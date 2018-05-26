@@ -1,10 +1,7 @@
 try:
-    import pgi
-    pgi.install_as_gi()
+    import gi
 except ImportError:
-    pass
-
-import gi
+    raise ImportError("Unable to import PyGObject. See https://pygobject.readthedocs.io/ for more info.")
 
 gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk

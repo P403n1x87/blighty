@@ -1,7 +1,7 @@
 import psutil
 
 from blighty.gtk import Canvas, start_event_loop, stop_event_loop
-from blighty.gtk.plot import SimplePlot
+from plot import SimplePlot
 
 
 class MPL(Canvas):
@@ -17,13 +17,13 @@ class MPL(Canvas):
         widget.request_redraw()
 
         self.count += 1
-        if self.count > 5:
+        if self.count > 10:
             self.destroy()
             stop_event_loop()
 
 
 def test_gtk_canvas():
-    canvas = MPL(width = 320, height = 160, opacity = .2)
+    canvas = MPL(100, 100, width = 320, height = 160)
     canvas.move(0, 0)
     canvas.show_all()
     start_event_loop()

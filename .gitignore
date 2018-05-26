@@ -1,0 +1,7 @@
+/build
+/dist
+*.egg*
+*cache*
+*tox
+*.so
+*.pyc

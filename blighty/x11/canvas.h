@@ -43,6 +43,7 @@ static void       Canvas_dealloc  (Canvas *);
 static PyObject * Canvas_new      (PyTypeObject *, PyObject *, PyObject *);
 static int        Canvas_init     (Canvas *, PyObject *, PyObject *);
 
+static PyObject * Canvas_move     (Canvas *, PyObject *, PyObject *);
 static PyObject * Canvas_show     (Canvas *);
 static PyObject * Canvas_get_size (Canvas *);
 static PyObject * Canvas_dispose  (Canvas *);
@@ -50,6 +51,9 @@ static PyObject * Canvas_destroy  (Canvas *);
 
 
 static PyMethodDef Canvas_methods[] = {
+  {"move"     , (PyCFunction) Canvas_move      , METH_VARARGS | METH_KEYWORDS,
+      "Move the window to new coordinates relative to the current gravity."
+  },
   {"show"     , (PyCFunction) Canvas_show      , METH_NOARGS,
       "Map the canvas to screen and set it ready for drawing."
   },
@@ -68,7 +72,7 @@ static PyMethodDef Canvas_methods[] = {
 
 // ---- ATTRIBUTES ----
 static PyMemberDef Canvas_members[] = {
-  {"interval", T_INT, offsetof(Canvas, interval), 0, "refresh interval in nanoseconds"},
+  {"interval", T_INT, offsetof(Canvas, interval), 0, "refresh interval in milliseconds"},
   {NULL}  /* Sentinel */
 };
 

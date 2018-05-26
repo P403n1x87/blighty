@@ -9,8 +9,7 @@ def test_canvas():
             self.d = 1.0
 
         def on_button_pressed(self, button, state, x, y):
-            if button == 1:
-                print("Destroying canvas", self)
+            if button == 1 and state == 0:
                 self.destroy()
 
         def on_key_pressed(self, keysym, state):
@@ -36,12 +35,12 @@ def test_canvas():
             if self.r == 10:
                 self.dispose()
 
-    canvases = [MyCanvas(200 * i, 200 * i, 200, 200) for i in range(3)]
+    canvases = [MyCanvas(200 * i, 200 * i, width = 200, height = 200, interval = 42) for i in range(3)]
 
     for canvas in canvases:
-        assert canvas.interval == 1e9
+        assert canvas.interval == 42
 
-        canvas.interval = 5e7
+        canvas.interval = 50
         assert canvas.show() is None
 
     assert x11.start_event_loop() is None
