@@ -23,6 +23,7 @@ typedef struct {
   cairo_t         * context;
   cairo_surface_t * surface;
   Display         * display;
+  int               screen;
   Drawable          win_id;
 
   // Signals
@@ -30,6 +31,7 @@ typedef struct {
 
   // Attributes
   unsigned int      interval;
+  int               gravity;
 
   // Internal attributes
   int               _running;

@@ -15,11 +15,6 @@ static const char * WINDOW_TYPE_MAP[] = {
   "_NET_WM_WINDOW_TYPE_TOOLBAR"
 };
 
-// ---- Class Canvas: methods ------------------------------------------------
-static void
-Canvas_dealloc(Canvas* self) {
-  Py_TYPE(self)->tp_free((PyObject*)self);
-}
 
 static void Canvas__change_property(Canvas * self, const char * property_name, const char * property_value, int mode) {
   Atom value = XInternAtom(self->display, property_value, False);
@@ -35,6 +30,91 @@ static void Canvas__change_property(Canvas * self, const char * property_name, c
   );
 }
 
+
+void
+Canvas__on_draw(Canvas * self, PyObject * args) {
+  PyObject * cb = PyObject_GetAttr((PyObject *) self, PyUnicode_FromString("on_draw"));
+  if (cb == NULL) {
+    PyErr_SetString(PyExc_TypeError, "Subclasses of Canvas must implement the 'on_draw(self, context)' method.");
+    return;
+  }
+  else {
+    if (!PyCallable_Check(cb)) {
+      PyErr_SetString(PyExc_TypeError, "on_draw callback must be callable.");
+      return;
+    }
+    // Required for animations in order to avoid flickers.
+    // The X server queues up draw request. This way we group
+    // them together and we send a single draw request
+    cairo_push_group(self->context);
+    // Call user declaration of the 'on_draw' method
+    PyObject_CallObject(cb, args);
+    cairo_pop_group_to_source(self->context);
+
+    // Only clear the window when we are sure we are ready to paint.
+    XClearWindow(self->display, self->win_id);
+
+    cairo_paint(self->context);
+  }
+}
+
+
+static void
+Canvas__ui_thread(Canvas * self) {
+  PyGILState_STATE gstate;
+  gstate = PyGILState_Ensure();
+
+  PyObject *args_tuple = Py_BuildValue("(O)", PycairoContext_FromContext(self->context, &PycairoContext_Type, (PyObject*) NULL));
+
+  while (self->_running) {
+    if (self->_dispose != 0) {
+      self->_destroy = 1;
+      break;
+    }
+    if (Atelier_is_running() > 0) {
+      Canvas__on_draw(self, args_tuple);
+    }
+
+    PyGILState_Release(gstate);
+    usleep(self->interval * 1000);
+    gstate = PyGILState_Ensure();
+  }
+
+  Py_DECREF(args_tuple);
+
+  PyGILState_Release(gstate);
+}
+
+
+static void
+Canvas__transform_coordinates(Canvas * self, int * x, int * y) {
+  // TODO: Extend with Xinerama support
+  if ((self->gravity - 1) % 3 == 0) *x = self->x;
+  else if ((self->gravity - 2) % 3 == 0) *x = ((XDisplayWidth(self->display, self->screen) - self->width) >> 1) + self->x;
+  else *x = XDisplayWidth(self->display, self->screen) - self->width - self->x;
+
+  if (self->gravity <= 3) *y = self->y;
+  else if (self->gravity <= 6) *y = ((XDisplayHeight(self->display, self->screen) - self->height) >> 1) + self->y;
+  else *y = XDisplayHeight(self->display, self->screen) - self->height - self->y;
+}
+
+
+//
+// class Canvas:
+//
+
+//
+//    def __del__(self):
+//
+static void
+Canvas_dealloc(Canvas* self) {
+  Py_TYPE(self)->tp_free((PyObject*)self);
+}
+
+
+//
+//    def __new__(self, *args, **kwargs):
+//
 static PyObject *
 Canvas_new(PyTypeObject *type, PyObject *args, PyObject *kwargs) {
   Canvas * self;
@@ -44,67 +124,69 @@ Canvas_new(PyTypeObject *type, PyObject *args, PyObject *kwargs) {
     char * keywords[] = {"x", "y", "width", "height",
      "interval",        // 1000
      "window_type",     // CanvasType.DESKTOP
+     "gravity",         // CanvasGravity.NORTH_WEST
      "sticky",          // True
      "keep_below"       // True
      "skip_taskbar",    // True
      "skip_pager",      // True
-     "gravity",         // CanvasGravity.NORTH_WEST
      NULL
     };
 
     // Default keyword arguments
     self->interval   = 1000;
-    int window_type  = 1;  // CanvasType.DESKTOP
+    int window_type  = 1;    // CanvasType.DESKTOP
+    self->gravity    = 1;    // CanvasGravity.NORTH_WEST
     int sticky       = 1;
     int keep_below   = 1;
     int skip_taskbar = 1;
     int skip_pager   = 1;
-    int gravity      = 1; // CanvasGravity.NORTH_WEST_GRAVITY
 
-    if (!PyArg_ParseTupleAndKeywords(args, kwargs, "IIII|IIppppI:Canvas.__new__",
+    if (!PyArg_ParseTupleAndKeywords(args, kwargs, "IIII|IIIpppp:Canvas.__new__",
         keywords,
         &self->x, &self->y, &self->width, &self->height,
         &self->interval,
         &window_type,
+        &self->gravity,
         &sticky,
         &keep_below,
         &skip_taskbar,
-        &skip_pager,
-        &gravity
+        &skip_pager
        )
     ) return NULL;
 
     if ((self->display = XOpenDisplay(NULL)) == NULL) return NULL;
 
+    self->screen = DefaultScreen(self->display);
+
     // Query Visual for "TrueColor" and 32 bits depth (RGBA)
     XVisualInfo visualinfo;
-    XMatchVisualInfo(self->display, DefaultScreen(self->display), 32, TrueColor, &visualinfo);
+    XMatchVisualInfo(self->display, self->screen, 32, TrueColor, &visualinfo);
 
     // Create the Window
     XSetWindowAttributes attr;
     attr.colormap = XCreateColormap(self->display, DefaultRootWindow(self->display), visualinfo.visual, AllocNone);
     attr.border_pixel = 0;
     attr.background_pixel = 0;
-    attr.win_gravity = gravity;
-    // attr.override_redirect = True;
-    // attr.event_mask = ExposureMask | StructureNotifyMask | ButtonPressMask | ButtonReleaseMask | Button1MotionMask,
+    attr.win_gravity = self->gravity;
+
+    int x, y;
+    Canvas__transform_coordinates(self, &x, &y);
 
     self->win_id = XCreateWindow(
       self->display,
       DefaultRootWindow(self->display),
-      self->x,
-      self->y,
+      x,
+      y,
       self->width,
       self->height,
       0,
       visualinfo.depth,
       InputOutput,
       visualinfo.visual,
-      CWColormap | CWBorderPixel | CWBackPixel | CWWinGravity, // | CWOverrideRedirect | CWEventMask,
+      CWColormap | CWBorderPixel | CWBackPixel | CWWinGravity,
       &attr
     );
 
-    // Stick to desktop: DESKTOP
     Canvas__change_property(self, "_NET_WM_WINDOW_TYPE", WINDOW_TYPE_MAP[window_type], PropModeReplace);
 
     if (keep_below   != 0) Canvas__change_property(self, "_NET_WM_STATE", "_NET_WM_STATE_BELOW"        , PropModeAppend);
@@ -112,7 +194,6 @@ Canvas_new(PyTypeObject *type, PyObject *args, PyObject *kwargs) {
     if (skip_taskbar != 0) Canvas__change_property(self, "_NET_WM_STATE", "_NET_WM_STATE_SKIP_TASKBAR" , PropModeAppend);
     if (skip_pager   != 0) Canvas__change_property(self, "_NET_WM_STATE", "_NET_WM_STATE_SKIP_PAGER"   , PropModeAppend);
 
-    // TODO: Allow move
     XSelectInput(self->display, self->win_id, StructureNotifyMask);
     XCreateGC(self->display, self->win_id, 0, 0);
 
@@ -142,78 +223,46 @@ Canvas_new(PyTypeObject *type, PyObject *args, PyObject *kwargs) {
   return (PyObject *)self;
 }
 
+
+//
+//    def __init__(self, *args, **kwargs):
+//
 static int
 Canvas_init(Canvas *self, PyObject *args, PyObject *kwds)
 {
   return 0;
 }
 
-void
-Canvas__on_draw(Canvas * self, PyObject * args) {
-  PyObject * cb = PyObject_GetAttr((PyObject *) self, PyUnicode_FromString("on_draw"));
-  if (cb == NULL) {
-    PyErr_SetString(PyExc_TypeError, "Subclasses of Canvas must implement the 'on_draw(self, context)' method.");
-    return;
-  }
-  else {
-    if (!PyCallable_Check(cb)) {
-      PyErr_SetString(PyExc_TypeError, "on_draw callback must be callable.");
-      return;
-    }
-    // Required for animations in order to avoid flickers.
-    // The X server queues up draw request. This way we group
-    // them together and we send a single draw request
-    cairo_push_group(self->context);
-    // Call user declaration of the 'on_draw' method
-    PyObject_CallObject(cb, args);
-    cairo_pop_group_to_source(self->context);
 
-    // Only clear the window when we are sure we are ready to paint.
-    XClearWindow(self->display, self->win_id);
-
-    cairo_paint(self->context);
-  }
-}
-
-static void
-Canvas__ui_thread(Canvas * self) {
-  PyGILState_STATE gstate;
-  gstate = PyGILState_Ensure();
-
-  PyObject *args_tuple = Py_BuildValue("(O)", PycairoContext_FromContext(self->context, &PycairoContext_Type, (PyObject*) NULL));
-
-  while (self->_running) {
-    if (self->_dispose != 0) {
-      self->_destroy = 1;
-      break;
-    }
-    if (Atelier_is_running() > 0) {
-      Canvas__on_draw(self, args_tuple);
-    }
-
-    PyGILState_Release(gstate);
-    usleep(self->interval * 1000);
-    gstate = PyGILState_Ensure();
-  }
-
-  Py_DECREF(args_tuple);
-
-  PyGILState_Release(gstate);
-}
-
+//
+//    def move(self, x, y):
+//      """Move the canvas to new coordinates relative to the current gravity.
+//      """
+//
 static PyObject *
-Canvas_move (Canvas * self, PyObject * args, PyObject * kwargs) {
-  int x, y;
+Canvas_move(Canvas * self, PyObject * args, PyObject * kwargs) {
+  int new_x, new_y;
   char * keywords[] = {"x", "y", NULL};
   if (!PyArg_ParseTupleAndKeywords(args, kwargs, "II:Canvas.move",
-    keywords, &x, &y)
+    keywords, &new_x, &new_y)
   ) return NULL;
+
+  int x, y;
+  self->x = new_x;
+  self->y = new_y;
+  Canvas__transform_coordinates(self, &x, &y);
 
   XMoveWindow(self->display, self->win_id, x, y);
 
   Py_INCREF(Py_None); return Py_None;
 }
 
+
+//
+//    def show(self):
+//      """Show the canvas.
+//      """
+//
 static PyObject *
 Canvas_show(Canvas* self) {
   // Input events
@@ -229,12 +278,29 @@ Canvas_show(Canvas* self) {
 }
 
 
+//
+//    def get_size(self):
+//      """Get the size of the Canvas.
+//
+//        Return:
+//          (tuple) The `(width, height)` tuple.
+//      """
+//
 static PyObject *
 Canvas_get_size(Canvas * self) {
   return Py_BuildValue("(ii)", self->width, self->height);
 }
 
 
+//
+//    def dispose(self):
+//      """Dispose of the canvas when no longer needed.
+//      This method marks the canvas it is called on as ready to be destroyed.
+//      The actual destruction is performed by the event loop, which calls the
+//      `destroy` method. This is the thread-safe way of destrying an X11
+//      Canvas object.
+//      """
+//
 static PyObject *
 Canvas_dispose(Canvas * self) {
   self->_dispose = 1;
@@ -242,8 +308,11 @@ Canvas_dispose(Canvas * self) {
 }
 
 
-// TODO: With the current design, this method is safe to call only from the
-// thread that is running the event loop.
+//
+//    def destroy(self):
+//      """Destroy the canvas.
+//      WARNING: Not thread-safe. Use `dispose` instead.
+//      """
 static PyObject *
 Canvas_destroy(Canvas * self) {
   self->_running = 0;

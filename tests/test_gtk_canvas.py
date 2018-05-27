@@ -1,5 +1,5 @@
-from time import sleep
 import blighty.gtk as b
+from blighty import CanvasGravity
 
 
 class MyCanvas(b.Canvas):
@@ -15,7 +15,7 @@ class MyCanvas(b.Canvas):
 
         w, h = self.get_size()
 
-        if self.r > 100 or self.r < 10:
+        if self.r > 92 or self.r < 10:
             self.d *= -1
         self.r += self.d
 
@@ -31,7 +31,7 @@ class MyCanvas(b.Canvas):
 
 
 def test_gtk_canvas():
-    canvases = [MyCanvas(200 * i, 200 * i, 200, 200) for i in range(3)]
+    canvases = [MyCanvas(200 * i, 200 * i, 200, 200, gravity = CanvasGravity.CENTER) for i in range(-1,2)]
 
     for canvas in canvases:
         assert canvas.interval == 1000

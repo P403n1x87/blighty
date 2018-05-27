@@ -1,6 +1,7 @@
 import psutil
 
 from blighty.gtk import Canvas, start_event_loop, stop_event_loop
+from blighty import CanvasGravity
 from plot import SimplePlot
 
 
@@ -23,7 +24,6 @@ class MPL(Canvas):
 
 
 def test_gtk_canvas():
-    canvas = MPL(100, 100, width = 320, height = 160)
-    canvas.move(0, 0)
-    canvas.show_all()
+    canvas = MPL(100, 100, width = 320, height = 160, gravity = CanvasGravity.SOUTH_EAST)
+    canvas.show()
     start_event_loop()

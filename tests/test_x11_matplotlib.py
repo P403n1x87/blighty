@@ -1,14 +1,15 @@
 from blighty.x11 import Canvas, start_event_loop
+from blighty import CanvasGravity
 
 import psutil
 from plot import SimplePlot
 
 def test_canvas():
     class TestMPL(Canvas):
-        def __init__(self, x, y, w, h):
-            super().__init__(x, y, w, h)
+        def __init__(self, *args, **kwargs):
+            super().__init__(*args, **kwargs)
 
-            self.plot = SimplePlot(w, h)
+            self.plot = SimplePlot(*self.get_size())
             self.count = 5
 
         def on_draw(self, cr):
@@ -27,7 +28,7 @@ def test_canvas():
             if keysym == 65307:
                 self.destroy()
 
-    canvas = TestMPL(0, 0, 320, 160)
+    canvas = TestMPL(10, 10, 320, 160, gravity = CanvasGravity.SOUTH_EAST)
     canvas.interval = 0
     canvas.show()
     start_event_loop()

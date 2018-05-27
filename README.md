@@ -17,7 +17,7 @@ contribute to this project!
 
 ## Requirements
 
-- Xlib (only for X Windows)
+- X11 (only for X Windows)
 - cairo
 - python3
 - python3-gi (only for GTK Windows)
@@ -32,7 +32,7 @@ contribute to this project!
 Make sure that all dependencies are satisfied:
 
 ~~~
-sudo apt install python3-gi, gir1.2-gtk-3.0, gir1.2-glib-2.0
+sudo apt install xorg python3-gi gir1.2-gtk-3.0 gir1.2-glib-2.0
 ~~~
 
 Clone this branch in any folder you like and then run the `setup.py` script with
@@ -52,8 +52,9 @@ just focus on the artwork, pretty much as with conky.
 
 ### Creating X11 Canvases
 
-This is the closest to conky that you can get for the moment. Use the following
-approach to create a window with the Xlib directly.
+This is the closest to conky that you can get for the moment, and the
+recommended way of using blighty. Use the following approach to create a window
+with the Xlib directly.
 
 ~~~ python
 from blighty.x11 import Canvas, start_event_loop
@@ -104,6 +105,11 @@ if __name__ == "__main__":
     canvas.show_all()
     b.start_event_loop()
 ~~~
+
+### Animations
+
+Animations can be controlled via the `Canvas.interval` attribute. This is the
+time in milliseconds that elapses between consecutive redraws of the Canvas.
 
 ## License
 
