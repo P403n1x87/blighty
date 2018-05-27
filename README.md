@@ -57,18 +57,19 @@ recommended way of using blighty. Use the following approach to create a window
 with the Xlib directly.
 
 ~~~ python
+from blighty import CanvasGravity
 from blighty.x11 import Canvas, start_event_loop
 
 class MyCanvas(Canvas):
   def on_draw(self, context):
     # context is an instance of a cairo context.
     # Refer to the Pycairo documentation.
-    #
+    
 if __name__ == "__main__":
   x, y, width, height = 10, 10, 200, 200
 
   # Instantiate the canvas
-  canvas = MyCanvas(x, y, width, height)
+  canvas = MyCanvas(10, 10, width = 200, height = 200, gravity = CanvasGravity.SOUTH_EAST)
 
   # Map it on screen
   canvas.show()
@@ -82,7 +83,7 @@ canvas can be handled. You can capture key and button presses by implementing
 the `on_key_pressed(self, keysym, state)` and `on_button_pressed(self, button,
 state, x, y)` method in your subclass of `Canvas`.
 
-### Creating GTK Windows
+### Creating GTK Canvases
 
 To create GTK-based canvases you can use the `blighty.gtk.Canvas` class, which
 is just a subclass of `Gtk.Window`.
@@ -101,7 +102,7 @@ class MyCanvas(b.Canvas):
         # Use wisely.
 
 if __name__ == "__main__":
-    canvas = MyCanvas(width=320, height=240)
+    canvas = MyCanvas(0, 0, width=320, height=240)
     canvas.show_all()
     b.start_event_loop()
 ~~~
