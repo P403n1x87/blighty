@@ -44,7 +44,7 @@ Canvas__on_draw(Canvas * self, PyObject * args) {
       return;
     }
     // Required for animations in order to avoid flickers.
-    // The X server queues up draw request. This way we group
+    // The X server queues up draw requests. This way we group
     // them together and we send a single draw request
     cairo_push_group(self->context);
     // Call user declaration of the 'on_draw' method
@@ -52,9 +52,12 @@ Canvas__on_draw(Canvas * self, PyObject * args) {
     cairo_pop_group_to_source(self->context);
 
     // Only clear the window when we are sure we are ready to paint.
-    XClearWindow(self->display, self->win_id);
-
+    // XClearWindow(self->display, self->win_id);
+    // cairo_paint(self->context);
+    cairo_save(self->context);
+    cairo_set_operator(self->context, CAIRO_OPERATOR_SOURCE);
     cairo_paint(self->context);
+    cairo_restore(self->context);
   }
 }
 
@@ -304,6 +307,8 @@ Canvas_get_size(Canvas * self) {
 static PyObject *
 Canvas_dispose(Canvas * self) {
   self->_dispose = 1;
+  XUnmapWindow(self->display, self->win_id);
+  
   Py_INCREF(Py_None); return Py_None;
 }
 
