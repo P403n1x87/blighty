@@ -74,7 +74,11 @@ static PyMethodDef Canvas_methods[] = {
 
 // ---- ATTRIBUTES ----
 static PyMemberDef Canvas_members[] = {
-  {"interval", T_INT, offsetof(Canvas, interval), 0, "refresh interval in milliseconds"},
+  {"interval" , T_INT , offsetof(Canvas, interval) , 0        , "refresh interval in milliseconds"},
+  {"x"        , T_INT , offsetof(Canvas, x)        , READONLY , "The canvas x coordinate"},
+  {"y"        , T_INT , offsetof(Canvas, y)        , READONLY , "The canvas y coordinate"},
+  {"width"    , T_INT , offsetof(Canvas, width)    , READONLY , "The canvas width"},
+  {"height"   , T_INT , offsetof(Canvas, height)   , READONLY , "The canvas height"},
   {NULL}  /* Sentinel */
 };
 
