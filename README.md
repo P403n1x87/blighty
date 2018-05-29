@@ -29,16 +29,11 @@ contribute to this project!
 
 ### Ubuntu
 
-Make sure that all dependencies are satisfied:
+The following commands will install blighty along with its dependencies.
 
 ~~~
-sudo apt install xorg python3-gi gir1.2-gtk-3.0 gir1.2-glib-2.0
-~~~
-
-Clone this branch in any folder you like and then run the `setup.py` script with
-
-~~~
-sudo -H python3 -m pip install .
+sudo apt install xorg libcairo2-dev python3-gi gir1.2-gtk-3.0 gir1.2-glib-2.0
+sudo -H python3 -m pip install git+https://github.com/P403n1x87/blighty.git
 ~~~
 
 
@@ -64,7 +59,7 @@ class MyCanvas(Canvas):
   def on_draw(self, context):
     # context is an instance of a cairo context.
     # Refer to the Pycairo documentation.
-    
+
 if __name__ == "__main__":
   x, y, width, height = 10, 10, 200, 200
 
