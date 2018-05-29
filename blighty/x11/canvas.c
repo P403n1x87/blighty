@@ -76,6 +76,11 @@ Canvas__ui_thread(Canvas * self) {
     }
     if (Atelier_is_running() > 0) {
       Canvas__on_draw(self, args_tuple);
+      if (PyErr_Occurred() != NULL) {
+        PyErr_Print();
+        self->_destroy = 1;
+        break;
+      }
     }
 
     PyGILState_Release(gstate);
@@ -308,7 +313,7 @@ static PyObject *
 Canvas_dispose(Canvas * self) {
   self->_dispose = 1;
   XUnmapWindow(self->display, self->win_id);
-  
+
   Py_INCREF(Py_None); return Py_None;
 }
 
