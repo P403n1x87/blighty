@@ -40,7 +40,7 @@ x11 = Extension('blighty.x11',
 
 setup(
     name             = 'blighty',
-    version          = '0.1.2',
+    version          = '0.2.0',
     description      = 'Desktop Widget Manager. Think of conky, but with Python instead of Lua.',
     long_description = open('README.md').read(),
     author           = 'Gabriele N. Tornetta',
