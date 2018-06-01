@@ -1,4 +1,25 @@
-// #include <pthread.h>
+// This file is part of "blighty" which is released under GPL.
+//
+// See file LICENCE or go to http://www.gnu.org/licenses/ for full license
+// details.
+//
+// blighty is a desktop widget creation and management library for Python 3.
+//
+// Copyright (c) 2018 Gabriele N. Tornetta <phoenix1987@gmail.com>.
+// All rights reserved.
+//
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
 #define CANVAS_C
 
 #include "atelier.h"
@@ -14,6 +35,13 @@ static const char * WINDOW_TYPE_MAP[] = {
   "_NET_WM_WINDOW_TYPE_DOCK",
   "_NET_WM_WINDOW_TYPE_TOOLBAR"
 };
+
+
+static time_t gettime() {
+  struct timespec ts;
+  clock_gettime(CLOCK_BOOTTIME, &ts);
+  return ts.tv_sec * 1000 + ts.tv_nsec / 1e6;
+}
 
 
 static void Canvas__change_property(Canvas * self, const char * property_name, const char * property_value, int mode) {
@@ -69,23 +97,27 @@ Canvas__ui_thread(Canvas * self) {
 
   PyObject *args_tuple = Py_BuildValue("(O)", PycairoContext_FromContext(self->context, &PycairoContext_Type, (PyObject*) NULL));
 
+  self->_expiry = gettime();
+
   while (self->_running) {
     if (self->_dispose != 0) {
       self->_destroy = 1;
       break;
     }
-    if (Atelier_is_running() > 0) {
+
+    PyGILState_Release(gstate);
+    usleep(1000); // Sleep 1 ms
+    gstate = PyGILState_Ensure();
+
+    if (Atelier_is_running() > 0 && self->_expiry <= gettime()) {
       Canvas__on_draw(self, args_tuple);
       if (PyErr_Occurred() != NULL) {
         PyErr_Print();
         self->_destroy = 1;
         break;
       }
+      self->_expiry += self->interval;
     }
-
-    PyGILState_Release(gstate);
-    usleep(self->interval * 1000);
-    gstate = PyGILState_Ensure();
   }
 
   Py_DECREF(args_tuple);
