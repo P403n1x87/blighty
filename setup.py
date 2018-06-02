@@ -27,12 +27,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 from setuptools import find_packages, setup, Extension
 
 
-x11 = Extension('blighty.x11',
+x11 = Extension('blighty._x11',
     include_dirs = ['/usr/include/cairo/'],
     libraries    = ['cairo', 'X11'],
     sources      = [
-        'blighty/x11/x11module.c',
-        'blighty/x11/canvas.c',
+        'blighty/x11/_x11module.c',
+        'blighty/x11/base_canvas.c',
         'blighty/x11/atelier.c',
     ]
 )
@@ -40,7 +40,7 @@ x11 = Extension('blighty.x11',
 
 setup(
     name             = 'blighty',
-    version          = '0.2.0',
+    version          = '0.3.0',
     description      = 'Desktop Widget Manager. Think of conky, but with Python instead of Lua.',
     long_description = open('README.md').read(),
     author           = 'Gabriele N. Tornetta',

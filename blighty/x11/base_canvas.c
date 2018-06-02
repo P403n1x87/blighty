@@ -20,10 +20,10 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-#define CANVAS_C
+#define BASE_CANVAS_C
 
 #include "atelier.h"
-#include "canvas.h"
+#include "base_canvas.h"
 
 #define PYCAIRO_NO_IMPORT
 #include "pycairo.h"
@@ -44,7 +44,7 @@ static time_t gettime() {
 }
 
 
-static void Canvas__change_property(Canvas * self, const char * property_name, const char * property_value, int mode) {
+static void BaseCanvas__change_property(BaseCanvas * self, const char * property_name, const char * property_value, int mode) {
   Atom value = XInternAtom(self->display, property_value, False);
   XChangeProperty(
     self->display,
@@ -60,10 +60,10 @@ static void Canvas__change_property(Canvas * self, const char * property_name, c
 
 
 void
-Canvas__on_draw(Canvas * self, PyObject * args) {
+BaseCanvas__on_draw(BaseCanvas * self, PyObject * args) {
   PyObject * cb = PyObject_GetAttr((PyObject *) self, PyUnicode_FromString("on_draw"));
   if (cb == NULL) {
-    PyErr_SetString(PyExc_TypeError, "Subclasses of Canvas must implement the 'on_draw(self, context)' method.");
+    PyErr_SetString(PyExc_TypeError, "Subclasses of BaseCanvas must implement the 'on_draw(self, context)' method.");
     return;
   }
   else {
@@ -91,7 +91,7 @@ Canvas__on_draw(Canvas * self, PyObject * args) {
 
 
 static void
-Canvas__ui_thread(Canvas * self) {
+BaseCanvas__ui_thread(BaseCanvas * self) {
   PyGILState_STATE gstate;
   gstate = PyGILState_Ensure();
 
@@ -110,7 +110,7 @@ Canvas__ui_thread(Canvas * self) {
     gstate = PyGILState_Ensure();
 
     if (Atelier_is_running() > 0 && self->_expiry <= gettime()) {
-      Canvas__on_draw(self, args_tuple);
+      BaseCanvas__on_draw(self, args_tuple);
       if (PyErr_Occurred() != NULL) {
         PyErr_Print();
         self->_destroy = 1;
@@ -127,7 +127,7 @@ Canvas__ui_thread(Canvas * self) {
 
 
 static void
-Canvas__transform_coordinates(Canvas * self, int * x, int * y) {
+BaseCanvas__transform_coordinates(BaseCanvas * self, int * x, int * y) {
   // TODO: Extend with Xinerama support
   if ((self->gravity - 1) % 3 == 0) *x = self->x;
   else if ((self->gravity - 2) % 3 == 0) *x = ((XDisplayWidth(self->display, self->screen) - self->width) >> 1) + self->x;
@@ -140,14 +140,14 @@ Canvas__transform_coordinates(Canvas * self, int * x, int * y) {
 
 
 //
-// class Canvas:
+// class BaseCanvas:
 //
 
 //
 //    def __del__(self):
 //
 static void
-Canvas_dealloc(Canvas* self) {
+BaseCanvas_dealloc(BaseCanvas* self) {
   Py_TYPE(self)->tp_free((PyObject*)self);
 }
 
@@ -156,15 +156,15 @@ Canvas_dealloc(Canvas* self) {
 //    def __new__(self, *args, **kwargs):
 //
 static PyObject *
-Canvas_new(PyTypeObject *type, PyObject *args, PyObject *kwargs) {
-  Canvas * self;
+BaseCanvas_new(PyTypeObject *type, PyObject *args, PyObject *kwargs) {
+  BaseCanvas * self;
 
-  self = (Canvas *)type->tp_alloc(type, 0);
+  self = (BaseCanvas *)type->tp_alloc(type, 0);
   if (self != NULL) {
     char * keywords[] = {"x", "y", "width", "height",
      "interval",        // 1000
-     "window_type",     // CanvasType.DESKTOP
-     "gravity",         // CanvasGravity.NORTH_WEST
+     "window_type",     // BaseCanvasType.DESKTOP
+     "gravity",         // BaseCanvasGravity.NORTH_WEST
      "sticky",          // True
      "keep_below"       // True
      "skip_taskbar",    // True
@@ -174,14 +174,14 @@ Canvas_new(PyTypeObject *type, PyObject *args, PyObject *kwargs) {
 
     // Default keyword arguments
     self->interval   = 1000;
-    int window_type  = 1;    // CanvasType.DESKTOP
-    self->gravity    = 1;    // CanvasGravity.NORTH_WEST
+    int window_type  = 1;    // BaseCanvasType.DESKTOP
+    self->gravity    = 1;    // BaseCanvasGravity.NORTH_WEST
     int sticky       = 1;
     int keep_below   = 1;
     int skip_taskbar = 1;
     int skip_pager   = 1;
 
-    if (!PyArg_ParseTupleAndKeywords(args, kwargs, "IIII|IIIpppp:Canvas.__new__",
+    if (!PyArg_ParseTupleAndKeywords(args, kwargs, "IIII|IIIpppp:BaseCanvas.__new__",
         keywords,
         &self->x, &self->y, &self->width, &self->height,
         &self->interval,
@@ -210,7 +210,7 @@ Canvas_new(PyTypeObject *type, PyObject *args, PyObject *kwargs) {
     attr.win_gravity = self->gravity;
 
     int x, y;
-    Canvas__transform_coordinates(self, &x, &y);
+    BaseCanvas__transform_coordinates(self, &x, &y);
 
     self->win_id = XCreateWindow(
       self->display,
@@ -227,12 +227,12 @@ Canvas_new(PyTypeObject *type, PyObject *args, PyObject *kwargs) {
       &attr
     );
 
-    Canvas__change_property(self, "_NET_WM_WINDOW_TYPE", WINDOW_TYPE_MAP[window_type], PropModeReplace);
+    BaseCanvas__change_property(self, "_NET_WM_WINDOW_TYPE", WINDOW_TYPE_MAP[window_type], PropModeReplace);
 
-    if (keep_below   != 0) Canvas__change_property(self, "_NET_WM_STATE", "_NET_WM_STATE_BELOW"        , PropModeAppend);
-    if (sticky       != 0) Canvas__change_property(self, "_NET_WM_STATE", "_NET_WM_STATE_STICKY"       , PropModeAppend);
-    if (skip_taskbar != 0) Canvas__change_property(self, "_NET_WM_STATE", "_NET_WM_STATE_SKIP_TASKBAR" , PropModeAppend);
-    if (skip_pager   != 0) Canvas__change_property(self, "_NET_WM_STATE", "_NET_WM_STATE_SKIP_PAGER"   , PropModeAppend);
+    if (keep_below   != 0) BaseCanvas__change_property(self, "_NET_WM_STATE", "_NET_WM_STATE_BELOW"        , PropModeAppend);
+    if (sticky       != 0) BaseCanvas__change_property(self, "_NET_WM_STATE", "_NET_WM_STATE_STICKY"       , PropModeAppend);
+    if (skip_taskbar != 0) BaseCanvas__change_property(self, "_NET_WM_STATE", "_NET_WM_STATE_SKIP_TASKBAR" , PropModeAppend);
+    if (skip_pager   != 0) BaseCanvas__change_property(self, "_NET_WM_STATE", "_NET_WM_STATE_SKIP_PAGER"   , PropModeAppend);
 
     XSelectInput(self->display, self->win_id, StructureNotifyMask);
     XCreateGC(self->display, self->win_id, 0, 0);
@@ -256,7 +256,7 @@ Canvas_new(PyTypeObject *type, PyObject *args, PyObject *kwargs) {
     self->_dispose = 0;
     self->_destroy = 0;
 
-    // Register the Canvas with the Atelier
+    // Register the BaseCanvas with the Atelier
     Atelier_add_canvas(self);
   }
 
@@ -268,7 +268,7 @@ Canvas_new(PyTypeObject *type, PyObject *args, PyObject *kwargs) {
 //    def __init__(self, *args, **kwargs):
 //
 static int
-Canvas_init(Canvas *self, PyObject *args, PyObject *kwds)
+BaseCanvas_init(BaseCanvas *self, PyObject *args, PyObject *kwds)
 {
   return 0;
 }
@@ -280,17 +280,17 @@ Canvas_init(Canvas *self, PyObject *args, PyObject *kwds)
 //      """
 //
 static PyObject *
-Canvas_move(Canvas * self, PyObject * args, PyObject * kwargs) {
+BaseCanvas_move(BaseCanvas * self, PyObject * args, PyObject * kwargs) {
   int new_x, new_y;
   char * keywords[] = {"x", "y", NULL};
-  if (!PyArg_ParseTupleAndKeywords(args, kwargs, "II:Canvas.move",
+  if (!PyArg_ParseTupleAndKeywords(args, kwargs, "II:BaseCanvas.move",
     keywords, &new_x, &new_y)
   ) return NULL;
 
   int x, y;
   self->x = new_x;
   self->y = new_y;
-  Canvas__transform_coordinates(self, &x, &y);
+  BaseCanvas__transform_coordinates(self, &x, &y);
 
   XMoveWindow(self->display, self->win_id, x, y);
 
@@ -304,15 +304,15 @@ Canvas_move(Canvas * self, PyObject * args, PyObject * kwargs) {
 //      """
 //
 static PyObject *
-Canvas_show(Canvas* self) {
+BaseCanvas_show(BaseCanvas* self) {
   // Input events
   XSelectInput(self->display, self->win_id, ButtonPressMask | KeyPressMask);
   XMapWindow(self->display, self->win_id);
 
   self->_running = 1;
 
-  // Use the allocated Canvas object to pass arguments to the UI thread.
-  PyThread_start_new_thread((void (*)(void *)) Canvas__ui_thread, self);
+  // Use the allocated BaseCanvas object to pass arguments to the UI thread.
+  PyThread_start_new_thread((void (*)(void *)) BaseCanvas__ui_thread, self);
 
   Py_INCREF(Py_None); return Py_None;
 }
@@ -320,14 +320,14 @@ Canvas_show(Canvas* self) {
 
 //
 //    def get_size(self):
-//      """Get the size of the Canvas.
+//      """Get the size of the BaseCanvas.
 //
 //        Return:
 //          (tuple) The `(width, height)` tuple.
 //      """
 //
 static PyObject *
-Canvas_get_size(Canvas * self) {
+BaseCanvas_get_size(BaseCanvas * self) {
   return Py_BuildValue("(ii)", self->width, self->height);
 }
 
@@ -338,11 +338,11 @@ Canvas_get_size(Canvas * self) {
 //      This method marks the canvas it is called on as ready to be destroyed.
 //      The actual destruction is performed by the event loop, which calls the
 //      `destroy` method. This is the thread-safe way of destrying an X11
-//      Canvas object.
+//      BaseCanvas object.
 //      """
 //
 static PyObject *
-Canvas_dispose(Canvas * self) {
+BaseCanvas_dispose(BaseCanvas * self) {
   self->_dispose = 1;
   XUnmapWindow(self->display, self->win_id);
 
@@ -356,13 +356,13 @@ Canvas_dispose(Canvas * self) {
 //      WARNING: Not thread-safe. Use `dispose` instead.
 //      """
 static PyObject *
-Canvas_destroy(Canvas * self) {
+BaseCanvas_destroy(BaseCanvas * self) {
   self->_running = 0;
   cairo_destroy(self->context);
   cairo_surface_destroy(self->surface);
   XCloseDisplay(self->display);
 
-  // De-register Canvas from Atelier;
+  // De-register BaseCanvas from Atelier;
   Atelier_remove_canvas(self);
 
   Py_INCREF(Py_None); return Py_None;

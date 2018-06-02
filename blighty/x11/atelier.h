@@ -24,16 +24,16 @@
 #ifndef ATELIER_H
 #define ATELIER_H
 
-#include "canvas.h"
+#include "base_canvas.h"
 
 void
 Atelier_init(void);
 
 void
-Atelier_add_canvas(Canvas * canvas);
+Atelier_add_canvas(BaseCanvas * canvas);
 
 int
-Atelier_remove_canvas(Canvas * canvas);
+Atelier_remove_canvas(BaseCanvas * canvas);
 
 
 /******************************************************************************

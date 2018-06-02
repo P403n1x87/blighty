@@ -45,17 +45,17 @@ Atelier_init(void) {
 }
 
 void
-Atelier_add_canvas(Canvas * canvas) {
+Atelier_add_canvas(BaseCanvas * canvas) {
   // TODO: Check that the canvas is not registered already.
   PyList_Append(atelier, (PyObject*) canvas);
 }
 
 
 int
-Atelier_remove_canvas(Canvas * canvas) {
-  Canvas * c;
+Atelier_remove_canvas(BaseCanvas * canvas) {
+  BaseCanvas * c;
   for (int i = 0; i < PyList_Size(atelier); i++) {
-    c = (Canvas *) PyList_GetItem(atelier, i);
+    c = (BaseCanvas *) PyList_GetItem(atelier, i);
     if (c == canvas) {
       PyList_SetSlice(atelier, i, i + 1, NULL);
       list_updated = 1;
@@ -75,7 +75,7 @@ static const struct timespec POLL_SLEEP = {0, 1e6};
 static int main_loop_running = 0;
 
 static void
-dispatch_event(Canvas * canvas) {
+dispatch_event(BaseCanvas * canvas) {
   char keybuf[8];
   KeySym key;
   XEvent e;
@@ -137,7 +137,7 @@ Atelier_start_event_loop(PyObject * args, PyObject * kwargs) {
 
   while (main_loop_running != 0 && PyList_Size(atelier) > 0) {
     for (int i = 0; i < PyList_Size(atelier); i++) {
-      dispatch_event((Canvas *) PyList_GetItem(atelier, i));
+      dispatch_event((BaseCanvas *) PyList_GetItem(atelier, i));
 
       // Check if any of the dispatched events has deleted a canvas.
       if (list_updated > 0) {
