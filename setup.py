@@ -40,14 +40,14 @@ x11 = Extension('blighty._x11',
 
 setup(
     name             = 'blighty',
-    version          = '0.3.0',
+    version          = '1.0.0',
     description      = 'Desktop Widget Manager. Think of conky, but with Python instead of Lua.',
     long_description = open('README.md').read(),
     author           = 'Gabriele N. Tornetta',
     author_email     = 'phoenix1987@gmail.com',
     url              = 'https://github.com/pypa/blighty',
     classifiers=[
-        'Development Status :: 4 - Beta',
+        'Development Status :: 5 - Stable',
 
         'Intended Audience :: Developers',
         'Topic :: Software Development :: Build Tools',
