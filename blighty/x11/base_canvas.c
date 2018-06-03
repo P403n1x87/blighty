@@ -61,7 +61,8 @@ static void BaseCanvas__change_property(BaseCanvas * self, const char * property
 
 void
 BaseCanvas__on_draw(BaseCanvas * self, PyObject * args) {
-  PyObject * cb = PyObject_GetAttr((PyObject *) self, PyUnicode_FromString("on_draw"));
+  PyObject * cb = PyObject_GetAttr((PyObject *) self, PyUnicode_FromString("_on_draw"));
+
   if (cb == NULL) {
     PyErr_SetString(PyExc_TypeError, "Subclasses of BaseCanvas must implement the 'on_draw(self, context)' method.");
     return;
@@ -71,6 +72,7 @@ BaseCanvas__on_draw(BaseCanvas * self, PyObject * args) {
       PyErr_SetString(PyExc_TypeError, "on_draw callback must be callable.");
       return;
     }
+
     // Required for animations in order to avoid flickers.
     // The X server queues up draw requests. This way we group
     // them together and we send a single draw request
@@ -78,14 +80,6 @@ BaseCanvas__on_draw(BaseCanvas * self, PyObject * args) {
     // Call user declaration of the 'on_draw' method
     PyObject_CallObject(cb, args);
     cairo_pop_group_to_source(self->context);
-
-    // Only clear the window when we are sure we are ready to paint.
-    // XClearWindow(self->display, self->win_id);
-    // cairo_paint(self->context);
-    cairo_save(self->context);
-    cairo_set_operator(self->context, CAIRO_OPERATOR_SOURCE);
-    cairo_paint(self->context);
-    cairo_restore(self->context);
   }
 }
 
@@ -98,6 +92,7 @@ BaseCanvas__ui_thread(BaseCanvas * self) {
   PyObject *args_tuple = Py_BuildValue("(O)", PycairoContext_FromContext(self->context, &PycairoContext_Type, (PyObject*) NULL));
 
   self->_expiry = gettime();
+  int interval = 25 > self->interval ? self->interval : 25; // TODO: Magic number
 
   while (self->_running) {
     if (self->_dispose != 0) {
@@ -111,12 +106,22 @@ BaseCanvas__ui_thread(BaseCanvas * self) {
 
     if (Atelier_is_running() > 0 && self->_expiry <= gettime()) {
       BaseCanvas__on_draw(self, args_tuple);
+      // Only clear the window when we are sure we are ready to paint.
+      // XClearWindow(self->display, self->win_id);
+      // cairo_paint(self->context);
+      cairo_save(self->context);
+      cairo_set_operator(self->context, CAIRO_OPERATOR_SOURCE);
+      cairo_paint(self->context);
+      cairo_restore(self->context);
+
+
       if (PyErr_Occurred() != NULL) {
         PyErr_Print();
         self->_destroy = 1;
         break;
       }
-      self->_expiry += self->interval;
+      self->_expiry += interval;
+      interval = self->interval;
     }
   }
 
