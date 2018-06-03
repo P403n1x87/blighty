@@ -1,5 +1,5 @@
 // This file is part of "blighty" which is released under GPL.
-// 
+//
 // See file LICENCE or go to http://www.gnu.org/licenses/ for full license
 // details.
 //
@@ -119,6 +119,12 @@ dispatch_event(BaseCanvas * canvas) {
         key,
         e.xkey.state
       ));
+    }
+    return;
+
+  case Expose:
+    if (e.xexpose.count == 0) {
+      BaseCanvas__redraw(canvas);
     }
     return;
 

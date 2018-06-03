@@ -62,6 +62,8 @@ typedef struct {
   long              _expiry;
 } BaseCanvas;
 
+void BaseCanvas__redraw(BaseCanvas * self);
+
 #ifdef BASE_CANVAS_C
 // ---- METHODS ----
 static void       BaseCanvas_dealloc  (BaseCanvas *);

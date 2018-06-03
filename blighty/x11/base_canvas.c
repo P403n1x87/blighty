@@ -60,6 +60,15 @@ static void BaseCanvas__change_property(BaseCanvas * self, const char * property
 
 
 void
+BaseCanvas__redraw(BaseCanvas * self) {
+  cairo_save(self->context);
+  cairo_set_operator(self->context, CAIRO_OPERATOR_SOURCE);
+  cairo_paint(self->context);
+  cairo_restore(self->context);
+}
+
+
+void
 BaseCanvas__on_draw(BaseCanvas * self, PyObject * args) {
   PyObject * cb = PyObject_GetAttr((PyObject *) self, PyUnicode_FromString("_on_draw"));
 
@@ -92,7 +101,6 @@ BaseCanvas__ui_thread(BaseCanvas * self) {
   PyObject *args_tuple = Py_BuildValue("(O)", PycairoContext_FromContext(self->context, &PycairoContext_Type, (PyObject*) NULL));
 
   self->_expiry = gettime();
-  int interval = 25 > self->interval ? self->interval : 25; // TODO: Magic number
 
   while (self->_running) {
     if (self->_dispose != 0) {
@@ -109,19 +117,14 @@ BaseCanvas__ui_thread(BaseCanvas * self) {
       // Only clear the window when we are sure we are ready to paint.
       // XClearWindow(self->display, self->win_id);
       // cairo_paint(self->context);
-      cairo_save(self->context);
-      cairo_set_operator(self->context, CAIRO_OPERATOR_SOURCE);
-      cairo_paint(self->context);
-      cairo_restore(self->context);
-
+      BaseCanvas__redraw(self);
 
       if (PyErr_Occurred() != NULL) {
         PyErr_Print();
         self->_destroy = 1;
         break;
       }
-      self->_expiry += interval;
-      interval = self->interval;
+      self->_expiry += self->interval;
     }
   }
 
@@ -239,7 +242,6 @@ BaseCanvas_new(PyTypeObject *type, PyObject *args, PyObject *kwargs) {
     if (skip_taskbar != 0) BaseCanvas__change_property(self, "_NET_WM_STATE", "_NET_WM_STATE_SKIP_TASKBAR" , PropModeAppend);
     if (skip_pager   != 0) BaseCanvas__change_property(self, "_NET_WM_STATE", "_NET_WM_STATE_SKIP_PAGER"   , PropModeAppend);
 
-    XSelectInput(self->display, self->win_id, StructureNotifyMask);
     XCreateGC(self->display, self->win_id, 0, 0);
 
     // Handle Delete Event
@@ -311,7 +313,11 @@ BaseCanvas_move(BaseCanvas * self, PyObject * args, PyObject * kwargs) {
 static PyObject *
 BaseCanvas_show(BaseCanvas* self) {
   // Input events
-  XSelectInput(self->display, self->win_id, ButtonPressMask | KeyPressMask);
+  XSelectInput(self->display, self->win_id,
+    ButtonPressMask
+  | KeyPressMask
+  | ExposureMask
+  );
   XMapWindow(self->display, self->win_id);
 
   self->_running = 1;
