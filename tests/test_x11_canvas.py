@@ -22,19 +22,23 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 
+import blighty.x11 as x11
+from blighty import CanvasGravity
+
+from random import random as r
+
+
 def test_canvas():
-    import blighty.x11 as x11
-    from blighty import CanvasGravity
 
     class MyCanvas(x11.Canvas):
         def __init__(self, *args, **kwargs):
             super().__init__(*args, **kwargs)
 
             self.r = 50.0
-            self.d = 1.0
+            self.d = 2.0
 
         def on_button_pressed(self, button, state, x, y):
-            if button == 1 and state == 0:
+            if button == 1 and state == 16:
                 self.destroy()
 
         def on_key_pressed(self, keysym, state):
@@ -43,7 +47,7 @@ def test_canvas():
 
         def on_draw(self, cr):
             cr.set_line_width(8)
-            cr.set_source_rgba(0.7, 0.2, 0.0, .5)
+            cr.set_source_rgba(*[r() for _ in range(4)])
 
             w, h = self.get_size()
 
@@ -71,5 +75,38 @@ def test_canvas():
     assert x11.start_event_loop() is None
 
 
+def test_draw_methods():
+
+    class DrawMethodsCanvas(x11.Canvas):
+        def __init__(self, *args, **kwargs):
+            super().__init__(*args, **kwargs)
+
+            self.c = 0
+
+        def on_button_pressed(self, button, state, x, y):
+            if button == 1:
+                self.destroy()
+
+        def draw_rect(ctx, width, height):
+            ctx.set_source_rgb(*[r() for _ in range(3)])
+            ctx.rectangle(0, 0, width, height)
+            ctx.fill()
+
+        def on_draw(self, ctx):
+            if self.c > 2:
+                self.dispose()
+                return
+
+            for i in range(4):
+                ctx.draw_rect(self.width >> i, self.height >> i)
+
+            self.c += 1
+
+    canvas = DrawMethodsCanvas(40, 40, 128, 128, interval = 1000)
+    canvas.show()
+    x11.start_event_loop()
+
+
 if __name__ == "__main__":
     test_canvas()
+    test_draw_methods()
