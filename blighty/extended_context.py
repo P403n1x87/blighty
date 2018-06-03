@@ -22,27 +22,16 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 
-# XWayland fix
-import os
-os.environ["GDK_BACKEND"] = "x11"
 
-from blighty.extended_context import ExtendedContext
+class ExtendedContext():
+    def __init__(self, ctx, canvas):
+        self._ctx = ctx
+        self.canvas = canvas
 
-class CanvasType(type):
-    NORMAL = 0         # _NET_WM_WINDOW_TYPE_NORMAL
-    DESKTOP = 1        # _NET_WM_WINDOW_TYPE_DESKTOP
-    DOCK = 2           # _NET_WM_WINDOW_TYPE_DOCK
-    UNDECORATED = 3    # _NET_WM_WINDOW_TYPE_TOOLBAR
+        for m in [dm for dm in dir(canvas) if callable(getattr(canvas, dm)) and dm[:5] == "draw_"]:
+            setattr(self, m, getattr(type(canvas), m).__get__(self, ExtendedContext))
+            delattr(type(canvas), m)
 
-
-class CanvasGravity(type):
-    NORTH_WEST = 1
-    NORTH = 2
-    NORTH_EAST = 3
-    WEST = 4
-    CENTER = 5
-    EAST = 6
-    SOUTH_WEST = 7
-    SOUTH = 8
-    SOUTH_EAST = 9
-    STATIC = 10
+    def __getattr__(self, name):
+        """Access the underling context methods."""
+        return getattr(self._ctx, name)
