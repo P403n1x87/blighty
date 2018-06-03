@@ -113,7 +113,10 @@ BaseCanvas__ui_thread(BaseCanvas * self) {
     gstate = PyGILState_Ensure();
 
     if (Atelier_is_running() > 0 && self->_expiry <= gettime()) {
+      self->_drawing = 1;
       BaseCanvas__on_draw(self, args_tuple);
+      self->_drawing = 0;
+
       // Only clear the window when we are sure we are ready to paint.
       // XClearWindow(self->display, self->win_id);
       // cairo_paint(self->context);
@@ -262,6 +265,7 @@ BaseCanvas_new(PyTypeObject *type, PyObject *args, PyObject *kwargs) {
     self->_running = 0;
     self->_dispose = 0;
     self->_destroy = 0;
+    self->_drawing = 0;
 
     // Register the BaseCanvas with the Atelier
     Atelier_add_canvas(self);

@@ -70,9 +70,14 @@ Atelier_remove_canvas(BaseCanvas * canvas) {
  ** EVENT LOOP
  ******************************************************************************/
 
-static const struct timespec POLL_SLEEP = {0, 1e6};
-
 static int main_loop_running = 0;
+
+static void
+thread_sleep(useconds_t usecs) {
+  Py_BEGIN_ALLOW_THREADS
+  usleep(usecs);
+  Py_END_ALLOW_THREADS
+}
 
 static void
 dispatch_event(BaseCanvas * canvas) {
@@ -124,6 +129,8 @@ dispatch_event(BaseCanvas * canvas) {
 
   case Expose:
     if (e.xexpose.count == 0) {
+      while (canvas->_drawing != 0)
+        thread_sleep(500);
       BaseCanvas__redraw(canvas);
     }
     return;
@@ -151,9 +158,7 @@ Atelier_start_event_loop(PyObject * args, PyObject * kwargs) {
         break;
       }
 
-      Py_BEGIN_ALLOW_THREADS
-      nanosleep(&POLL_SLEEP, NULL);
-      Py_END_ALLOW_THREADS
+      thread_sleep(1000);
     }
   }
 

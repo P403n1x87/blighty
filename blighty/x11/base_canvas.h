@@ -60,6 +60,7 @@ typedef struct {
   int               _dispose;
   int               _destroy;
   long              _expiry;
+  int               _drawing;
 } BaseCanvas;
 
 void BaseCanvas__redraw(BaseCanvas * self);
