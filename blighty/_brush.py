@@ -22,21 +22,26 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 
-from cairo import Context
-from blighty import ExtendedContext
-from blighty._x11 import BaseCanvas
+
+def not_callable_from_instance(*args, **kwargs):
+    raise RuntimeError("This method cannot be called on instances of type {}".format(type(self).__name__))
 
 
-class Canvas(BaseCanvas):
-    def __init__(self, *args, **kwargs):
-        self._extended_context = None
+class BrushSets:
+    brush_sets = {}
 
-    def _on_draw(self, ctx):
-        # Enrich the cairo context with the draw_methods and the canvas
-        if self._extended_context is None:
-            self._extended_context = ExtendedContext(ctx, self)
+    @staticmethod
+    def add_brush(brush_set, method_name, method):
+        if brush_set not in BrushSets.brush_sets:
+            BrushSets.brush_sets[brush_set] = {}
 
-        self.on_draw(self._extended_context)
+        BrushSets.brush_sets[brush_set][method_name] = method
 
-    def on_draw(self, ctx):
-        raise NotImplementedError("on_draw method not implemented in subclass.")
+    @staticmethod
+    def get_brush_set(brush_set):
+        return BrushSets.brush_sets.get(brush_set, {})
+
+
+def brush(f):
+    BrushSets.add_brush(*f.__qualname__.rsplit('.', 1), f)
+    return not_callable_from_instance

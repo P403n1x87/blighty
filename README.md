@@ -45,7 +45,7 @@ This package makes it easy to create transparent windows that you can draw on
 with `cairo`. It takes all the boilerplate code away from you so that you can
 just focus on the artwork, pretty much as with conky.
 
-### Creating X11 Canvases
+### X11 Canvases
 
 This is the closest to conky that you can get for the moment, and the
 recommended way of using blighty. Use the following approach to create a window
@@ -78,7 +78,7 @@ canvas can be handled. You can capture key and button presses by implementing
 the `on_key_pressed(self, keysym, state)` and `on_button_pressed(self, button,
 state, x, y)` method in your subclass of `Canvas`.
 
-### Creating GTK Canvases
+### GTK Canvases
 
 To create GTK-based canvases you can use the `blighty.gtk.Canvas` class, which
 is just a subclass of `Gtk.Window`.
@@ -106,6 +106,175 @@ if __name__ == "__main__":
 
 Animations can be controlled via the `Canvas.interval` attribute. This is the
 time in milliseconds that elapses between consecutive redraws of the Canvas.
+
+### Brushes
+
+_Since version 1.1.0_.
+
+Consider the following simple example of a clock widget.
+
+~~~ python
+from blighty import CanvasGravity
+from blighty.x11 import Canvas, start_event_loop
+
+import datetime
+
+from math import pi as PI
+
+
+class Clock(Canvas):
+    def on_button_pressed(self, button, state, x, y):
+        self.dispose()
+
+    def hand(self, ctx, angle, length, thickness):
+        ctx.save()
+        ctx.set_source_rgba(1, 1, 1, 1)
+        ctx.set_line_width(thickness)
+        ctx.rotate(angle)
+        ctx.move_to(0, length * .2)
+        ctx.line_to(0, -length)
+        ctx.stroke()
+        ctx.restore()
+
+    def on_draw(self, ctx):
+        now = datetime.datetime.now()
+
+        ctx.translate(self.width >> 1, self.height >> 1)
+
+        self.hand(ctx,
+            angle = now.second / 30 * PI,
+            length = (self.height >> 1) * .9,
+            thickness = 1
+        )
+
+        mins = now.minute + now.second / 60
+        self.hand(ctx,
+            angle = mins / 30 * PI,
+            length = (self.height >> 1) * .8,
+            thickness = 3
+        )
+
+        hours = (now.hour % 12) + mins / 60
+        self.hand(ctx,
+            angle = hours / 6 * PI,
+            length = (self.height >> 1) * .5,
+            thickness = 6
+        )
+~~~
+
+It is clear that the `hand` method would be more appropriate for the instance of the cairo Context `ctx`. The coding would be simpler if we could call it as `ctx.hand`. _Brushes_ allow you to re-bind methods from the `Canvas` subclass to the cairo context. Import the `brush` decorator from `blighty` with
+
+~~~ python
+from blighty import brush
+~~~
+
+and the use it to decorate the `hand` method. The `self` argument is no longer necessary, since it will be replaced by the cairo context instance. So the above code becomes
+
+~~~ python
+from blighty import CanvasGravity, brush
+from blighty.x11 import Canvas, start_event_loop
+
+import datetime
+
+from math import pi as PI
+
+
+class Clock(Canvas):
+    def on_button_pressed(self, button, state, x, y):
+        self.dispose()
+
+    @brush
+    def hand(ctx, angle, length, thickness):
+        ctx.save()
+        ctx.set_source_rgba(1, 1, 1, 1)
+        ctx.set_line_width(thickness)
+        ctx.rotate(angle)
+        ctx.move_to(0, length * .2)
+        ctx.line_to(0, -length)
+        ctx.stroke()
+        ctx.restore()
+
+    def on_draw(self, ctx):
+        now = datetime.datetime.now()
+
+        ctx.translate(self.width >> 1, self.height >> 1)
+
+        ctx.hand(
+            angle = now.second / 30 * PI,
+            length = (self.height >> 1) * .9,
+            thickness = 1
+        )
+
+        mins = now.minute + now.second / 60
+        ctx.hand(
+            angle = mins / 30 * PI,
+            length = (self.height >> 1) * .8,
+            thickness = 3
+        )
+
+        hours = (now.hour % 12) + mins / 60
+        ctx.hand(
+            angle = hours / 6 * PI,
+            length = (self.height >> 1) * .5,
+            thickness = 6
+        )
+~~~
+
+By default, methods of subclasses of `Canvas` that begin with `draw_` are re-bound to the cairo context in the `on_draw` method. So the same as the above code could be achieved without the use of the `brush` decorator with
+
+~~~ python
+from blighty import CanvasGravity
+from blighty.x11 import Canvas, start_event_loop
+
+import datetime
+
+from math import pi as PI
+
+
+class Clock(Canvas):
+    def on_button_pressed(self, button, state, x, y):
+        self.dispose()
+
+    def draw_hand(ctx, angle, length, thickness):
+        ctx.save()
+        ctx.set_source_rgba(1, 1, 1, 1)
+        ctx.set_line_width(thickness)
+        ctx.rotate(angle)
+        ctx.move_to(0, length * .2)
+        ctx.line_to(0, -length)
+        ctx.stroke()
+        ctx.restore()
+
+    def on_draw(self, ctx):
+        now = datetime.datetime.now()
+
+        ctx.translate(self.width >> 1, self.height >> 1)
+
+        ctx.draw_hand(
+            angle = now.second / 30 * PI,
+            length = (self.height >> 1) * .9,
+            thickness = 1
+        )
+
+        mins = now.minute + now.second / 60
+        ctx.draw_hand(
+            angle = mins / 30 * PI,
+            length = (self.height >> 1) * .8,
+            thickness = 3
+        )
+
+        hours = (now.hour % 12) + mins / 60
+        ctx.draw_hand(
+            angle = hours / 6 * PI,
+            length = (self.height >> 1) * .5,
+            thickness = 6
+        )
+~~~
+
+_Brushes_ are implemented via the class `ExtendedContext`, which is just a wrapper around `cairo.Context`. The argument passed to the `on_draw` callback is hence an instance of this class. For convenience, it exposes the containing canvas instance via the `canvas` attribute so that it doesn't need to be passed to the brush method when you need to access some of the canvas attributes (e.g. its size) or methods.
+
+_Brushes_ are currently available for X11 canvases only.
+
 
 ## License
 

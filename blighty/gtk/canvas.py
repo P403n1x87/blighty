@@ -123,7 +123,7 @@ class Canvas(Gtk.Window):
         sleep(self.interval / 1000.)
 
     def on_draw(self, widget, cr):
-        raise NotImplementedError("Subclasses of blighty.gtk.Canvas must implement the on_draw method.")
+        raise NotImplementedError("on_draw method not implemented in subclass.")
 
     def request_redraw(self):
         self.queue_draw()

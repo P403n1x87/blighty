@@ -22,6 +22,8 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 
+from . _brush import BrushSets, not_callable_from_instance
+
 
 class ExtendedContext():
     def __init__(self, ctx, canvas):
@@ -30,7 +32,12 @@ class ExtendedContext():
 
         for m in [dm for dm in dir(canvas) if callable(getattr(canvas, dm)) and dm[:5] == "draw_"]:
             setattr(self, m, getattr(type(canvas), m).__get__(self, ExtendedContext))
-            delattr(type(canvas), m)
+            setattr(type(canvas), m, not_callable_from_instance)
+
+        for n, m in BrushSets.get_brush_set(type(canvas).__qualname__).items():
+            if n in dir(ctx):
+                raise RuntimeError("Brush name '{}' clashes with attribute or method in {}".format(n, type(ctx).__qualname__))
+            setattr(self, n, m.__get__(self, ExtendedContext))
 
     def __getattr__(self, name):
         """Access the underling context methods."""

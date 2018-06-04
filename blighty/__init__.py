@@ -26,7 +26,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import os
 os.environ["GDK_BACKEND"] = "x11"
 
-from blighty.extended_context import ExtendedContext
+from . _extended_context import ExtendedContext
+
+from . _brush import brush
+
 
 class CanvasType(type):
     NORMAL = 0         # _NET_WM_WINDOW_TYPE_NORMAL

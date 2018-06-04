@@ -22,7 +22,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 
-from blighty import CanvasGravity
+from blighty import CanvasGravity, brush
 from blighty.x11 import Canvas, start_event_loop
 
 import datetime
@@ -34,7 +34,7 @@ class Clock(Canvas):
     def on_button_pressed(self, button, state, x, y):
         self.dispose()
 
-    @staticmethod
+    @brush
     def hand(ctx, angle, length, thickness):
         ctx.save()
         ctx.set_source_rgba(1, 1, 1, 1)
@@ -50,22 +50,25 @@ class Clock(Canvas):
 
         ctx.translate(self.width >> 1, self.height >> 1)
 
-        Clock.hand(ctx,
-                   angle = now.second / 30 * PI,
-                   length = (self.height >> 1) * .9,
-                   thickness = 1)
+        ctx.hand(
+            angle = now.second / 30 * PI,
+            length = (self.height >> 1) * .9,
+            thickness = 1
+        )
 
         mins = now.minute + now.second / 60
-        Clock.hand(ctx,
-                   angle = mins / 30 * PI,
-                   length = (self.height >> 1) * .8,
-                   thickness = 3)
+        ctx.hand(
+            angle = mins / 30 * PI,
+            length = (self.height >> 1) * .8,
+            thickness = 3
+        )
 
         hours = (now.hour % 12) + mins / 60
-        Clock.hand(ctx,
-                   angle = hours / 6 * PI,
-                   length = (self.height >> 1) * .5,
-                   thickness = 6)
+        ctx.hand(
+            angle = hours / 6 * PI,
+            length = (self.height >> 1) * .5,
+            thickness = 6
+        )
 
 
 if __name__ == "__main__":
