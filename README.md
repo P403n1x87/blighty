@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/P403n1x87/blighty.svg?branch=master)](https://travis-ci.org/P403n1x87/blighty)
+
 # blighty
 
 ## Synopsis
