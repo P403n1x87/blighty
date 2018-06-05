@@ -1,15 +1,15 @@
 language: python
-python:
-  - "3.5"
-  - "3.6"
-  - "3.7-dev"
+python: 3.4
+
+virtualenv:
+  system_site_packages: true
 
 before_install:
   - sudo apt-get update
-  - sudo apt-get install -y xorg libcairo2-dev python3-gi gir1.2-gtk-3.0 gir1.2-glib-2.0
+  - sudo apt-get install -y xorg libcairo2-dev python-gi python3-gi python3-gi-cairo gir1.2-gtk-3.0 gir1.2-glib-2.0
 
 install:
   - pip3 install ".[test]"
 
 script:
-  - xvfb-run pytest
+  - xvfb-run py.test
