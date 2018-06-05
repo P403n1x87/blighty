@@ -28,9 +28,10 @@ from setuptools import find_packages, setup, Extension
 
 
 x11 = Extension('blighty._x11',
-    include_dirs = ['/usr/include/cairo/'],
-    libraries    = ['cairo', 'X11'],
-    sources      = [
+    include_dirs       = ['/usr/include/cairo/'],
+    libraries          = ['cairo', 'X11'],
+    extra_compile_args = ['-std=c99'],
+    sources            = [
         'blighty/x11/_x11module.c',
         'blighty/x11/base_canvas.c',
         'blighty/x11/atelier.c',
