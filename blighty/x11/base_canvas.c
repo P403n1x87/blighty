@@ -37,7 +37,7 @@ static const char * WINDOW_TYPE_MAP[] = {
 };
 
 
-static time_t gettime() {
+static time_t gettime(void) {
   struct timespec ts;
   clock_gettime(CLOCK_BOOTTIME, &ts);
   return ts.tv_sec * 1000 + ts.tv_nsec / 1e6;
