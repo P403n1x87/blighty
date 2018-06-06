@@ -24,7 +24,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
 def not_callable_from_instance(*args, **kwargs):
-    raise RuntimeError("This method cannot be called on instances of type {}".format(type(self).__name__))
+    raise RuntimeError(
+        "This method cannot be called on instances of type {}".format(
+            type(args[0]).__name__
+        )
+    )
 
 
 class BrushSets:
@@ -43,5 +47,5 @@ class BrushSets:
 
 
 def brush(f):
-    BrushSets.add_brush(*f.__qualname__.rsplit('.', 1), f)
+    BrushSets.add_brush(*f.__qualname__.rsplit('.', 1), method = f)
     return not_callable_from_instance
