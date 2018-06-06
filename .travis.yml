@@ -12,4 +12,4 @@ install:
   - pip3 install ".[test]"
 
 script:
-  - xvfb-run py.test
+  - py.test

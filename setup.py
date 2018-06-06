@@ -65,7 +65,7 @@ setup(
     ext_modules      = [x11],
     install_requires = ['pycairo'],
     extras_require   = {
-        'test': ['numpy', 'matplotlib', 'psutil'],
+        'test': ['pytest-xvfb', 'numpy', 'matplotlib', 'psutil'],
     },
     project_urls     = {
         'Bug Reports' : 'https://github.com/pypa/blighty/issues',
