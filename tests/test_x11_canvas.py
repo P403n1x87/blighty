@@ -81,7 +81,7 @@ def test_draw_methods():
         def __init__(self, *args, **kwargs):
             super().__init__(*args, **kwargs)
 
-            self.c = False
+            self.c = 0
 
         def on_button_pressed(self, button, state, x, y):
             if button == 1:
@@ -93,16 +93,16 @@ def test_draw_methods():
             ctx.fill()
 
         def on_draw(self, ctx):
-            if self.c:
+            if self.c > 2:
                 self.dispose()
                 return
 
             for i in range(4):
                 ctx.draw_rect(self.width >> i, self.height >> i)
 
-            self.c = True
+            self.c += 1
 
-    canvas = DrawMethodsCanvas(40, 40, 128, 128, interval = 3000)
+    canvas = DrawMethodsCanvas(40, 40, 128, 128, interval = 1500)
     canvas.show()
     x11.start_event_loop()
 

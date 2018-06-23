@@ -57,8 +57,6 @@ typedef struct {
 
   // Internal attributes
   int               _running;
-  int               _dispose;
-  int               _destroy;
   long              _expiry;
   int               _drawing;
 } BaseCanvas;

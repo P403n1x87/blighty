@@ -29,6 +29,12 @@
 #include "pycairo.h"
 #include "pythread.h"
 
+
+//
+// CONSTANTS
+//
+#define UI_INTERVAL 1000  // 1 ms
+
 static const char * WINDOW_TYPE_MAP[] = {
   "_NET_WM_WINDOW_TYPE_NORMAL",
   "_NET_WM_WINDOW_TYPE_DESKTOP",
@@ -37,19 +43,33 @@ static const char * WINDOW_TYPE_MAP[] = {
 };
 
 
-static time_t gettime(void) {
+//
+// PRIVATE GLOBAL STATE
+//
+static Display              * display = NULL;
+static int                    screen;
+static XVisualInfo            visualinfo;
+static XSetWindowAttributes   attr;
+
+
+//
+// LOCAL HELPERS
+//
+static time_t
+gettime(void) {
   struct timespec ts;
   clock_gettime(CLOCK_BOOTTIME, &ts);
   return ts.tv_sec * 1000 + ts.tv_nsec / 1e6;
 }
 
 
-static void BaseCanvas__change_property(BaseCanvas * self, const char * property_name, const char * property_value, int mode) {
-  Atom value = XInternAtom(self->display, property_value, False);
+static void
+BaseCanvas__change_property(BaseCanvas * self, const char * property_name, const char * property_value, int mode) {
+  Atom value = XInternAtom(display, property_value, False);
   XChangeProperty(
-    self->display,
+    display,
     self->win_id,
-    XInternAtom(self->display, property_name, False),
+    XInternAtom(display, property_name, False),
     XA_ATOM,
     32,
     mode,
@@ -65,6 +85,7 @@ BaseCanvas__redraw(BaseCanvas * self) {
   cairo_set_operator(self->context, CAIRO_OPERATOR_SOURCE);
   cairo_paint(self->context);
   cairo_restore(self->context);
+  XFlush(display);
 }
 
 
@@ -103,13 +124,8 @@ BaseCanvas__ui_thread(BaseCanvas * self) {
   self->_expiry = gettime();
 
   while (self->_running) {
-    if (self->_dispose != 0) {
-      self->_destroy = 1;
-      break;
-    }
-
     PyGILState_Release(gstate);
-    usleep(1000); // Sleep 1 ms
+    usleep(self->interval > 100 ? 100 * UI_INTERVAL : UI_INTERVAL); // Sleep 1 ms
     gstate = PyGILState_Ensure();
 
     if (Atelier_is_running() > 0 && self->_expiry <= gettime()) {
@@ -118,13 +134,13 @@ BaseCanvas__ui_thread(BaseCanvas * self) {
       self->_drawing = 0;
 
       // Only clear the window when we are sure we are ready to paint.
-      // XClearWindow(self->display, self->win_id);
+      // XClearWindow(display, self->win_id);
       // cairo_paint(self->context);
       BaseCanvas__redraw(self);
 
       if (PyErr_Occurred() != NULL) {
         PyErr_Print();
-        self->_destroy = 1;
+        BaseCanvas_dispose(self);
         break;
       }
       self->_expiry += self->interval;
@@ -141,12 +157,12 @@ static void
 BaseCanvas__transform_coordinates(BaseCanvas * self, int * x, int * y) {
   // TODO: Extend with Xinerama support
   if ((self->gravity - 1) % 3 == 0) *x = self->x;
-  else if ((self->gravity - 2) % 3 == 0) *x = ((XDisplayWidth(self->display, self->screen) - self->width) >> 1) + self->x;
-  else *x = XDisplayWidth(self->display, self->screen) - self->width - self->x;
+  else if ((self->gravity - 2) % 3 == 0) *x = ((XDisplayWidth(display, screen) - self->width) >> 1) + self->x;
+  else *x = XDisplayWidth(display, screen) - self->width - self->x;
 
   if (self->gravity <= 3) *y = self->y;
-  else if (self->gravity <= 6) *y = ((XDisplayHeight(self->display, self->screen) - self->height) >> 1) + self->y;
-  else *y = XDisplayHeight(self->display, self->screen) - self->height - self->y;
+  else if (self->gravity <= 6) *y = ((XDisplayHeight(display, screen) - self->height) >> 1) + self->y;
+  else *y = XDisplayHeight(display, screen) - self->height - self->y;
 }
 
 
@@ -205,27 +221,24 @@ BaseCanvas_new(PyTypeObject *type, PyObject *args, PyObject *kwargs) {
        )
     ) return NULL;
 
-    if ((self->display = XOpenDisplay(NULL)) == NULL) return NULL;
+    if (display == NULL) {
+      if ((display = XOpenDisplay(NULL)) == NULL) return NULL;
+      Atelier_set_display(display);
+      screen = DefaultScreen(display);
 
-    self->screen = DefaultScreen(self->display);
-
-    // Query Visual for "TrueColor" and 32 bits depth (RGBA)
-    XVisualInfo visualinfo;
-    XMatchVisualInfo(self->display, self->screen, 32, TrueColor, &visualinfo);
-
-    // Create the Window
-    XSetWindowAttributes attr;
-    attr.colormap = XCreateColormap(self->display, DefaultRootWindow(self->display), visualinfo.visual, AllocNone);
-    attr.border_pixel = 0;
-    attr.background_pixel = 0;
-    attr.win_gravity = self->gravity;
+      // Query Visual for "TrueColor" and 32 bits depth (RGBA)
+      XMatchVisualInfo(display, screen, 32, TrueColor, &visualinfo);
+      attr.colormap = XCreateColormap(display, DefaultRootWindow(display), visualinfo.visual, AllocNone);
+      attr.border_pixel = 0;
+      attr.background_pixel = 0;
+    }
 
     int x, y;
     BaseCanvas__transform_coordinates(self, &x, &y);
 
     self->win_id = XCreateWindow(
-      self->display,
-      DefaultRootWindow(self->display),
+      display,
+      DefaultRootWindow(display),
       x,
       y,
       self->width,
@@ -245,15 +258,15 @@ BaseCanvas_new(PyTypeObject *type, PyObject *args, PyObject *kwargs) {
     if (skip_taskbar != 0) BaseCanvas__change_property(self, "_NET_WM_STATE", "_NET_WM_STATE_SKIP_TASKBAR" , PropModeAppend);
     if (skip_pager   != 0) BaseCanvas__change_property(self, "_NET_WM_STATE", "_NET_WM_STATE_SKIP_PAGER"   , PropModeAppend);
 
-    XCreateGC(self->display, self->win_id, 0, 0);
+    XCreateGC(display, self->win_id, 0, 0);
 
     // Handle Delete Event
-    self->wm_delete_window = XInternAtom(self->display, "WM_DELETE_WINDOW", False);
-    XSetWMProtocols(self->display, self->win_id, (Atom *) &(self->wm_delete_window), 1);
+    self->wm_delete_window = XInternAtom(display, "WM_DELETE_WINDOW", False);
+    XSetWMProtocols(display, self->win_id, (Atom *) &(self->wm_delete_window), 1);
 
     // Create the Cairo Context
     self->surface = cairo_xlib_surface_create(
-      self->display,
+      display,
       self->win_id,
       visualinfo.visual,
       self->width,
@@ -263,8 +276,6 @@ BaseCanvas_new(PyTypeObject *type, PyObject *args, PyObject *kwargs) {
     self->context = cairo_create(self->surface);
 
     self->_running = 0;
-    self->_dispose = 0;
-    self->_destroy = 0;
     self->_drawing = 0;
 
     // Register the BaseCanvas with the Atelier
@@ -303,7 +314,7 @@ BaseCanvas_move(BaseCanvas * self, PyObject * args, PyObject * kwargs) {
   self->y = new_y;
   BaseCanvas__transform_coordinates(self, &x, &y);
 
-  XMoveWindow(self->display, self->win_id, x, y);
+  XMoveWindow(display, self->win_id, x, y);
 
   Py_INCREF(Py_None); return Py_None;
 }
@@ -317,12 +328,12 @@ BaseCanvas_move(BaseCanvas * self, PyObject * args, PyObject * kwargs) {
 static PyObject *
 BaseCanvas_show(BaseCanvas* self) {
   // Input events
-  XSelectInput(self->display, self->win_id,
+  XSelectInput(display, self->win_id,
     ButtonPressMask
   | KeyPressMask
   | ExposureMask
   );
-  XMapWindow(self->display, self->win_id);
+  XMapWindow(display, self->win_id);
 
   self->_running = 1;
 
@@ -358,8 +369,16 @@ BaseCanvas_get_size(BaseCanvas * self) {
 //
 static PyObject *
 BaseCanvas_dispose(BaseCanvas * self) {
-  self->_dispose = 1;
-  XUnmapWindow(self->display, self->win_id);
+  XUnmapWindow(display, self->win_id);
+
+  XEvent event;
+  event.type = ClientMessage;
+  event.xany.window = self->win_id;
+	event.xclient.format = 32;
+  event.xclient.data.l[0] = self->wm_delete_window;
+  XSendEvent(display, self->win_id, True, 0, &event);
+  // Send the event immediately
+  XFlush(display);
 
   Py_INCREF(Py_None); return Py_None;
 }
@@ -370,15 +389,19 @@ BaseCanvas_dispose(BaseCanvas * self) {
 //      """Destroy the canvas.
 //      WARNING: Not thread-safe. Use `dispose` instead.
 //      """
+//
 static PyObject *
 BaseCanvas_destroy(BaseCanvas * self) {
   self->_running = 0;
   cairo_destroy(self->context);
   cairo_surface_destroy(self->surface);
-  XCloseDisplay(self->display);
 
   // De-register BaseCanvas from Atelier;
-  Atelier_remove_canvas(self);
+  if (Atelier_remove_canvas(self) == 0) {
+    XCloseDisplay(display);
+    display = NULL;
+    Atelier_set_display(NULL);
+  }
 
   Py_INCREF(Py_None); return Py_None;
 }
