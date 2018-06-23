@@ -107,6 +107,41 @@ def test_draw_methods():
     x11.start_event_loop()
 
 
+def test_draw_once():
+
+    class DrawMethodsCanvas(x11.Canvas):
+        def __init__(self, *args, **kwargs):
+            super().__init__(*args, **kwargs)
+
+            self.c = 0
+
+        def on_button_pressed(self, button, state, x, y):
+            if button == 1:
+                self.destroy()
+
+        def draw_rect(ctx, width, height):
+            ctx.set_source_rgb(*[r() for _ in range(3)])
+            ctx.rectangle(0, 0, width, height)
+            ctx.fill()
+
+        def on_draw(self, ctx):
+            if self.c > 2:
+                self.dispose()
+                return
+
+            self.c += 1
+
+            if self.c > 1:
+                return False
+
+            for i in range(4):
+                ctx.draw_rect(self.width >> i, self.height >> i)
+
+    canvas = DrawMethodsCanvas(40, 40, 128, 128, interval = 1500)
+    canvas.show()
+    x11.start_event_loop()
+
+
 if __name__ == "__main__":
     test_canvas()
     test_draw_methods()

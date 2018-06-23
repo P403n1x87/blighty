@@ -36,7 +36,7 @@ class Canvas(BaseCanvas):
         if self._extended_context is None:
             self._extended_context = ExtendedContext(ctx, self)
 
-        self.on_draw(self._extended_context)
+        return self.on_draw(self._extended_context)
 
     def on_draw(self, ctx):
         raise NotImplementedError("on_draw method not implemented in subclass.")

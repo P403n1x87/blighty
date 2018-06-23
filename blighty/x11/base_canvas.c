@@ -108,8 +108,10 @@ BaseCanvas__on_draw(BaseCanvas * self, PyObject * args) {
     // them together and we send a single draw request
     cairo_push_group(self->context);
     // Call user declaration of the 'on_draw' method
-    PyObject_CallObject(cb, args);
-    cairo_pop_group_to_source(self->context);
+    if (PyObject_CallObject(cb, args) != Py_None)
+      cairo_pop_group(self->context);
+    else
+      cairo_pop_group_to_source(self->context);
   }
 }
 
@@ -125,7 +127,7 @@ BaseCanvas__ui_thread(BaseCanvas * self) {
 
   while (self->_running) {
     PyGILState_Release(gstate);
-    usleep(self->interval > 100 ? 100 * UI_INTERVAL : UI_INTERVAL); // Sleep 1 ms
+    usleep(self->interval > 100 ? 100 * UI_INTERVAL : UI_INTERVAL);
     gstate = PyGILState_Ensure();
 
     if (Atelier_is_running() > 0 && self->_expiry <= gettime()) {
@@ -134,8 +136,6 @@ BaseCanvas__ui_thread(BaseCanvas * self) {
       self->_drawing = 0;
 
       // Only clear the window when we are sure we are ready to paint.
-      // XClearWindow(display, self->win_id);
-      // cairo_paint(self->context);
       BaseCanvas__redraw(self);
 
       if (PyErr_Occurred() != NULL) {
