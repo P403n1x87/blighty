@@ -49,3 +49,15 @@ class CanvasGravity(type):
     SOUTH = 8
     SOUTH_EAST = 9
     STATIC = 10
+
+
+class TextAlign(type):
+    TOP_RIGHT = 1
+    TOP_MIDDLE = 2
+    TOP_LEFT = 3
+    CENTER_RIGHT = 4
+    CENTER_MIDDLE = 5
+    CENTER_LEFT = 6
+    BOTTOM_RIGHT = 7
+    BOTTOM_MIDDLE = 8
+    BOTTOM_LEFT = 9

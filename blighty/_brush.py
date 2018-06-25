@@ -33,6 +33,7 @@ def not_callable_from_instance(*args, **kwargs):
 
 class BrushSets:
     brush_sets = {}
+    inherited = {}
 
     @staticmethod
     def add_brush(brush_set, method_name, method):
@@ -45,6 +46,22 @@ class BrushSets:
     def get_brush_set(brush_set):
         return BrushSets.brush_sets.get(brush_set, {})
 
+    @staticmethod
+    def inherit(klass):
+        if klass.__qualname__ in BrushSets.inherited:
+            return
+
+        for e in klass.__bases__:
+            try:
+                BrushSets.inherit(e)
+                if klass.__qualname__ not in BrushSets.brush_sets:
+                    BrushSets.brush_sets[klass.__qualname__] = {}
+                BrushSets.brush_sets[klass.__qualname__].update(BrushSets.brush_sets[e.__qualname__])
+            except KeyError:
+                # No brushes registered for the superclass so we can skip it
+                pass
+
+        BrushSets.inherited[klass.__qualname__] = True
 
 def brush(f):
     BrushSets.add_brush(*f.__qualname__.rsplit('.', 1), method = f)

@@ -63,6 +63,60 @@ def test_brush():
     x11.start_event_loop()
 
 
+def test_grid():
+
+    class DrawMethodsCanvas(x11.Canvas):
+        def __init__(self, *args, **kwargs):
+            super().__init__(*args, **kwargs)
+
+            self.c = False
+
+        def on_button_pressed(self, button, state, x, y):
+            if button == 1:
+                self.destroy()
+
+        def on_draw(self, ctx):
+            if self.c:
+                self.dispose()
+                return
+
+            ctx.draw_grid()
+
+            self.c = True
+
+    canvas = DrawMethodsCanvas(40, 40, 512, 512, interval = 3000)
+    canvas.show()
+    x11.start_event_loop()
+
+
+def test_text():
+
+    from blighty.x11 import Canvas
+
+    class DrawMethodsCanvas(Canvas):
+        def __init__(self, *args, **kwargs):
+            super().__init__(*args, **kwargs)
+
+            self.c = False
+
+        def on_button_pressed(self, button, state, x, y):
+            if button == 1:
+                self.destroy()
+
+        def on_draw(self, ctx):
+            if self.c:
+                self.dispose()
+                return
+
+            for i in range(1, 10):
+                ctx.write_text(self.width >> 1, self.height >> 1, str(i), align = i)
+
+            self.c = True
+
+    canvas = DrawMethodsCanvas(40, 40, 128, 128, interval = 3000)
+    canvas.show()
+    x11.start_event_loop()
+
 # def test_invalid_brush():
 #
 #     class DrawMethodsCanvas(x11.Canvas):
