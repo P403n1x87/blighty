@@ -13,3 +13,11 @@ install:
 
 script:
   - py.test
+
+deploy:
+  provider: pypi
+  user: P403n1x87
+  password: $PYPI_PASSWORD
+  distributions: "sdist bdist_wheel"
+  on:
+    tags: true
