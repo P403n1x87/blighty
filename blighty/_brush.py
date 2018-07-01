@@ -22,6 +22,8 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 
+from functools import wraps
+
 
 def not_callable_from_instance(*args, **kwargs):
     raise RuntimeError(
@@ -63,6 +65,38 @@ class BrushSets:
 
         BrushSets.inherited[klass.__qualname__] = True
 
+
 def brush(f):
+    """Brush decorator.
+
+    Used to mark a bound method of a subclass of the `Canvas` class as a
+    _brush_. The method is then rebound to to the extended Cairo context that
+    is passed to the `on_draw` callback. The first argument should then be
+    called `ctx` or `cr` instead of `self`, but this is not enforced so that
+    any keyword can be chosen.
+
+    Example:
+        class BrushExample(blighty.x11.Canvas):
+            @brush
+            def brush_method(ctx, data):
+                ctx.save()
+                # Draw something on the Cairo context
+                ctx.restore()
+
+            def on_draw(self, ctx):
+                ctx.brush_method(42)
+
+    In the above example, the `brush_method` has been decorated with the
+    `brush` decorator. Therefore it will be callable as a method of `ctx`
+    rather than `self`. An attempt to call it from `self` will cause a
+    `RuntimeError` since the method is now bound to `ctx`.
+
+    The use of the `brush` decorator is not restricted to X11 canvases.
+    """
     BrushSets.add_brush(*f.__qualname__.rsplit('.', 1), method = f)
-    return not_callable_from_instance
+
+    @wraps(f)
+    def wrapper(*args, **kwargs):
+        return not_callable_from_instance(*args, **kwargs)
+
+    return wrapper

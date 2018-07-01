@@ -190,8 +190,8 @@ BaseCanvas_new(PyTypeObject *type, PyObject *args, PyObject *kwargs) {
   if (self != NULL) {
     char * keywords[] = {"x", "y", "width", "height",
      "interval",        // 1000
-     "window_type",     // BaseCanvasType.DESKTOP
-     "gravity",         // BaseCanvasGravity.NORTH_WEST
+     "window_type",     // CanvasType.DESKTOP
+     "gravity",         // CanvasGravity.NORTH_WEST
      "sticky",          // True
      "keep_below"       // True
      "skip_taskbar",    // True

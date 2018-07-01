@@ -26,6 +26,21 @@ from . _brush import BrushSets, not_callable_from_instance
 
 
 class ExtendedContext():
+    """Extension of the standard `cairo.Context` class.
+
+    This class is used to extend the vanilla `cairo.Context` with _brushes_.
+    These are either methods of a subclass of `Canvas` that are prefixed with
+    `draw_`, or those that are explicitly decorated with the `@brush`
+    decorator.
+
+    There shouldn't be any reasons why you'd want to use instantiate this class
+    directly. The `ctx` argument that is passed to the `Canvas` `on_draw`
+    callback is an instance of this class. This can be passed as an argument
+    to any callable object that expects a `cairo.Context` instance. The
+    underlying `Canvas` object can be accessed via the `canvas` attribute. This
+    can be useful if one needs to refer to the parent canvas geometry (e.g.
+    its size).
+    """
     def __init__(self, ctx, canvas):
         self._ctx = ctx
         self.canvas = canvas
