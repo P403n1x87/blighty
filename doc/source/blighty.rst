@@ -1,6 +1,13 @@
 blighty package
 ===============
 
+Module content
+--------------
+
+.. automodule:: blighty
+    :members:
+    :undoc-members:
+
 Subpackages
 -----------
 
@@ -8,11 +15,3 @@ Subpackages
 
     blighty.gtk
     blighty.x11
-
-Module contents
----------------
-
-.. automodule:: blighty
-    :members:
-    :undoc-members:
-    :show-inheritance:

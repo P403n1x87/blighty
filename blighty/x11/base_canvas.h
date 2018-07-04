@@ -78,19 +78,26 @@ static PyObject * BaseCanvas_destroy  (BaseCanvas *);
 
 static PyMethodDef BaseCanvas_methods[] = {
   {"move"     , (PyCFunction) BaseCanvas_move      , METH_VARARGS | METH_KEYWORDS,
-      "Move the window to new coordinates relative to the current gravity."
+      "Move the canvas to new coordinates.\n\n"
+
+      "The *x* and *y* coordinates are relative to the canvas gravity."
   },
   {"show"     , (PyCFunction) BaseCanvas_show      , METH_NOARGS,
       "Map the canvas to screen and set it ready for drawing."
   },
   {"get_size" , (PyCFunction) BaseCanvas_get_size  , METH_NOARGS,
-      "Get the canvas size."
+      "Get the canvas size.\n\n"
+
+      "Returns:\n"
+      "  tuple: the 2-tuple of width and height in pixels."
   },
   {"dispose"  , (PyCFunction) BaseCanvas_dispose   , METH_NOARGS,
       "Mark the canvas as ready to be destroyed to free up resources."
   },
   {"destroy"  , (PyCFunction) BaseCanvas_destroy   , METH_NOARGS,
-      "Destroy the canvas. This method is not thread-safe. Use the dispose method instead."
+      "Destroy the canvas.\n\n"
+
+      "This method is not thread-safe. Use the :func:`dispose` method instead."
   },
   {NULL}  /* Sentinel */
 };
@@ -98,11 +105,11 @@ static PyMethodDef BaseCanvas_methods[] = {
 
 // ---- ATTRIBUTES ----
 static PyMemberDef BaseCanvas_members[] = {
-  {"interval" , T_INT , offsetof(BaseCanvas, interval) , 0        , "refresh interval in milliseconds"},
-  {"x"        , T_INT , offsetof(BaseCanvas, x)        , READONLY , "The canvas x coordinate"},
-  {"y"        , T_INT , offsetof(BaseCanvas, y)        , READONLY , "The canvas y coordinate"},
-  {"width"    , T_INT , offsetof(BaseCanvas, width)    , READONLY , "The canvas width"},
-  {"height"   , T_INT , offsetof(BaseCanvas, height)   , READONLY , "The canvas height"},
+  {"interval" , T_INT , offsetof(BaseCanvas, interval) , 0        , "The refresh interval, in milliseconds."},
+  {"x"        , T_INT , offsetof(BaseCanvas, x)        , READONLY , "The canvas *x* coordinate. *Read-only*."},
+  {"y"        , T_INT , offsetof(BaseCanvas, y)        , READONLY , "The canvas *y* coordinate. *Read-only*."},
+  {"width"    , T_INT , offsetof(BaseCanvas, width)    , READONLY , "The canvas width. *Read-only*."},
+  {"height"   , T_INT , offsetof(BaseCanvas, height)   , READONLY , "The canvas height. *Read-only*."},
   {NULL}  /* Sentinel */
 };
 

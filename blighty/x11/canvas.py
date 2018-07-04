@@ -118,10 +118,11 @@ If you need to pass data to the canvas, you might want to do that before
 calling this method, since presumably the ``on_draw`` callback, which will
 start to be called, makes use of it.
 
-Finally, you can start the main event loop with ``start_event_loop`` in case
-that your canvases should handle input events, like mouse button clicks or
-key presses. Note however that execution in the current thread will halt at
-this call, until it returns after a call to ``stop_event_loop``.
+Finally, you must start the main event loop with ``start_event_loop`` to start
+drawing on the canvases, and in case that they should handle input events, like
+mouse button clicks or key presses. Note however that execution in the current
+thread will halt at this call, until it returns after a call to
+``stop_event_loop``.
 
 For more details on how to handle events with your X11 canvases, see the
 section `Event handling`_ below.
@@ -295,7 +296,7 @@ Module API
 """
 
 from blighty import ExtendedContext, TextAlign, brush
-from blighty._brush import BrushSets
+from blighty._brush import BrushSets, draw_grid, write_text
 from blighty._x11 import BaseCanvas
 
 
@@ -308,6 +309,7 @@ class Canvas(BaseCanvas):
     Redraws happen at regular intervals in time, as specified by the
     ``interval`` attribute (also passed as an argument via the constructor).
     """
+
     def __init__(self, *args, **kwargs):
         """Initialise the Canvas object.
 
@@ -335,9 +337,10 @@ class Canvas(BaseCanvas):
     def on_draw(self, ctx):
         """Draw callback.
 
-        Once the ``show`` method is called on a ``Canvas`` object, this method
-        gets called at regular intervals of time to perform the draw operation.
-        Every subclass of ``Canvas`` must implement this method.
+        Once the :func:`show` method is called on a :class:`Canvas` object,
+        this method gets called at regular intervals of time to perform the
+        draw operation. Every subclass of :class:`Canvas` must implement this
+        method.
         """
         raise NotImplementedError("on_draw method not implemented in subclass.")
 
@@ -351,26 +354,7 @@ class Canvas(BaseCanvas):
             x (int): The horizontal spacing between lines.
             y (int): The vertical spacing between lines.
         """
-        w, h = ctx.canvas.get_size()
-
-        ctx.save()
-
-        ctx.set_source_rgba(.8, .8, .8, .8)
-        ctx.set_line_width(1)
-        ctx.set_font_size(9)
-        for i in range(x, w, x):
-            ctx.write_text(i, 0, str(i), align = TextAlign.BOTTOM_MIDDLE)
-            ctx.move_to(i, 8)
-            ctx.line_to(i, h)
-            ctx.stroke()
-
-        for i in range(y, h, y):
-            ctx.write_text(0, i, str(i), align = TextAlign.CENTER_LEFT)
-            ctx.move_to(8, i)
-            ctx.line_to(w, i)
-            ctx.stroke()
-
-        ctx.restore()
+        draw_grid(ctx, x, y)
 
     @brush
     def write_text(cr, x, y, text, align = TextAlign.TOP_LEFT):
@@ -400,24 +384,4 @@ class Canvas(BaseCanvas):
             tuple: The same return value as ``cairo.text_extents``.
 
         """
-        ex = cr.text_extents(text)
-
-        if align <= TextAlign.TOP_LEFT:
-            dy = 0
-        elif align <= TextAlign.CENTER_LEFT:
-            dy = ex.height // 2
-        else:
-            dy = ex.height
-
-        if align % 3 == 1:
-            dx = ex.width
-        elif align % 3 == 2:
-            dx = ex.width // 2
-        else:
-            dx = 0
-
-        cr.move_to(x - dx, y + dy)
-        cr.show_text(text)
-        cr.stroke()
-
-        return ex
+        return write_text(cr, x, y, text, align)

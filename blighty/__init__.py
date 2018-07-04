@@ -21,14 +21,8 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 """
-The ``blighty`` project
-***********************
-
-
-Hello World
-===========
-
-Trying to use RST syntax in docstring.
+This module contains the common objects and types for the different kind of
+canvases provided by ``blighty``.
 """
 
 # XWayland fix
@@ -37,10 +31,24 @@ os.environ["GDK_BACKEND"] = "x11"
 
 from . _extended_context import ExtendedContext
 
-from . _brush import brush
+from . _brush import brush, TextAlign
 
 
 class CanvasType(type):
+    """The Canvas type.
+
+    The canvas types enumerated in this Python type reflect the same window
+    types that one can request to the window manager via the `Extended
+    Window Manager Hints <https://standards.freedesktop.org/wm-spec/wm-spec-1.3.html>`_.
+
+    - ``NORMAL`` is a normal top-level window.
+    - ``DESKTOP`` is a window drawn directly on the desktop.
+    - ``DOCK`` indicates a dock or panel window that will usually stay on top
+      of other windows.
+    - ``UNDECORATED`` is a type of window that behaves as a toolbar. As such,
+      it is undecorated.
+    """
+
     NORMAL = 0         # _NET_WM_WINDOW_TYPE_NORMAL
     DESKTOP = 1        # _NET_WM_WINDOW_TYPE_DESKTOP
     DOCK = 2           # _NET_WM_WINDOW_TYPE_DOCK
@@ -48,6 +56,15 @@ class CanvasType(type):
 
 
 class CanvasGravity(type):
+    """Window gravity control type.
+
+    The positioning of a canvas on the screen is controlled by its gravity.
+    By default, a window is positioned in a coordinate system where the origin
+    is located in the top-left corner of the screen, with the *x* axis running
+    horizontally from left to right, and the *y* from top to bottom. To change
+    the location of the origin, use one of the following values.
+    """
+
     NORTH_WEST = 1
     NORTH = 2
     NORTH_EAST = 3
@@ -58,15 +75,3 @@ class CanvasGravity(type):
     SOUTH = 8
     SOUTH_EAST = 9
     STATIC = 10
-
-
-class TextAlign(type):
-    TOP_RIGHT = 1
-    TOP_MIDDLE = 2
-    TOP_LEFT = 3
-    CENTER_RIGHT = 4
-    CENTER_MIDDLE = 5
-    CENTER_LEFT = 6
-    BOTTOM_RIGHT = 7
-    BOTTOM_MIDDLE = 8
-    BOTTOM_LEFT = 9

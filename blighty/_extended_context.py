@@ -45,9 +45,22 @@ class ExtendedContext():
         self._ctx = ctx
         self.canvas = canvas
 
-        for m in [dm for dm in dir(canvas) if callable(getattr(canvas, dm)) and dm[:5] == "draw_"]:
+        collected_methods = []
+
+        for dm in dir(canvas):
+            try:
+                if callable(getattr(canvas, dm)) and dm[:5] == "draw_":
+                    collected_methods.append(dm)
+            except RuntimeError:
+                # In the GTK case, introspection breaks getattr so we ignore
+                # the attributes we cannot retrieve.
+                pass
+
+        # for m in [dm for dm in dir(canvas) if callable(getattr(canvas, dm)) and dm[:5] == "draw_"]:
+        for m in collected_methods:
+            # Re-bind brush method and mark the original as non-callable
             setattr(self, m, getattr(type(canvas), m).__get__(self, ExtendedContext))
-            setattr(type(canvas), m, not_callable_from_instance)
+            setattr(canvas, m, not_callable_from_instance.__get__(canvas, type(canvas)))
 
         for n, m in BrushSets.get_brush_set(type(canvas).__qualname__).items():
             if n in dir(ctx):
