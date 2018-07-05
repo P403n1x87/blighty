@@ -288,8 +288,10 @@ documentation below for more details.
 
 
 References
-======================
+==========
+
 .. [1] https://tronche.com/gui/x/xlib/events/keyboard-pointer/keyboard-pointer.html
+
 
 Module API
 ==========
@@ -328,6 +330,11 @@ class Canvas(BaseCanvas):
         class. It ensures that an instance of ``ExtendedContext`` is created
         before going on to delegate the draw procedures to the user-defined
         ``on_draw`` callback.
+
+        If you want to skip some of the iterations and retain the current
+        content of the canvas, you can return ``True``. This is useful to avoid
+        performing the same drawing operations when not required because no
+        data to display has changed.
         """
         if self._extended_context is None:
             self._extended_context = ExtendedContext(ctx, self)
