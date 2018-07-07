@@ -24,28 +24,30 @@
 Description
 ===========
 
-This module provides the ``Canvas`` class for the creation of X11 canvases.
+This module provides the :class:`Canvas` class for the creation of X11
+canvases.
 
-The ``Canvas`` class is, in Java terminoly, *abstract* and should not be
+The :class:`Canvas` class is, in Java terminoly, *abstract* and should not be
 instantiated directly. Instead, applications should define their own subclasses
-of the ``Canvas`` and implement the ``on_draw`` method, which gets called
+of the :class:`Canvas` and implement the :func:`on_draw` method, which gets called
 periodically to perform the required draw operations using pycairo.
 
-Once created, an instance of a subclass of ``Canvas`` can be shown on screen
-by calling the ``show`` method. This starts drawing the canvas on screen by
-calling the `on_draw` callback at regular intervals in time. Events can be
-handled by starting the event loop with ``start_event_loop``, as described in
-more details in the `Event handling`_ section.
+Once created, an instance of a subclass of :class:`Canvas` can be shown on
+screen by calling the :func:`show` method. This starts drawing the canvas on
+screen by calling the `on_draw` callback at regular intervals in time. Events
+can be handled by starting the event loop with
+:func:`blighty.x11.start_event_loop`, as described in more details in the
+`Event handling`_ section.
 
 
 Creating a canvas
 -----------------
 
 Canvases are created by simply subclassing the `Canvas` class and implementing
-the ``on_draw`` callback.
+the :func:`on_draw` callback.
 
-The ``Canvas`` constructor (i.e. the ``__new__`` magic method) takes the
-following arguments:
+The :class:`Canvas` constructor (i.e. the :func:`__new__` magic method) takes
+the following arguments:
 
 +----------------+------------------------------------------------------------+
 | Argument       | Description                                                |
@@ -58,7 +60,7 @@ following arguments:
 +----------------+                                                            |
 | *height*       |                                                            |
 +----------------+------------------------------------------------------------+
-| *interval*     | The time interval between calls to the ``on_draw``         |
+| *interval*     | The time interval between calls to the :func:`on_draw`     |
 |                | callback, in `milliseconds`.                               |
 |                |                                                            |
 |                | **Default value**: 1000 (i.e. 1 second)                    |
@@ -103,26 +105,27 @@ following arguments:
 Note that the interval can be changed dynamically by setting the ``interval``
 attribute on the canvas object directly after it has been created.
 
-If you want to distribute your subclasses of ``Canvas``, we recommend that you
-create a static method ``build`` that returns an instance of the subclass, with
-some of the argumets set to a predefined values. This is useful if you want to
-distribute widgets with, e.g., a predefined size, as a Python module.
+If you want to distribute your subclasses of :class:`Canvas`, we recommend that
+you create a static method ``build`` that returns an instance of the subclass,
+with some of the argumets set to a predefined values. This is useful if you
+want to distribute widgets with, e.g., a predefined size, as a Python module.
 
 Showing the canvas
 ------------------
 
 When a canvas is created, it is not immediately shown to screen. To map it to
-screen and start the draw cycle one has to call the ``show`` method explicitly.
+screen and start the draw cycle one has to call the :func:`show` method
+explicitly.
 
 If you need to pass data to the canvas, you might want to do that before
-calling this method, since presumably the ``on_draw`` callback, which will
+calling this method, since presumably the :func:`on_draw` callback, which will
 start to be called, makes use of it.
 
-Finally, you must start the main event loop with ``start_event_loop`` to start
-drawing on the canvases, and in case that they should handle input events, like
-mouse button clicks or key presses. Note however that execution in the current
-thread will halt at this call, until it returns after a call to
-``stop_event_loop``.
+Finally, you must start the main event loop with
+:func:`blighty.x11.start_event_loop` to start drawing on the canvases, and in
+case that they should handle input events, like mouse button clicks or key
+presses. Note however that execution in the current thread will halt at this
+call, until it returns after a call to :func:`blighty.x11.stop_event_loop`.
 
 For more details on how to handle events with your X11 canvases, see the
 section `Event handling`_ below.
@@ -132,23 +135,24 @@ Disposing of a canvas
 ---------------------
 
 If you want to programmatically dispose of a canvas, you can call the
-``dispose`` method. This doesn't destroy the canvas immediately, but sends a
-delete request to the main event loop instead. This is the preffered way of
+:func:`dispose` method. This doesn't destroy the canvas immediately, but sends
+a delete request to the main event loop instead. This is the preffered way of
 getting rid of a canvas when you are running the event loop. You can also use
-the ``destroy`` method directly, which destroys the canvas immediately. However
-this is not thread safe and should not be called in the ``on_draw`` callback
-when running the event loop.
+the :func:`destroy` method directly, which destroys the canvas immediately.
+However this is not thread safe and should not be called in the :func:`on_draw`
+callback when running the event loop.
 
 
 Event handling
 --------------
 
 A feature that distinguishes blighty from conky is that it allows you to handle
-simple user input on the canvases. Currently, X11 canvaes support two events:
+simple user input on the canvases. Currently, X11 canvases support two events:
 mouse button and key press events.
 
-Mouse button events can be handled by implementing the ``on_button_pressed``
-callback in the subclass of ``Canvas``. The signature is the following::
+Mouse button events can be handled by implementing the
+:func:`on_button_pressed` callback in the subclass of :class:`Canvas`. The
+signature is the following::
 
     def on_button_pressed(self, button, state, x, y):
 
@@ -159,10 +163,11 @@ following signature::
 
     def on_key_pressed(self, keysym, state):
 
-The ``state`` argument has the same semantics as in the ``on_button_pressed``
-case, while the ``keysym`` is described, e,g, in the
-`Keyboard Econding <https://tronche.com/gui/x/xlib/input/keyboard-encoding.html>`_
-section of the Xlib guide.
+The ``state`` argument has the same semantics as in the
+:func:`on_button_pressed` case, while the ``keysym`` is described, e,g, in the
+`Keyboard Econding
+<https://tronche.com/gui/x/xlib/input/keyboard-encoding.html>`_ section of the
+Xlib guide.
 
 A simple example
 ----------------
@@ -200,14 +205,14 @@ Here is a simple example that shows all the above concepts in action::
 Extra features
 ==============
 
-The ``Canvas`` class comes with some handy extra features that can help with
-common patterns, thus sparing you to have to type boilerplate code.
+The :class:`Canvas` class comes with some handy extra features that can help
+with common patterns, thus sparing you to have to type boilerplate code.
 
 Brushes
 -------
 
-Brushes are a way to rebind methods from your subclass of ``Canvas`` to the
-Cairo context. Consider the following example::
+Brushes are a way to rebind methods from your subclass of :class:`Canvas` to
+the Cairo context. Consider the following example::
 
     from random import random as r
 
@@ -227,10 +232,10 @@ to belong to ``ctx``, since the general pattern of these helper methods
 requires that we pass ``ctx`` as one of the arguments.
 
 If one prefixes the ``rect`` method with ``draw_`` then it turns into an
-*implicit brush*. The ``on_draw`` callback is called with the ``ctx`` argument
-being an instance of ``ExtendedContext``. The ``draw_rect`` brush is then
-available from ``ctx`` as a bound method. The sample code above can then be
-refactored as::
+*implicit brush*. The :func:`on_draw` callback is called with the ``ctx``
+argument being an instance of ``ExtendedContext``. The ``draw_rect`` brush is
+then available from ``ctx`` as a bound method. The sample code above can then
+be refactored as::
 
     from random import random as r
 
@@ -248,7 +253,7 @@ Notice how ``draw_rect`` now takes less arguments, and how the first one is
 ``ctx``, the (extended) Cairo context.
 
 If you do not wish to prefix your methods with ``draw_``, you can use the
-``blighty.brush`` decorator instead to create an *explicit brush*. The code
+:func:`blighty.brush` decorator instead to create an *explicit brush*. The code
 would then look like this::
 
     from blighty import brush
@@ -271,15 +276,16 @@ Text alignment
 
 A common task is writing text on a canvas. With Cairo, text alignment usually
 requires the same pattern: get the text extents and compute the new position.
-To help with that, ``Canvas`` objects come with a pre-defined ``write_text``
-brush. Please refer to the API documentation below for usage details.
+To help with that, :class:`Canvas` objects come with a pre-defined
+:func:`write_text` brush. Please refer to the API documentation below for usage
+details.
 
 
 Grid
 ----
 
 When designing a canvas from scrach, it is hard to guess at positions without
-any guiding lines. To help with precise placement, every ``Canvas`` object
+any guiding lines. To help with precise placement, every :class:`Canvas` object
 comes with a ``draw_grid`` brush that creates a rectangular grid on the canvas.
 The spacing between the lines is set to 50 pixels by default (assuming that
 the scale hasn't been changed before). This can be adjusted by passing the new
@@ -306,7 +312,7 @@ class Canvas(BaseCanvas):
     """X11 Canvas object.
 
     This class is meant to be used as a superclass and should not be
-    instantiated directly. Subclasses should implement the ``on_draw``
+    instantiated directly. Subclasses should implement the :func:`on_draw`
     callback, which is invoked every time the canvas needs to be redrawn.
     Redraws happen at regular intervals in time, as specified by the
     ``interval`` attribute (also passed as an argument via the constructor).
@@ -329,7 +335,7 @@ class Canvas(BaseCanvas):
         This is the callback that actually gets called from the BaseCanvas
         class. It ensures that an instance of ``ExtendedContext`` is created
         before going on to delegate the draw procedures to the user-defined
-        ``on_draw`` callback.
+        :func:`on_draw` callback.
 
         If you want to skip some of the iterations and retain the current
         content of the canvas, you can return ``True``. This is useful to avoid
