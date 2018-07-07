@@ -121,33 +121,35 @@ BaseCanvas__ui_thread(BaseCanvas * self) {
   PyGILState_STATE gstate;
   gstate = PyGILState_Ensure();
 
-  PyObject *args_tuple = Py_BuildValue("(O)", PycairoContext_FromContext(self->context, &PycairoContext_Type, (PyObject*) NULL));
+  self->context_arg = Py_BuildValue("(O)", PycairoContext_FromContext(self->context, &PycairoContext_Type, (PyObject*) NULL));
 
   self->_expiry = gettime();
 
   while (self->_running) {
-    PyGILState_Release(gstate);
+    Py_BEGIN_ALLOW_THREADS
     usleep(self->interval > 100 ? 100 * UI_INTERVAL : UI_INTERVAL);
-    gstate = PyGILState_Ensure();
+    Py_END_ALLOW_THREADS
 
     if (Atelier_is_running() > 0 && self->_expiry <= gettime()) {
-      self->_drawing = 1;
-      BaseCanvas__on_draw(self, args_tuple);
-      self->_drawing = 0;
+      self->_needs_redraw = 1;
 
-      // Only clear the window when we are sure we are ready to paint.
-      BaseCanvas__redraw(self);
+      // Request redraw
+      XEvent event;
+      event.type = Expose;
+      event.xany.window = self->win_id;
+      event.xexpose.count = 0;
 
-      if (PyErr_Occurred() != NULL) {
-        PyErr_Print();
-        BaseCanvas_dispose(self);
-        break;
-      }
+      XLockDisplay(display);
+      XSendEvent(display, self->win_id, False, ExposureMask, &event);
+      // Send the event immediately
+      XFlush(display);
+      XUnlockDisplay(display);
+
       self->_expiry += self->interval;
     }
   }
 
-  Py_DECREF(args_tuple);
+  Py_DECREF(self->context_arg);
 
   PyGILState_Release(gstate);
 }
@@ -275,8 +277,9 @@ BaseCanvas_new(PyTypeObject *type, PyObject *args, PyObject *kwargs) {
     cairo_xlib_surface_set_size(self->surface, self->width, self->height);
     self->context = cairo_create(self->surface);
 
-    self->_running = 0;
-    self->_drawing = 0;
+    self->_running      = 0;
+    self->_drawing      = 0;
+    self->_needs_redraw = 1;
 
     // Register the BaseCanvas with the Atelier
     Atelier_add_canvas(self);

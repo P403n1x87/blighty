@@ -125,9 +125,19 @@ dispatch_event(BaseCanvas * canvas, XEvent * e) {
 
   case Expose:
     if (e->xexpose.count == 0) {
-      while (canvas->_drawing != 0)
-        thread_sleep(LOOP_INTERVAL >> 1);
+      if (canvas->_needs_redraw != 0) {
+        BaseCanvas__on_draw(canvas, canvas->context_arg);
+        canvas->_needs_redraw = 0;
+      }
+
+      // Only clear the window when we are sure we are ready to paint.
       BaseCanvas__redraw(canvas);
+
+      if (PyErr_Occurred() != NULL) {
+        PyErr_Print();
+        PyObject_CallMethod((PyObject *) canvas, "dispose", NULL);
+        break;
+      }
     }
     return;
 

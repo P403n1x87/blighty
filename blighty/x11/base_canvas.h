@@ -43,6 +43,7 @@ typedef struct {
 
   // X/Cairo data structures
   cairo_t         * context;
+  PyObject        * context_arg;
   cairo_surface_t * surface;
   Display         * display;
   int               screen;
@@ -59,6 +60,7 @@ typedef struct {
   int               _running;
   long              _expiry;
   int               _drawing;
+  int               _needs_redraw;
 } BaseCanvas;
 
 void BaseCanvas__redraw(BaseCanvas * self);
