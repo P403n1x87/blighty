@@ -46,11 +46,11 @@ def test_canvas():
 
         def on_button_pressed(self, button, state, x, y):
             if button == 1:
-                self.destroy()
+                self.dispose()
 
         def on_key_pressed(self, keysym, state):
             if keysym == 65307:
-                self.destroy()
+                self.dispose()
 
     canvas = TestMPL(10, 10, 320, 160, gravity = CanvasGravity.SOUTH_EAST)
     canvas.interval = 0

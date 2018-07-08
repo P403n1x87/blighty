@@ -22,8 +22,6 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 
-import pytest
-
 import blighty.x11 as x11
 from blighty import brush
 
@@ -40,7 +38,7 @@ def test_brush():
 
         def on_button_pressed(self, button, state, x, y):
             if button == 1:
-                self.destroy()
+                self.dispose()
 
         @brush
         def rect(ctx, width, height):
@@ -73,7 +71,7 @@ def test_grid():
 
         def on_button_pressed(self, button, state, x, y):
             if button == 1:
-                self.destroy()
+                self.dispose()
 
         def on_draw(self, ctx):
             if self.c:
@@ -101,7 +99,7 @@ def test_text():
 
         def on_button_pressed(self, button, state, x, y):
             if button == 1:
-                self.destroy()
+                self.dispose()
 
         def on_draw(self, ctx):
             if self.c:
