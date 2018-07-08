@@ -237,6 +237,13 @@ class Canvas(Gtk.Window):
         self.y = y
         return super().move(*self._translate_coordinates(x, y))
 
+    def dispose(self):
+        """Dispose of the canvas.
+
+        For GTK-based canvases, this is equivalent to calling the
+        :func:`destroy` method.
+        """
+        self.destroy()
 
     # TODO: Remove duplicate docstrings
 
