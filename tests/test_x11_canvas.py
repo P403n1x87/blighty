@@ -37,11 +37,11 @@ class MyCanvas(x11.Canvas):
 
     def on_button_pressed(self, button, state, x, y):
         if button == 1 and state == 16:
-            self.destroy()
+            self.dispose()
 
     def on_key_pressed(self, keysym, state):
         if keysym == 65307:
-            self.destroy()
+            self.dispose()
 
     def on_draw(self, cr):
         cr.set_line_width(8)
@@ -85,7 +85,7 @@ def test_draw_methods():
 
         def on_button_pressed(self, button, state, x, y):
             if button == 1:
-                self.destroy()
+                self.dispose()
 
         def draw_rect(ctx, width, height):
             ctx.set_source_rgb(*[r() for _ in range(3)])
@@ -117,7 +117,7 @@ def test_draw_once():
 
         def on_button_pressed(self, button, state, x, y):
             if button == 1:
-                self.destroy()
+                self.dispose()
 
         def draw_rect(ctx, width, height):
             ctx.set_source_rgb(*[r() for _ in range(3)])
