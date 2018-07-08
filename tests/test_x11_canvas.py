@@ -33,7 +33,7 @@ class MyCanvas(x11.Canvas):
         super().__init__(*args, **kwargs)
 
         self.r = 50.0
-        self.d = 2.0
+        self.d = 4.0
 
     def on_button_pressed(self, button, state, x, y):
         if button == 1 and state == 16:
@@ -54,10 +54,7 @@ class MyCanvas(x11.Canvas):
         self.r += self.d
 
         cr.arc(w >> 1, h >> 1, self.r, 0, 2 * 3.14159265)
-        cr.stroke_preserve()
-
-        cr.set_source_rgba(0.3, 0.4, 0.6, .5)
-        cr.fill()
+        cr.stroke()
 
         if self.r == 10:
             self.dispose()
@@ -69,7 +66,7 @@ def test_canvas():
     for canvas in canvases:
         assert canvas.interval == 42
 
-        canvas.interval = 50
+        canvas.interval = 100
         assert canvas.show() is None
 
     assert x11.start_event_loop() is None
