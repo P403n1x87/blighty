@@ -26,13 +26,41 @@ from . _brush import BrushSets, not_callable_from_instance
 
 
 class ExtendedContext():
+    """Extension of the standard `cairo.Context` class.
+
+    This class is used to extend the vanilla `cairo.Context` with _brushes_.
+    These are either methods of a subclass of `Canvas` that are prefixed with
+    `draw_`, or those that are explicitly decorated with the `@brush`
+    decorator.
+
+    There shouldn't be any reasons why you'd want to use instantiate this class
+    directly. The `ctx` argument that is passed to the `Canvas` `on_draw`
+    callback is an instance of this class. This can be passed as an argument
+    to any callable object that expects a `cairo.Context` instance. The
+    underlying `Canvas` object can be accessed via the `canvas` attribute. This
+    can be useful if one needs to refer to the parent canvas geometry (e.g.
+    its size).
+    """
     def __init__(self, ctx, canvas):
         self._ctx = ctx
         self.canvas = canvas
 
-        for m in [dm for dm in dir(canvas) if callable(getattr(canvas, dm)) and dm[:5] == "draw_"]:
+        collected_methods = []
+
+        for dm in dir(canvas):
+            try:
+                if callable(getattr(canvas, dm)) and dm[:5] == "draw_":
+                    collected_methods.append(dm)
+            except RuntimeError:
+                # In the GTK case, introspection breaks getattr so we ignore
+                # the attributes we cannot retrieve.
+                pass
+
+        # for m in [dm for dm in dir(canvas) if callable(getattr(canvas, dm)) and dm[:5] == "draw_"]:
+        for m in collected_methods:
+            # Re-bind brush method and mark the original as non-callable
             setattr(self, m, getattr(type(canvas), m).__get__(self, ExtendedContext))
-            setattr(type(canvas), m, not_callable_from_instance)
+            setattr(canvas, m, not_callable_from_instance.__get__(canvas, type(canvas)))
 
         for n, m in BrushSets.get_brush_set(type(canvas).__qualname__).items():
             if n in dir(ctx):

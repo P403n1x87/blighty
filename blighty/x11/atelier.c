@@ -26,9 +26,16 @@
 
 #define GET_CALLBACK(object, method) PyObject_GetAttr((PyObject *) object, PyUnicode_FromString(method))
 
+#define LOOP_INTERVAL 2000
+
 static PyObject * atelier = NULL;
 
-static int list_updated = 0;
+static Display * display = NULL;
+
+void
+Atelier_set_display(Display * d) {
+  display = d;
+}
 
 void
 Atelier_init(void) {
@@ -41,7 +48,6 @@ Atelier_init(void) {
     Py_DECREF(atelier);
   }
   atelier = PyList_New(0);
-  list_updated = 0;
 }
 
 void
@@ -58,11 +64,10 @@ Atelier_remove_canvas(BaseCanvas * canvas) {
     c = (BaseCanvas *) PyList_GetItem(atelier, i);
     if (c == canvas) {
       PyList_SetSlice(atelier, i, i + 1, NULL);
-      list_updated = 1;
-      return 1;
+      return PyList_Size(atelier);
     }
   }
-  return 0;
+  return -1;
 }
 
 
@@ -72,6 +77,7 @@ Atelier_remove_canvas(BaseCanvas * canvas) {
 
 static int main_loop_running = 0;
 
+
 static void
 thread_sleep(useconds_t usecs) {
   Py_BEGIN_ALLOW_THREADS
@@ -79,27 +85,17 @@ thread_sleep(useconds_t usecs) {
   Py_END_ALLOW_THREADS
 }
 
+
 static void
-dispatch_event(BaseCanvas * canvas) {
+dispatch_event(BaseCanvas * canvas, XEvent * e) {
   char keybuf[8];
   KeySym key;
-  XEvent e;
   PyObject * cb;
 
-  if (canvas->_destroy != 0) {
-    PyObject_CallMethod((PyObject *) canvas, "destroy", NULL);
-    return;
-  }
-
-  if (!XPending(canvas->display)) return;
-
-  XNextEvent(canvas->display, &e);
-  if (e.type >= LASTEvent) return;
-
-  switch (e.type) {
+  switch (e->type) {
   case ClientMessage:
     // TODO: Extend
-    if ((Atom) e.xclient.data.l[0] == canvas->wm_delete_window) {
+    if ((Atom) e->xclient.data.l[0] == canvas->wm_delete_window) {
       PyObject_CallMethod((PyObject *) canvas, "destroy", NULL);
     }
     return;
@@ -108,10 +104,10 @@ dispatch_event(BaseCanvas * canvas) {
     cb = GET_CALLBACK(canvas, "on_button_pressed");
     if (cb != NULL) {
       PyObject_CallObject(cb, Py_BuildValue("(iiii)",
-        e.xbutton.button,
-        e.xbutton.state,
-        e.xbutton.x,
-        e.xbutton.y
+        e->xbutton.button,
+        e->xbutton.state,
+        e->xbutton.x,
+        e->xbutton.y
       ));
     }
     return;
@@ -119,24 +115,34 @@ dispatch_event(BaseCanvas * canvas) {
   case KeyPress:
     cb = GET_CALLBACK(canvas, "on_key_pressed");
     if (cb != NULL) {
-      XLookupString(&e.xkey, keybuf, sizeof(keybuf), &key, NULL);
+      XLookupString(&(e->xkey), keybuf, sizeof(keybuf), &key, NULL);
       PyObject_CallObject(cb, Py_BuildValue("(ii)",
         key,
-        e.xkey.state
+        e->xkey.state
       ));
     }
     return;
 
   case Expose:
-    if (e.xexpose.count == 0) {
-      while (canvas->_drawing != 0)
-        thread_sleep(500);
+    if (e->xexpose.count == 0) {
+      if (canvas->_needs_redraw != 0) {
+        BaseCanvas__on_draw(canvas, canvas->context_arg);
+        canvas->_needs_redraw = 0;
+      }
+
+      // Only clear the window when we are sure we are ready to paint.
       BaseCanvas__redraw(canvas);
+
+      if (PyErr_Occurred() != NULL) {
+        PyErr_Print();
+        PyObject_CallMethod((PyObject *) canvas, "dispose", NULL);
+        break;
+      }
     }
     return;
 
   default:
-    fprintf(stderr, "Dropping unhandled XEevent.type = %d.\n", e.type);
+    fprintf(stderr, "Dropping unhandled XEevent.type = %d.\n", e->type);
   }
 }
 
@@ -148,18 +154,31 @@ Atelier_start_event_loop(PyObject * args, PyObject * kwargs) {
 
   main_loop_running = 1;
 
-  while (main_loop_running != 0 && PyList_Size(atelier) > 0) {
-    for (int i = 0; i < PyList_Size(atelier); i++) {
-      dispatch_event((BaseCanvas *) PyList_GetItem(atelier, i));
+  XEvent e;
+  BaseCanvas * canvas;
+  while (main_loop_running != 0 && PyList_Size(atelier) > 0 && display != NULL) {
+    Py_BEGIN_ALLOW_THREADS
+    XNextEvent(display, &e);
+    Py_END_ALLOW_THREADS
 
-      // Check if any of the dispatched events has deleted a canvas.
-      if (list_updated > 0) {
-        list_updated = 0;
+    if (e.type >= LASTEvent) continue;
+    // Find the canvas based on window ID
+    int found = 0;
+    for (int i = 0; i < PyList_Size(atelier); i++) {
+      canvas = (BaseCanvas *) PyList_GetItem(atelier, i);
+      if (canvas->win_id == e.xany.window) {
+        found = 1;
         break;
       }
-
-      thread_sleep(1000);
     }
+
+    // TODO: Raise RuntimeError!
+    if (!found) {
+      fprintf(stderr, "Canvas not found!\n");
+      return;
+    }
+
+    dispatch_event(canvas, &e);
   }
 
   main_loop_running = 0;

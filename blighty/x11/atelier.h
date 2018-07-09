@@ -27,6 +27,9 @@
 #include "base_canvas.h"
 
 void
+Atelier_set_display(Display *);
+
+void
 Atelier_init(void);
 
 void

@@ -28,48 +28,45 @@ from blighty import CanvasGravity
 from random import random as r
 
 
+class MyCanvas(x11.Canvas):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        self.r = 50.0
+        self.d = 4.0
+
+    def on_button_pressed(self, button, state, x, y):
+        if button == 1 and state == 16:
+            self.dispose()
+
+    def on_key_pressed(self, keysym, state):
+        if keysym == 65307:
+            self.dispose()
+
+    def on_draw(self, cr):
+        cr.set_line_width(8)
+        cr.set_source_rgba(*[r() for _ in range(4)])
+
+        w, h = self.get_size()
+
+        if self.r > 92 or self.r < 10:
+            self.d *= -1
+        self.r += self.d
+
+        cr.arc(w >> 1, h >> 1, self.r, 0, 2 * 3.14159265)
+        cr.stroke()
+
+        if self.r == 10:
+            self.dispose()
+
+
 def test_canvas():
-
-    class MyCanvas(x11.Canvas):
-        def __init__(self, *args, **kwargs):
-            super().__init__(*args, **kwargs)
-
-            self.r = 50.0
-            self.d = 2.0
-
-        def on_button_pressed(self, button, state, x, y):
-            if button == 1 and state == 16:
-                self.destroy()
-
-        def on_key_pressed(self, keysym, state):
-            if keysym == 65307:
-                self.destroy()
-
-        def on_draw(self, cr):
-            cr.set_line_width(8)
-            cr.set_source_rgba(*[r() for _ in range(4)])
-
-            w, h = self.get_size()
-
-            if self.r > 92 or self.r < 10:
-                self.d *= -1
-            self.r += self.d
-
-            cr.arc(w >> 1, h >> 1, self.r, 0, 2 * 3.14159265)
-            cr.stroke_preserve()
-
-            cr.set_source_rgba(0.3, 0.4, 0.6, .5)
-            cr.fill()
-
-            if self.r == 10:
-                self.dispose()
-
     canvases = [MyCanvas(200 * i, 200 * i, width = 200, height = 200, interval = 42, gravity = CanvasGravity.CENTER) for i in range(-1, 2)]
 
     for canvas in canvases:
         assert canvas.interval == 42
 
-        canvas.interval = 50
+        canvas.interval = 100
         assert canvas.show() is None
 
     assert x11.start_event_loop() is None
@@ -81,11 +78,11 @@ def test_draw_methods():
         def __init__(self, *args, **kwargs):
             super().__init__(*args, **kwargs)
 
-            self.c = False
+            self.c = 0
 
         def on_button_pressed(self, button, state, x, y):
             if button == 1:
-                self.destroy()
+                self.dispose()
 
         def draw_rect(ctx, width, height):
             ctx.set_source_rgb(*[r() for _ in range(3)])
@@ -93,16 +90,51 @@ def test_draw_methods():
             ctx.fill()
 
         def on_draw(self, ctx):
-            if self.c:
+            if self.c > 2:
                 self.dispose()
                 return
 
             for i in range(4):
                 ctx.draw_rect(self.width >> i, self.height >> i)
 
-            self.c = True
+            self.c += 1
 
-    canvas = DrawMethodsCanvas(40, 40, 128, 128, interval = 3000)
+    canvas = DrawMethodsCanvas(40, 40, 128, 128, interval = 1500)
+    canvas.show()
+    x11.start_event_loop()
+
+
+def test_draw_once():
+
+    class DrawMethodsCanvas(x11.Canvas):
+        def __init__(self, *args, **kwargs):
+            super().__init__(*args, **kwargs)
+
+            self.c = 0
+
+        def on_button_pressed(self, button, state, x, y):
+            if button == 1:
+                self.dispose()
+
+        def draw_rect(ctx, width, height):
+            ctx.set_source_rgb(*[r() for _ in range(3)])
+            ctx.rectangle(0, 0, width, height)
+            ctx.fill()
+
+        def on_draw(self, ctx):
+            if self.c > 2:
+                self.dispose()
+                return
+
+            self.c += 1
+
+            if self.c > 1:
+                return False
+
+            for i in range(4):
+                ctx.draw_rect(self.width >> i, self.height >> i)
+
+    canvas = DrawMethodsCanvas(40, 40, 128, 128, interval = 1500)
     canvas.show()
     x11.start_event_loop()
 

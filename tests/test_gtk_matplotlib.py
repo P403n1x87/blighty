@@ -36,10 +36,9 @@ class MPL(Canvas):
         self.plot = SimplePlot(self.width, self.height)
         self.count = 0
 
-    def on_draw(self, widget, cr):
+    def on_draw(self, cr):
         self.plot.push_value(psutil.cpu_percent(2))
         self.plot.draw(cr)
-        widget.request_redraw()
 
         self.count += 1
         if self.count > 10:
