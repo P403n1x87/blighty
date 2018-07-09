@@ -1,5 +1,5 @@
 [![Build Status](https://travis-ci.org/P403n1x87/blighty.svg?branch=master)](https://travis-ci.org/P403n1x87/blighty)
-[![Documentation Status](//readthedocs.org/projects/blighty/badge/?version=latest)](https://blighty.readthedocs.io/en/latest/?badge=latest)
+[![Documentation Status](https://readthedocs.org/projects/blighty/badge/?version=latest)](https://blighty.readthedocs.io/en/latest/?badge=latest)
 
 # blighty
 
