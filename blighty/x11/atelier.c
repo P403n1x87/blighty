@@ -24,13 +24,17 @@
 #include "atelier.h"
 #include <stdio.h>
 
-#define GET_CALLBACK(object, method) PyObject_GetAttr((PyObject *) object, PyUnicode_FromString(method))
-
 #define LOOP_INTERVAL 2000
 
 static PyObject * atelier = NULL;
 
 static Display * display = NULL;
+
+static PyObject *
+get_callback(PyObject * object, char * method) {
+  PyObject * py_method = PyUnicode_FromString(method);
+  return PyObject_HasAttr(object, py_method) > 0 ? PyObject_GetAttr(object, py_method) : NULL;
+}
 
 void
 Atelier_set_display(Display * d) {
@@ -101,7 +105,7 @@ dispatch_event(BaseCanvas * canvas, XEvent * e) {
     return;
 
   case ButtonPress:
-    cb = GET_CALLBACK(canvas, "on_button_pressed");
+    cb = get_callback((PyObject *) canvas, "on_button_pressed");
     if (cb != NULL) {
       PyObject_CallObject(cb, Py_BuildValue("(iiii)",
         e->xbutton.button,
@@ -113,7 +117,7 @@ dispatch_event(BaseCanvas * canvas, XEvent * e) {
     return;
 
   case KeyPress:
-    cb = GET_CALLBACK(canvas, "on_key_pressed");
+    cb = get_callback((PyObject *) canvas, "on_key_pressed");
     if (cb != NULL) {
       XLookupString(&(e->xkey), keybuf, sizeof(keybuf), &key, NULL);
       PyObject_CallObject(cb, Py_BuildValue("(ii)",
