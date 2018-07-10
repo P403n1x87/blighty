@@ -42,7 +42,9 @@ sudo -H python3 -m pip install git+https://github.com/P403n1x87/blighty.git
 
 ## Usage
 
-Refer to the code in the `tests` folder for some simple examples.
+The official documentation is hosted on
+[ReadTheDocs.io](https://blighty.readthedocs.io/en/latest/). Refer to the code
+in the `examples` folder for some simple examples.
 
 This package makes it easy to create transparent windows that you can draw on
 with `cairo`. It takes all the boilerplate code away from you so that you can
@@ -165,13 +167,18 @@ class Clock(Canvas):
         )
 ~~~
 
-It is clear that the `hand` method would be more appropriate for the instance of the cairo Context `ctx`. The coding would be simpler if we could call it as `ctx.hand`. _Brushes_ allow you to re-bind methods from the `Canvas` subclass to the cairo context. Import the `brush` decorator from `blighty` with
+It is clear that the `hand` method would be more appropriate for the instance of
+the cairo Context `ctx`. The coding would be simpler if we could call it as
+`ctx.hand`. _Brushes_ allow you to re-bind methods from the `Canvas` subclass to
+the cairo context. Import the `brush` decorator from `blighty` with
 
 ~~~ python
 from blighty import brush
 ~~~
 
-and the use it to decorate the `hand` method. The `self` argument is no longer necessary, since it will be replaced by the cairo context instance. So the above code becomes
+and the use it to decorate the `hand` method. The `self` argument is no longer
+necessary, since it will be replaced by the cairo context instance. So the above
+code becomes
 
 ~~~ python
 from blighty import CanvasGravity, brush
@@ -223,7 +230,9 @@ class Clock(Canvas):
         )
 ~~~
 
-By default, methods of subclasses of `Canvas` that begin with `draw_` are re-bound to the cairo context in the `on_draw` method. So the same as the above code could be achieved without the use of the `brush` decorator with
+By default, methods of subclasses of `Canvas` that begin with `draw_` are
+re-bound to the cairo context in the `on_draw` method. So the same as the above
+code could be achieved without the use of the `brush` decorator with
 
 ~~~ python
 from blighty import CanvasGravity
@@ -274,9 +283,12 @@ class Clock(Canvas):
         )
 ~~~
 
-_Brushes_ are implemented via the class `ExtendedContext`, which is just a wrapper around `cairo.Context`. The argument passed to the `on_draw` callback is hence an instance of this class. For convenience, it exposes the containing canvas instance via the `canvas` attribute so that it doesn't need to be passed to the brush method when you need to access some of the canvas attributes (e.g. its size) or methods.
-
-_Brushes_ are currently available for X11 canvases only.
+_Brushes_ are implemented via the class `ExtendedContext`, which is just a
+wrapper around `cairo.Context`. The argument passed to the `on_draw` callback is
+hence an instance of this class. For convenience, it exposes the containing
+canvas instance via the `canvas` attribute so that it doesn't need to be passed
+to the brush method when you need to access some of the canvas attributes (e.g.
+its size) or methods.
 
 
 ## License

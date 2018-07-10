@@ -360,7 +360,6 @@ class Wunderground(Canvas):
         ctx.restore()
 
     def on_draw(self, ctx):
-        print("Drawing")
         ctx.select_font_face(*Fonts.LAKSAMAN_NORMAL)
 
         if self.datasource is None:
