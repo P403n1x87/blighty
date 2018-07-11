@@ -16,6 +16,7 @@ before_script:
 
 # FIXME: Tests cause SIGSEGV on Travis.
 script:
+  - true
   # - py.test
 
 after_failure:
