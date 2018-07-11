@@ -15,8 +15,8 @@ before_script:
 - ulimit -c unlimited -S       # enable core dumps
 
 # FIXME: Tests cause SIGSEGV on Travis.
-# script:
-#   - py.test
+script:
+  # - py.test
 
 after_failure:
 - COREFILE=$(find . -maxdepth 1 -name "core*" | head -n 1) # find core file
