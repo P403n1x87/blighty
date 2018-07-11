@@ -48,7 +48,7 @@ setup(
     author_email     = 'phoenix1987@gmail.com',
     url              = 'https://github.com/P403n1x87/blighty',
     classifiers=[
-        'Development Status :: 5 - Stable',
+        'Development Status :: 5 - Production/Stable',
 
         'Intended Audience :: Developers',
         'Topic :: Software Development :: Build Tools',
