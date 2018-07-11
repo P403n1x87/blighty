@@ -46,7 +46,7 @@ setup(
     long_description = open('README.md').read(),
     author           = 'Gabriele N. Tornetta',
     author_email     = 'phoenix1987@gmail.com',
-    url              = 'https://github.com/pypa/blighty',
+    url              = 'https://github.com/P403n1x87/blighty',
     classifiers=[
         'Development Status :: 5 - Stable',
 
@@ -68,7 +68,7 @@ setup(
         'test': ['pytest-xvfb', 'numpy', 'matplotlib', 'psutil'],
     },
     project_urls     = {
-        'Bug Reports' : 'https://github.com/pypa/blighty/issues',
-        'Source'      : 'https://github.com/pypa/blighty/',
+        'Bug Reports' : 'https://github.com/P403n1x87/blighty/issues',
+        'Source'      : 'https://github.com/P403n1x87/blighty',
     },
 )
