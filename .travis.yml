@@ -27,6 +27,6 @@ deploy:
   provider: pypi
   user: P403n1x87
   password: $PYPI_PASSWORD
-  distributions: "sdist bdist_wheel"
+  distributions: "sdist bdist"
   on:
     tags: true
