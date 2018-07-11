@@ -26,8 +26,7 @@ after_failure:
 deploy:
   provider: pypi
   user: P403n1x87
-  password:
-    secure: $PYPI_PASSWORD
+  password: $PYPI_PASSWORD
   distributions: "sdist bdist_wheel"
   on:
     tags: true
