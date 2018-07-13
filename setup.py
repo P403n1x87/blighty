@@ -24,8 +24,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 
-from setuptools import find_packages, setup, Extension
-
+from setuptools import Extension, find_packages, setup
 
 x11 = Extension('blighty._x11',
     include_dirs       = ['/usr/include/cairo/'],
@@ -41,9 +40,9 @@ x11 = Extension('blighty._x11',
 
 setup(
     name             = 'blighty',
-    version          = '2.0.0',
+    version          = '2.0.1',
     description      = 'Desktop Widget Manager. Think of conky, but with Python instead of Lua.',
-    long_description = open('README.md').read(),
+    long_description = open('README.md').read(), long_description_content_type='text/markdown',
     author           = 'Gabriele N. Tornetta',
     author_email     = 'phoenix1987@gmail.com',
     url              = 'https://github.com/P403n1x87/blighty',
@@ -53,7 +52,7 @@ setup(
         'Intended Audience :: Developers',
         'Topic :: Software Development :: Build Tools',
 
-        'License :: OSI Approved :: MIT License',
+        'License :: OSI Approved :: GNU General Public License v3 (GPLv3)',
 
         'Programming Language :: Python :: 3',
         'Programming Language :: Python :: 3.4',
