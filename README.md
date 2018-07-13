@@ -30,13 +30,28 @@ contribute to this project!
 
 ## Installation
 
-### Ubuntu
+Currently, blighty needs to be built from its source code. The following
+installation instructions have been tested on Ubuntu 18.04. If you are using a
+different distribution, make sure that you install all the listed dependencies
+from your package repository.
 
-The following commands will install blighty along with its dependencies.
+To install the required dependencies, use the following command
 
 ~~~
 sudo apt install xorg libcairo2-dev python3-gi gir1.2-gtk-3.0 gir1.2-glib-2.0
-sudo -H python3 -m pip install git+https://github.com/P403n1x87/blighty.git
+~~~
+
+To install blighty from PyPI, use the command
+
+~~~
+sudo -H python3 -m pip install blighty --upgrade
+~~~
+
+Should you encounter any problems installing blighty from PyPI, then install it
+directly from GitHub with the following command.
+
+~~~
+sudo -H python3 -m pip install git+https://github.com/P403n1x87/blighty.git --upgrade
 ~~~
 
 

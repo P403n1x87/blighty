@@ -32,15 +32,15 @@ x11 = Extension('blighty._x11',
     extra_compile_args = ['-std=c99'],
     sources            = [
         'blighty/x11/_x11module.c',
-        'blighty/x11/base_canvas.c',
         'blighty/x11/atelier.c',
+        'blighty/x11/base_canvas.c',
     ]
 )
 
 
 setup(
     name             = 'blighty',
-    version          = '2.0.1',
+    version          = '2.1.0',
     description      = 'Desktop Widget Manager. Think of conky, but with Python instead of Lua.',
     long_description = open('README.md').read(), long_description_content_type='text/markdown',
     author           = 'Gabriele N. Tornetta',
