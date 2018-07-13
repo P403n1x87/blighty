@@ -23,10 +23,10 @@ after_failure:
 - COREFILE=$(find . -maxdepth 1 -name "core*" | head -n 1) # find core file
 - if [[ -f "$COREFILE" ]]; then gdb -c "$COREFILE" /usr/bin/python3 -ex "thread apply all bt" -ex "set pagination 0" -batch; fi
 
-deploy:
-  provider: pypi
-  user: P403n1x87
-  password: $PYPI_PASSWORD
-  distributions: "sdist bdist"
-  on:
-    tags: true
+# deploy:
+#   provider: pypi
+#   user: P403n1x87
+#   password: $PYPI_PASSWORD
+#   distributions: "sdist"
+#   on:
+#     tags: true
