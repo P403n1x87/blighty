@@ -107,11 +107,14 @@ BaseCanvas__on_draw(BaseCanvas * self, PyObject * args) {
     // The X server queues up draw requests. This way we group
     // them together and we send a single draw request
     cairo_push_group(self->context);
+
     // Call user declaration of the 'on_draw' method
-    if (PyObject_CallObject(cb, args) != Py_None)
-      cairo_pop_group(self->context);
-    else
-      cairo_pop_group_to_source(self->context);
+    PyObject * cb_result = PyObject_CallObject(cb, args);
+
+    cairo_pattern_t * group = cairo_pop_group(self->context);
+    if (cb_result == Py_None)
+      cairo_set_source(self->context, group);
+    cairo_pattern_destroy(group);
   }
 }
 
@@ -279,7 +282,7 @@ BaseCanvas_new(PyTypeObject *type, PyObject *args, PyObject *kwargs) {
 
     self->_running      = 0;
     self->_drawing      = 0;
-    self->_needs_redraw = 1;
+    self->_needs_redraw = 0;
 
     // Register the BaseCanvas with the Atelier
     Atelier_add_canvas(self);
