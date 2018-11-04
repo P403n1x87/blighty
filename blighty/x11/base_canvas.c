@@ -22,10 +22,11 @@
 
 #define BASE_CANVAS_C
 
-#include <X11/extensions/Xinerama.h>
 
 #include "atelier.h"
 #include "base_canvas.h"
+
+#include <X11/extensions/Xinerama.h>
 
 #define PYCAIRO_NO_IMPORT
 #include "pycairo.h"
