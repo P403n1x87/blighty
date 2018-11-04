@@ -22,6 +22,7 @@ contribute to this project!
 ## Requirements
 
 - X11 (only for X Windows)
+- Xinerama (only for X Windows)
 - cairo
 - python3
 - python3-gi (only for GTK Windows)
@@ -39,7 +40,7 @@ from your package repository.
 To install the required dependencies, use the following command
 
 ~~~
-sudo apt install xorg libcairo2-dev python3-gi gir1.2-gtk-3.0 gir1.2-glib-2.0
+sudo apt install xorg libxinerama-dev libcairo2-dev python3-gi gir1.2-gtk-3.0 gir1.2-glib-2.0
 ~~~
 
 To install blighty from PyPI, use the command

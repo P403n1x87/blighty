@@ -22,8 +22,11 @@
 
 #define BASE_CANVAS_C
 
+
 #include "atelier.h"
 #include "base_canvas.h"
+
+#include <X11/extensions/Xinerama.h>
 
 #define PYCAIRO_NO_IMPORT
 #include "pycairo.h"
@@ -46,8 +49,6 @@ static const char * WINDOW_TYPE_MAP[] = {
 //
 // PRIVATE GLOBAL STATE
 //
-static Display              * display = NULL;
-static int                    screen;
 static XVisualInfo            visualinfo;
 static XSetWindowAttributes   attr;
 
@@ -65,6 +66,8 @@ gettime(void) {
 
 static void
 BaseCanvas__change_property(BaseCanvas * self, const char * property_name, const char * property_value, int mode) {
+  Display * display = Atelier_get_display();
+
   Atom value = XInternAtom(display, property_value, False);
   XChangeProperty(
     display,
@@ -85,7 +88,7 @@ BaseCanvas__redraw(BaseCanvas * self) {
   cairo_set_operator(self->context, CAIRO_OPERATOR_SOURCE);
   cairo_paint(self->context);
   cairo_restore(self->context);
-  XFlush(display);
+  XFlush(Atelier_get_display());
 }
 
 
@@ -142,6 +145,7 @@ BaseCanvas__ui_thread(BaseCanvas * self) {
       event.xany.window = self->win_id;
       event.xexpose.count = 0;
 
+      Display * display = Atelier_get_display();
       XLockDisplay(display);
       XSendEvent(display, self->win_id, False, ExposureMask, &event);
       // Send the event immediately
@@ -160,14 +164,24 @@ BaseCanvas__ui_thread(BaseCanvas * self) {
 
 static void
 BaseCanvas__transform_coordinates(BaseCanvas * self, int * x, int * y) {
-  // TODO: Extend with Xinerama support
+  Display            * display = Atelier_get_display();
+  int                  screen  = DefaultScreen(display);
+  XineramaScreenInfo * si      = Atelier_get_screen_info(self->xine_screen);
+
+  int width  = si ? si->width  : XDisplayWidth(display, screen);
+  int height = si ? si->height : XDisplayHeight(display, screen);
+  int x_org  = si ? si->x_org  : 0;
+  int y_org  = si ? si->y_org  : 0;
+
   if ((self->gravity - 1) % 3 == 0) *x = self->x;
-  else if ((self->gravity - 2) % 3 == 0) *x = ((XDisplayWidth(display, screen) - self->width) >> 1) + self->x;
-  else *x = XDisplayWidth(display, screen) - self->width - self->x;
+  else if ((self->gravity - 2) % 3 == 0) *x = ((width - self->width) >> 1) + self->x;
+  else *x = width - self->width - self->x;
+  *x += x_org;
 
   if (self->gravity <= 3) *y = self->y;
-  else if (self->gravity <= 6) *y = ((XDisplayHeight(display, screen) - self->height) >> 1) + self->y;
-  else *y = XDisplayHeight(display, screen) - self->height - self->y;
+  else if (self->gravity <= 6) *y = ((height - self->height) >> 1) + self->y;
+  else *y = height - self->height - self->y;
+  *y += y_org;
 }
 
 
@@ -195,6 +209,7 @@ BaseCanvas_new(PyTypeObject *type, PyObject *args, PyObject *kwargs) {
   if (self != NULL) {
     char * keywords[] = {"x", "y", "width", "height",
      "interval",        // 1000
+     "screen",          // 0
      "window_type",     // CanvasType.DESKTOP
      "gravity",         // CanvasGravity.NORTH_WEST
      "sticky",          // True
@@ -205,18 +220,20 @@ BaseCanvas_new(PyTypeObject *type, PyObject *args, PyObject *kwargs) {
     };
 
     // Default keyword arguments
-    self->interval   = 1000;
-    int window_type  = 1;    // BaseCanvasType.DESKTOP
-    self->gravity    = 1;    // BaseCanvasGravity.NORTH_WEST
-    int sticky       = 1;
-    int keep_below   = 1;
-    int skip_taskbar = 1;
-    int skip_pager   = 1;
+    self->interval    = 1000;
+    self->xine_screen = 0;
+    int window_type   = 1;    // BaseCanvasType.DESKTOP
+    self->gravity     = 1;    // BaseCanvasGravity.NORTH_WEST
+    int sticky        = 1;
+    int keep_below    = 1;
+    int skip_taskbar  = 1;
+    int skip_pager    = 1;
 
-    if (!PyArg_ParseTupleAndKeywords(args, kwargs, "IIII|IIIpppp:BaseCanvas.__new__",
+    if (!PyArg_ParseTupleAndKeywords(args, kwargs, "IIII|IIIIpppp:BaseCanvas.__new__",
         keywords,
         &self->x, &self->y, &self->width, &self->height,
         &self->interval,
+        &self->xine_screen,
         &window_type,
         &self->gravity,
         &sticky,
@@ -226,17 +243,17 @@ BaseCanvas_new(PyTypeObject *type, PyObject *args, PyObject *kwargs) {
        )
     ) return NULL;
 
-    if (display == NULL) {
-      if ((display = XOpenDisplay(NULL)) == NULL) return NULL;
-      Atelier_set_display(display);
-      screen = DefaultScreen(display);
+    Display * display = Atelier_get_display();
+    if (display == NULL)
+      return NULL;
 
-      // Query Visual for "TrueColor" and 32 bits depth (RGBA)
-      XMatchVisualInfo(display, screen, 32, TrueColor, &visualinfo);
-      attr.colormap = XCreateColormap(display, DefaultRootWindow(display), visualinfo.visual, AllocNone);
-      attr.border_pixel = 0;
-      attr.background_pixel = 0;
-    }
+    int screen = DefaultScreen(display);
+
+    // Query Visual for "TrueColor" and 32 bits depth (RGBA)
+    XMatchVisualInfo(display, screen, 32, TrueColor, &visualinfo);
+    attr.colormap = XCreateColormap(display, DefaultRootWindow(display), visualinfo.visual, AllocNone);
+    attr.border_pixel = 0;
+    attr.background_pixel = 0;
 
     int x, y;
     BaseCanvas__transform_coordinates(self, &x, &y);
@@ -320,7 +337,7 @@ BaseCanvas_move(BaseCanvas * self, PyObject * args, PyObject * kwargs) {
   self->y = new_y;
   BaseCanvas__transform_coordinates(self, &x, &y);
 
-  XMoveWindow(display, self->win_id, x, y);
+  XMoveWindow(Atelier_get_display(), self->win_id, x, y);
 
   Py_INCREF(Py_None); return Py_None;
 }
@@ -333,6 +350,8 @@ BaseCanvas_move(BaseCanvas * self, PyObject * args, PyObject * kwargs) {
 //
 static PyObject *
 BaseCanvas_show(BaseCanvas* self) {
+  Display * display = Atelier_get_display();
+
   // Input events
   XSelectInput(display, self->win_id,
     ButtonPressMask
@@ -375,6 +394,8 @@ BaseCanvas_get_size(BaseCanvas * self) {
 //
 static PyObject *
 BaseCanvas_dispose(BaseCanvas * self) {
+  Display * display = Atelier_get_display();
+
   XUnmapWindow(display, self->win_id);
 
   XEvent event;
@@ -403,11 +424,7 @@ BaseCanvas_destroy(BaseCanvas * self) {
   cairo_surface_destroy(self->surface);
 
   // De-register BaseCanvas from Atelier;
-  if (Atelier_remove_canvas(self) == 0) {
-    XCloseDisplay(display);
-    display = NULL;
-    Atelier_set_display(NULL);
-  }
+  Atelier_remove_canvas(self);
 
   Py_INCREF(Py_None); return Py_None;
 }

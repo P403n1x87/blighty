@@ -22,10 +22,10 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 
+from random import random as r
+
 import blighty.x11 as x11
 from blighty import CanvasGravity
-
-from random import random as r
 
 
 class MyCanvas(x11.Canvas):
@@ -61,7 +61,34 @@ class MyCanvas(x11.Canvas):
 
 
 def test_canvas():
-    canvases = [MyCanvas(200 * i, 200 * i, width = 200, height = 200, interval = 42, gravity = CanvasGravity.CENTER) for i in range(-1, 2)]
+    canvases = [
+        MyCanvas(
+            200 * i, 200 * i,
+            width=200, height=200,
+            interval=42,
+            gravity=CanvasGravity.CENTER
+        ) for i in range(-1, 2)
+    ]
+
+    for canvas in canvases:
+        assert canvas.interval == 42
+
+        canvas.interval = 100
+        assert canvas.show() is None
+
+    assert x11.start_event_loop() is None
+
+
+def test_canvas_xinerama():
+    canvases = [
+        MyCanvas(
+            200 * i, 200 * i,
+            width=200, height=200,
+            interval=42,
+            screen=1,
+            gravity=CanvasGravity.CENTER
+        ) for i in range(-1, 2)
+    ]
 
     for canvas in canvases:
         assert canvas.interval == 42

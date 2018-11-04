@@ -29,8 +29,8 @@ canvases.
 
 The :class:`Canvas` class is, in Java terminoly, *abstract* and should not be
 instantiated directly. Instead, applications should define their own subclasses
-of the :class:`Canvas` and implement the :func:`on_draw` method, which gets called
-periodically to perform the required draw operations using pycairo.
+of the :class:`Canvas` and implement the :func:`on_draw` method, which gets
+called periodically to perform the required draw operations using pycairo.
 
 Once created, an instance of a subclass of :class:`Canvas` can be shown on
 screen by calling the :func:`show` method. This starts drawing the canvas on
@@ -64,6 +64,13 @@ the following arguments:
 |                | callback, in `milliseconds`.                               |
 |                |                                                            |
 |                | **Default value**: 1000 (i.e. 1 second)                    |
++----------------+------------------------------------------------------------+
+| *screen*       | In multi-screen setups, specifies on which screen the      |
+|                | canvas is to be drawn. The value 0 identifies the first    |
+|                | screen. To treat the phisical screens as a single virtual  |
+|                | screen, use the value -1.                                  |
+|                |                                                            |
+|                | **Default value**: 0 (i.e. the first screen)               |
 +----------------+------------------------------------------------------------+
 | *window_type*  | The type of window to create. The possible choices are     |
 |                | enumerated in the ``blighty.CanvasType`` type and are      |
