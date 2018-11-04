@@ -105,11 +105,12 @@ except ImportError:
 
 gi.require_version('Gtk', '3.0')
 gi.require_version('Gdk', '3.0')
-from gi.repository import Gtk, Gdk
-
 from time import sleep
-from blighty import CanvasType, CanvasGravity, TextAlign, ExtendedContext, brush
+
+from blighty import (CanvasGravity, CanvasType, ExtendedContext, TextAlign,
+                     brush)
 from blighty._brush import BrushSets, draw_grid, write_text
+from gi.repository import Gdk, Gtk
 
 WINDOW_TYPE_MAP = [
     Gdk.WindowTypeHint.NORMAL,
@@ -131,6 +132,7 @@ class Canvas(Gtk.Window):
 
     def __init__(self, x, y, width, height,
                  interval = 1000,
+                 screen = 0,
                  window_type = CanvasType.DESKTOP,
                  gravity = CanvasGravity.NORTH_WEST,
                  sticky = True,
@@ -148,6 +150,7 @@ class Canvas(Gtk.Window):
         super().__init__()
 
         self.interval = interval
+        self.xine_screen = screen
         self.gravity = gravity
 
         self.set_type_hint(WINDOW_TYPE_MAP[window_type])
@@ -189,21 +192,33 @@ class Canvas(Gtk.Window):
         self._extended_context = None
 
     def _translate_coordinates(self, x, y):
+        if self.xine_screen < 0 or self.xine_screen >= self.screen.get_n_monitors():
+            width = self.screen.get_width()
+            height = self.screen.get_height()
+            x_org = 0
+            y_org = 0
+        else:
+            monitor = self.screen.get_monitor_geometry(self.xine_screen)
+            width = monitor.width
+            height = monitor.height
+            x_org = monitor.x
+            y_org = monitor.y
+
         if (self.gravity - 1) % 3 == 0:
             tx = x
         elif (self.gravity - 2) % 3 == 0:
-            tx = ((self.screen.get_width() - self.width) >> 1) + x
+            tx = ((width - self.width) >> 1) + x
         else:
-            tx = self.screen.get_width() - self.width - x
+            tx = width - self.width - x
 
         if self.gravity <= 3:
             ty = y
         elif self.gravity <= 6:
-            ty = ((self.screen.get_height() - self.height) >> 1) + y
+            ty = ((height - self.height) >> 1) + y
         else:
-            ty = self.screen.get_height() - self.height - y
+            ty = height - self.height - y
 
-        return tx, ty
+        return tx + x_org, ty + y_org
 
     def _on_draw(self, widget, cr):
         self._extended_context = ExtendedContext(cr, self)

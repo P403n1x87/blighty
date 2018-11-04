@@ -26,8 +26,16 @@
 
 #include "base_canvas.h"
 
+#include <X11/extensions/Xinerama.h>  // Must be included AFTER base_canvas!
+
+Display *
+Atelier_get_display(void);
+
 void
 Atelier_set_display(Display *);
+
+XineramaScreenInfo *
+Atelier_get_screen_info(int);
 
 void
 Atelier_init(void);

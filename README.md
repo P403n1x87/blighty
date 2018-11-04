@@ -22,6 +22,7 @@ contribute to this project!
 ## Requirements
 
 - X11 (only for X Windows)
+- Xinerama (only for X Windows)
 - cairo
 - python3
 - python3-gi (only for GTK Windows)
