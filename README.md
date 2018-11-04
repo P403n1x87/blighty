@@ -1,8 +1,48 @@
-[![Build Status](https://travis-ci.org/P403n1x87/blighty.svg?branch=master)](https://travis-ci.org/P403n1x87/blighty)
-[![Documentation Status](https://readthedocs.org/projects/blighty/badge/?version=latest)](https://blighty.readthedocs.io/en/latest/?badge=latest)
-[![Downloads](http://pepy.tech/badge/blighty)](http://pepy.tech/project/blighty)
+<h1 align="center">
+  <br>
+  <img src="art/logo.svg" width="480px" alt="Austin">
+  <br>
+</h1>
 
-# Blighty
+<h3 align="center">Desktop Widget Manager</h3>
+<p align="center">Think of Conky, but with Python instead of Lua.</p>
+
+<p align="center">
+  <a href="https://travis-ci.org/P403n1x87/blighty">
+    <img src="https://travis-ci.org/P403n1x87/blighty.svg?branch=master"
+         alt="Travis CI Build Status">
+  </a>
+  <a href="https://blighty.readthedocs.io/en/latest/?badge=latest">
+    <img src="https://readthedocs.org/projects/blighty/badge/?version=latest"
+         alt="Documentation Status">
+  </a>
+  <a href="http://pepy.tech/project/blighty">
+    <img src="http://pepy.tech/badge/blighty"
+         alt="PyPI Downloads">
+  </a>
+  <img src="https://img.shields.io/badge/version-3.0.0-blue.svg"
+       alt="Version 3.0.0">
+  <a href="https://github.com/P403n1x87/blighty/blob/master/LICENSE.md">
+    <img src="https://img.shields.io/badge/license-GPLv3-ff69b4.svg"
+         alt="source{d} design document">
+  </a>
+</p>
+
+<p align="center">
+  <img src="https://upload.wikimedia.org/wikipedia/commons/3/3a/Tux_Mono.svg" height="24px" />
+  &nbsp;&nbsp;&nbsp;&nbsp;
+  <!-- <img src="https://upload.wikimedia.org/wikipedia/commons/f/fa/Apple_logo_black.svg" height="24px" />
+  &nbsp;&nbsp;&nbsp;&nbsp;
+  <img src="https://upload.wikimedia.org/wikipedia/commons/2/2b/Windows_logo_2012-Black.svg" height="24px" /> -->
+</p>
+
+<p align="center">
+  <a href="#synopsis"><b>Synopsis</b></a>&nbsp;&bull;
+  <a href="#requirements"><b>Requirements</b></a>&nbsp;&bull;
+  <a href="#installation"><b>Installation</b></a>&nbsp;&bull;
+  <a href="#usage"><b>Usage</b></a>
+</p>
+
 
 ## Synopsis
 
