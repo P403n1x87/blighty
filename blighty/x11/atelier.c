@@ -147,14 +147,7 @@ Atelier_remove_canvas(BaseCanvas * canvas) {
 static int main_loop_running = 0;
 
 
-static void
-thread_sleep(useconds_t usecs) {
-  Py_BEGIN_ALLOW_THREADS
-  usleep(usecs);
-  Py_END_ALLOW_THREADS
-}
-
-
+// ----------------------------------------------------------------------------
 static void
 dispatch_event(BaseCanvas * canvas, XEvent * e) {
   char keybuf[8];
@@ -215,6 +208,8 @@ dispatch_event(BaseCanvas * canvas, XEvent * e) {
   }
 }
 
+
+// ----------------------------------------------------------------------------
 PyObject *
 Atelier_start_event_loop(PyObject * args, PyObject * kwargs) {
   if (main_loop_running > 0 || atelier == NULL) {
@@ -255,11 +250,15 @@ Atelier_start_event_loop(PyObject * args, PyObject * kwargs) {
   Py_INCREF(Py_None); return Py_None;
 }
 
+
+// ----------------------------------------------------------------------------
 void
 Atelier_stop_event_loop(void) {
   main_loop_running = 0;
 }
 
+
+// ----------------------------------------------------------------------------
 int
 Atelier_is_running(void) {
   return main_loop_running;

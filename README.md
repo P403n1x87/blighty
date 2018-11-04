@@ -2,16 +2,16 @@
 [![Documentation Status](https://readthedocs.org/projects/blighty/badge/?version=latest)](https://blighty.readthedocs.io/en/latest/?badge=latest)
 [![Downloads](http://pepy.tech/badge/blighty)](http://pepy.tech/project/blighty)
 
-# blighty
+# Blighty
 
 ## Synopsis
 
-The **blighty** project is inspired by conky. In essence, it is a collection of
+The **Blighty** project is inspired by Conky. In essence, it is a collection of
 objects that allow you to quickly create a transparent window that you can draw
 on with cairo. But instead of coding your widgets in Lua, that perhaps end up
 calling Python as external tools, you can now code them natively in Python.
 
-Performance won't be as great as conky, with probably more resource being used
+Performance won't be as great as Conky, with probably more resource being used
 for the same end result, but native Python support opens up for a lot more
 customisation possibilities in a snap of your fingers.
 
@@ -21,8 +21,8 @@ contribute to this project!
 
 ## Requirements
 
-- X11 (only for X Windows)
-- Xinerama (only for X Windows)
+- X11
+- Xinerama
 - cairo
 - python3
 - python3-gi (only for GTK Windows)
@@ -32,7 +32,7 @@ contribute to this project!
 
 ## Installation
 
-Currently, blighty needs to be built from its source code. The following
+Currently, Blighty needs to be built from its source code. The following
 installation instructions have been tested on Ubuntu 18.04. If you are using a
 different distribution, make sure that you install all the listed dependencies
 from your package repository.
@@ -43,13 +43,13 @@ To install the required dependencies, use the following command
 sudo apt install xorg libxinerama-dev libcairo2-dev python3-gi gir1.2-gtk-3.0 gir1.2-glib-2.0
 ~~~
 
-To install blighty from PyPI, use the command
+To install Blighty from PyPI, use the command
 
 ~~~
 sudo -H python3 -m pip install blighty --upgrade
 ~~~
 
-Should you encounter any problems installing blighty from PyPI, then install it
+Should you encounter any problems installing Blighty from PyPI, then install it
 directly from GitHub with the following command.
 
 ~~~
@@ -65,12 +65,12 @@ in the `examples` folder for some simple examples.
 
 This package makes it easy to create transparent windows that you can draw on
 with `cairo`. It takes all the boilerplate code away from you so that you can
-just focus on the artwork, pretty much as with conky.
+just focus on the artwork, pretty much as with Conky.
 
 ### X11 Canvases
 
-This is the closest to conky that you can get for the moment, and the
-recommended way of using blighty. Use the following approach to create a window
+This is the closest to Conky that you can get for the moment, and the
+recommended way of using Blighty. Use the following approach to create a window
 with the Xlib directly.
 
 ~~~ python

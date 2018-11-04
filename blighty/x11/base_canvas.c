@@ -56,6 +56,8 @@ static XSetWindowAttributes   attr;
 //
 // LOCAL HELPERS
 //
+
+// ----------------------------------------------------------------------------
 static time_t
 gettime(void) {
   struct timespec ts;
@@ -64,6 +66,7 @@ gettime(void) {
 }
 
 
+// ----------------------------------------------------------------------------
 static void
 BaseCanvas__change_property(BaseCanvas * self, const char * property_name, const char * property_value, int mode) {
   Display * display = Atelier_get_display();
@@ -82,6 +85,7 @@ BaseCanvas__change_property(BaseCanvas * self, const char * property_name, const
 }
 
 
+// ----------------------------------------------------------------------------
 void
 BaseCanvas__redraw(BaseCanvas * self) {
   cairo_save(self->context);
@@ -92,12 +96,16 @@ BaseCanvas__redraw(BaseCanvas * self) {
 }
 
 
+// ----------------------------------------------------------------------------
 void
 BaseCanvas__on_draw(BaseCanvas * self, PyObject * args) {
   PyObject * cb = PyObject_GetAttr((PyObject *) self, PyUnicode_FromString("_on_draw"));
 
   if (cb == NULL) {
-    PyErr_SetString(PyExc_TypeError, "Subclasses of BaseCanvas must implement the 'on_draw(self, context)' method.");
+    PyErr_SetString(
+      PyExc_TypeError,
+      "Subclasses of BaseCanvas must implement the 'on_draw(self, context)' method."
+    );
     return;
   }
   else {
@@ -122,12 +130,15 @@ BaseCanvas__on_draw(BaseCanvas * self, PyObject * args) {
 }
 
 
+// ----------------------------------------------------------------------------
 static void
 BaseCanvas__ui_thread(BaseCanvas * self) {
   PyGILState_STATE gstate;
   gstate = PyGILState_Ensure();
 
-  self->context_arg = Py_BuildValue("(O)", PycairoContext_FromContext(self->context, &PycairoContext_Type, (PyObject*) NULL));
+  self->context_arg = Py_BuildValue("(O)", PycairoContext_FromContext(
+    self->context, &PycairoContext_Type, (PyObject*) NULL
+  ));
 
   self->_expiry = gettime();
 
@@ -152,7 +163,7 @@ BaseCanvas__ui_thread(BaseCanvas * self) {
       XFlush(display);
       XUnlockDisplay(display);
 
-      self->_expiry += self->interval;
+      self->_expiry += self->interval ? self->interval : UI_INTERVAL;
     }
   }
 
@@ -162,6 +173,7 @@ BaseCanvas__ui_thread(BaseCanvas * self) {
 }
 
 
+// ----------------------------------------------------------------------------
 static void
 BaseCanvas__transform_coordinates(BaseCanvas * self, int * x, int * y) {
   Display            * display = Atelier_get_display();
@@ -403,9 +415,12 @@ BaseCanvas_dispose(BaseCanvas * self) {
   event.xany.window = self->win_id;
 	event.xclient.format = 32;
   event.xclient.data.l[0] = self->wm_delete_window;
+
+  XLockDisplay(display);
   XSendEvent(display, self->win_id, True, 0, &event);
   // Send the event immediately
   XFlush(display);
+  XUnlockDisplay(display);
 
   Py_INCREF(Py_None); return Py_None;
 }
