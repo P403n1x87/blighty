@@ -35,7 +35,7 @@ def test_canvas():
 
             width, height = self.get_size()
             self.plot = Graph(0, 0, width, height >> 1)
-            self.refl = Graph(0, height >> 1, width, -(height >> 1))
+            self.refl = Graph(0, height >> 1, width, -(height >> 1), scale=None)
             self.count = 0
 
         def on_draw(self, cr):

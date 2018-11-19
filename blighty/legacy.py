@@ -42,13 +42,19 @@ class Graph:
         self.y = y
         self.width = width
         self.height = height
-        self.scale = scale
+        self.scale = scale if scale else 0
+        self.auto = not scale
         self._values = deque(maxlen=width)
 
     def push_value(self, v):
         self._values.append(v)
+        if self.auto:
+            self.scale = max(self._values)
 
     def draw(self, cr):
+        if not self.scale:
+            return
+
         offset = self.x + self.width - len(self._values)
         for i in range(len(self._values)):
             cr.set_line_width(1)
