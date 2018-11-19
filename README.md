@@ -356,7 +356,9 @@ its size) or methods.
 _Since version 3.0.0_
 
 If you really can't do without the Conky look, Blighty offers you Conky-like graphs out of the box.
+
 <p align="center"><img src="art/legacy-graph.gif"/></p>
+
 All you have to do is create an instance of `blighty.legacy.Graph` by specifying the position and the size of the graph. Optionally, you can also pass a `scale` argument, which by default is set to `100` and defines the _y_ scale of the graph. If you want the graph to auto-scale, use `scale=None`. You push values to the graph with the `push_value` method and draw it on a canvas with the `draw` method, which requires a Cairo context as argument.
 
 
