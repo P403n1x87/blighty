@@ -16,11 +16,14 @@
     <img src="https://readthedocs.org/projects/blighty/badge/?version=latest"
          alt="Documentation Status">
   </a>
+  <a href="https://badge.fury.io/py/blighty">
+    <img src="https://badge.fury.io/py/blighty.svg" alt="PyPI version" height="18">
+  </a>
   <a href="http://pepy.tech/project/blighty">
     <img src="http://pepy.tech/badge/blighty"
          alt="PyPI Downloads">
   </a>
-  <img src="https://img.shields.io/badge/version-3.0.0-blue.svg"
+  <img src="https://img.shields.io/badge/version-3.0.0%20(canaletto)-blue.svg"
        alt="Version 3.0.0">
   <a href="https://github.com/P403n1x87/blighty/blob/master/LICENSE.md">
     <img src="https://img.shields.io/badge/license-GPLv3-ff69b4.svg"
@@ -346,6 +349,15 @@ hence an instance of this class. For convenience, it exposes the containing
 canvas instance via the `canvas` attribute so that it doesn't need to be passed
 to the brush method when you need to access some of the canvas attributes (e.g.
 its size) or methods.
+
+
+## Conky-like Graphs
+
+_Since version 3.0.0_
+
+If you really can't do without the Conky look, Blighty offers you Conky-like graphs out of the box.
+<p align="center"><img src="art/legacy-graph.gif"/></p>
+All you have to do is create an instance of `blighty.legacy.Graph` by specifying the position and the size of the graph. Optionally, you can also pass a `scale` argument, which by default is set to `100` and defines the _y_ scale of the graph. If you want the graph to auto-scale, use `scale=None`. You push values to the graph with the `push_value` method and draw it on a canvas with the `draw` method, which requires a Cairo context as argument.
 
 
 ## License
