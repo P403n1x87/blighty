@@ -54,6 +54,7 @@ typedef struct {
 
   // Attributes
   unsigned int      interval;
+  unsigned int      xine_screen;
   int               gravity;
 
   // Internal attributes

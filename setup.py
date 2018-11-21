@@ -28,7 +28,7 @@ from setuptools import Extension, find_packages, setup
 
 x11 = Extension('blighty._x11',
     include_dirs       = ['/usr/include/cairo/'],
-    libraries          = ['cairo', 'X11'],
+    libraries          = ['cairo', 'X11', 'Xinerama'],
     extra_compile_args = ['-std=c99'],
     sources            = [
         'blighty/x11/_x11module.c',
@@ -40,7 +40,7 @@ x11 = Extension('blighty._x11',
 
 setup(
     name             = 'blighty',
-    version          = '2.1.2',
+    version          = '3.0.0',
     description      = 'Desktop Widget Manager. Think of conky, but with Python instead of Lua.',
     long_description = open('README.md').read(), long_description_content_type='text/markdown',
     author           = 'Gabriele N. Tornetta',

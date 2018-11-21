@@ -24,9 +24,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import psutil
 from blighty import CanvasGravity
+from blighty.legacy import Graph
 from blighty.x11 import Canvas, start_event_loop
-
-from plot import SimplePlot
 
 
 def test_canvas():
@@ -34,15 +33,28 @@ def test_canvas():
         def __init__(self, *args, **kwargs):
             super().__init__(*args, **kwargs)
 
-            self.plot = SimplePlot(*self.get_size())
-            self.count = 5
+            width, height = self.get_size()
+            self.plot = Graph(0, 0, width, height >> 1)
+            self.refl = Graph(0, height >> 1, width, -(height >> 1), scale=None)
+            self.count = 0
 
         def on_draw(self, cr):
-            self.plot.push_value(psutil.cpu_percent(.1))
+            cr.set_source_rgb(0.1, 0.1, 0.1)
+            cr.rectangle(0, 0, *self.get_size())
+            cr.fill()
+
+            v = psutil.cpu_percent(0.1)
+
+            self.plot.push_value(v)
+            self.refl.push_value(v)
+
+            cr.set_source_rgb(1, 1, 1)
             self.plot.draw(cr)
+            cr.set_source_rgb(.2, .2, .2)
+            self.refl.draw(cr)
             self.count += 1
 
-            if self.count > 10:
+            if self.count > 300:
                 self.dispose()
 
         def on_button_pressed(self, button, state, x, y):
@@ -53,8 +65,8 @@ def test_canvas():
             if keysym == 65307:
                 self.dispose()
 
-    canvas = TestMPL(10, 10, 320, 160, gravity = CanvasGravity.SOUTH_EAST)
-    canvas.interval = 2000
+    canvas = TestMPL(10, 10, 160, 160, gravity = CanvasGravity.SOUTH_EAST)
+    canvas.interval = 500
     canvas.show()
     start_event_loop()
 

@@ -28,19 +28,78 @@
 
 static PyObject * atelier = NULL;
 
-static Display * display = NULL;
+static Display            * display = NULL;
+static XineramaScreenInfo * info    = NULL;
+static int                  n_scr   = 0;
 
+
+// ----------------------------------------------------------------------------
 static PyObject *
 get_callback(PyObject * object, char * method) {
   PyObject * py_method = PyUnicode_FromString(method);
-  return PyObject_HasAttr(object, py_method) > 0 ? PyObject_GetAttr(object, py_method) : NULL;
+
+  return PyObject_HasAttr(object, py_method) > 0
+    ? PyObject_GetAttr(object, py_method)
+    : NULL;
 }
 
+
+// ----------------------------------------------------------------------------
+Display *
+Atelier_get_display(void) {
+  if (display == NULL)
+    Atelier_set_display(XOpenDisplay(NULL));
+
+  return display;
+}
+
+
+// ----------------------------------------------------------------------------
 void
 Atelier_set_display(Display * d) {
+  if (d == NULL) {
+    if (display != NULL) {
+      if (info != NULL) {
+        XFree(info);
+        info = NULL;
+        n_scr = 0;
+      }
+
+      XCloseDisplay(display);
+      display = NULL;
+    }
+    return;
+  }
+
   display = d;
+
+  // Xinerama support
+  int event, error;
+
+  if (!XineramaQueryExtension(d, &event, &error))
+    return;
+
+  if (!XineramaIsActive(d))
+    return;
+
+  info = XineramaQueryScreens(d, &n_scr);
 }
 
+
+// ----------------------------------------------------------------------------
+XineramaScreenInfo *
+Atelier_get_screen_info(int screen) {
+  if (screen < n_scr) {
+    for (register int i = 0; i < n_scr; i++)
+      if (screen == info[i].screen_number)
+        return &(info[i]);
+  }
+
+  return NULL;
+}
+
+
+// ----------------------------------------------------------------------------
 void
 Atelier_init(void) {
   // Initialise Xlib and CPython for concurrent threads.
@@ -54,6 +113,8 @@ Atelier_init(void) {
   atelier = PyList_New(0);
 }
 
+
+// ----------------------------------------------------------------------------
 void
 Atelier_add_canvas(BaseCanvas * canvas) {
   // TODO: Check that the canvas is not registered already.
@@ -61,6 +122,7 @@ Atelier_add_canvas(BaseCanvas * canvas) {
 }
 
 
+// ----------------------------------------------------------------------------
 int
 Atelier_remove_canvas(BaseCanvas * canvas) {
   BaseCanvas * c;
@@ -68,7 +130,10 @@ Atelier_remove_canvas(BaseCanvas * canvas) {
     c = (BaseCanvas *) PyList_GetItem(atelier, i);
     if (c == canvas) {
       PyList_SetSlice(atelier, i, i + 1, NULL);
-      return PyList_Size(atelier);
+      int n_canvas = PyList_Size(atelier);
+      if (!n_canvas)
+        Atelier_set_display(NULL);
+      return n_canvas;
     }
   }
   return -1;
@@ -82,14 +147,7 @@ Atelier_remove_canvas(BaseCanvas * canvas) {
 static int main_loop_running = 0;
 
 
-static void
-thread_sleep(useconds_t usecs) {
-  Py_BEGIN_ALLOW_THREADS
-  usleep(usecs);
-  Py_END_ALLOW_THREADS
-}
-
-
+// ----------------------------------------------------------------------------
 static void
 dispatch_event(BaseCanvas * canvas, XEvent * e) {
   char keybuf[8];
@@ -150,6 +208,8 @@ dispatch_event(BaseCanvas * canvas, XEvent * e) {
   }
 }
 
+
+// ----------------------------------------------------------------------------
 PyObject *
 Atelier_start_event_loop(PyObject * args, PyObject * kwargs) {
   if (main_loop_running > 0 || atelier == NULL) {
@@ -179,7 +239,7 @@ Atelier_start_event_loop(PyObject * args, PyObject * kwargs) {
     // TODO: Raise RuntimeError!
     if (!found) {
       fprintf(stderr, "Canvas not found!\n");
-      return;
+      return NULL;
     }
 
     dispatch_event(canvas, &e);
@@ -190,11 +250,15 @@ Atelier_start_event_loop(PyObject * args, PyObject * kwargs) {
   Py_INCREF(Py_None); return Py_None;
 }
 
+
+// ----------------------------------------------------------------------------
 void
 Atelier_stop_event_loop(void) {
   main_loop_running = 0;
 }
 
+
+// ----------------------------------------------------------------------------
 int
 Atelier_is_running(void) {
   return main_loop_running;
