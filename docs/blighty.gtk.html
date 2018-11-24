@@ -1,0 +1,424 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>blighty.gtk package &mdash; blighty 2.0.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/theme_overrides.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="blighty.x11 package" href="blighty.x11.html" />
+    <link rel="prev" title="blighty package" href="blighty.html" /> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> blighty
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="blighty.html">blighty package</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="blighty.html#module-blighty">Module content</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="blighty.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l3 current"><a class="current reference internal" href="#">blighty.gtk package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#module-blighty.gtk">Module contents</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-blighty.gtk.canvas">blighty.gtk.canvas module</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="blighty.x11.html">blighty.x11 package</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">blighty</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="blighty.html">blighty package</a> &raquo;</li>
+        
+      <li>blighty.gtk package</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/blighty.gtk.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="blighty-gtk-package">
+<h1>blighty.gtk package<a class="headerlink" href="#blighty-gtk-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="module-blighty.gtk">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-blighty.gtk" title="Permalink to this headline">¶</a></h2>
+<p>This module provides support for creating GTK canvases. If you are trying to
+replicate conky’s behaviour then consider using the <a class="reference internal" href="blighty.x11.html#module-blighty.x11" title="blighty.x11"><code class="xref py py-mod docutils literal notranslate"><span class="pre">blighty.x11</span></code></a>
+submodule instead.</p>
+<dl class="function">
+<dt id="blighty.gtk.start_event_loop">
+<code class="descclassname">blighty.gtk.</code><code class="descname">start_event_loop</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/blighty/gtk.html#start_event_loop"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#blighty.gtk.start_event_loop" title="Permalink to this definition">¶</a></dt>
+<dd><p>Start the main GTK event loop.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="blighty.gtk.stop_event_loop">
+<code class="descclassname">blighty.gtk.</code><code class="descname">stop_event_loop</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/blighty/gtk.html#stop_event_loop"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#blighty.gtk.stop_event_loop" title="Permalink to this definition">¶</a></dt>
+<dd><p>Stop the main GTK event loop.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-blighty.gtk.canvas">
+<span id="blighty-gtk-canvas-module"></span><h2>blighty.gtk.canvas module<a class="headerlink" href="#module-blighty.gtk.canvas" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="description">
+<h3>Description<a class="headerlink" href="#description" title="Permalink to this headline">¶</a></h3>
+<p>This module provides the <code class="docutils literal notranslate"><span class="pre">Canvas</span></code> class for the creation of X11 canvases.</p>
+<p>We advise that you consider using the <code class="docutils literal notranslate"><span class="pre">Canvas</span></code> class provided by the
+<a class="reference internal" href="blighty.x11.html#module-blighty.x11" title="blighty.x11"><code class="xref py py-mod docutils literal notranslate"><span class="pre">blighty.x11</span></code></a> submodule instead, as it gives more portability
+acrossdifferent display managers. The interface of
+<a class="reference internal" href="#blighty.gtk.canvas.Canvas" title="blighty.gtk.canvas.Canvas"><code class="xref py py-class docutils literal notranslate"><span class="pre">blighty.gtk.canvas.Canvas</span></code></a> is identical to that of
+<a class="reference internal" href="blighty.x11.html#blighty.x11.canvas.Canvas" title="blighty.x11.canvas.Canvas"><code class="xref py py-class docutils literal notranslate"><span class="pre">blighty.x11.canvas.Canvas</span></code></a>, so we refer you to the latter for more
+details of how to deal with GTK canvases. The key difference is basically in
+the class that your canvases have to extend. For example, if you have an
+X11-based canvas and you have the following import in your source code:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">blighty.x11</span> <span class="k">import</span> <span class="n">Canvas</span><span class="p">,</span> <span class="n">start_event_loop</span>
+</pre></div>
+</div>
+<p>all you have to do is replace <code class="docutils literal notranslate"><span class="pre">blighty.x11</span></code> with <code class="docutils literal notranslate"><span class="pre">blighty.gtk</span></code>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">blighty.gtk</span> <span class="k">import</span> <span class="n">Canvas</span><span class="p">,</span> <span class="n">start_event_loop</span>
+</pre></div>
+</div>
+<p>and the same code will work just fine and will produce the same result.</p>
+<p>Here is the same simple example from the <a class="reference internal" href="blighty.x11.html#module-blighty.x11" title="blighty.x11"><code class="xref py py-mod docutils literal notranslate"><span class="pre">blighty.x11</span></code></a> module, adapted
+to the GTK case:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">blighty</span> <span class="k">import</span> <span class="n">CanvasGravity</span>
+<span class="kn">from</span> <span class="nn">blighty.gtk</span> <span class="k">import</span> <span class="n">Canvas</span><span class="p">,</span> <span class="n">start_event_loop</span>
+
+<span class="k">class</span> <span class="nc">MyCanvas</span><span class="p">(</span><span class="n">Canvas</span><span class="p">):</span>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">build</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">MyCanvas</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="mi">200</span><span class="p">,</span> <span class="mi">200</span><span class="p">,</span> <span class="n">gravity</span> <span class="o">=</span> <span class="n">CanvasGravity</span><span class="o">.</span><span class="n">NORTH</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">on_button_pressed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">button</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">button</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>  <span class="c1"># Left mouse button pressed</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">dispose</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">on_draw</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ctx</span><span class="p">):</span>
+        <span class="n">ctx</span><span class="o">.</span><span class="n">set_source_rgb</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="n">ctx</span><span class="o">.</span><span class="n">rectangle</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">ctx</span><span class="o">.</span><span class="n">canvas</span><span class="o">.</span><span class="n">width</span> <span class="o">&gt;&gt;</span> <span class="mi">1</span><span class="p">,</span> <span class="n">ctx</span><span class="o">.</span><span class="n">canvas</span><span class="o">.</span><span class="n">height</span> <span class="o">&gt;&gt;</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">ctx</span><span class="o">.</span><span class="n">fill</span><span class="p">()</span>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="c1"># Instantiate the canvas</span>
+    <span class="n">canvas</span> <span class="o">=</span> <span class="n">MyCanvas</span><span class="o">.</span><span class="n">build</span><span class="p">()</span>
+
+    <span class="c1"># Map it on screen</span>
+    <span class="n">canvas</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+
+    <span class="c1"># Start the event loop</span>
+    <span class="n">start_event_loop</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>The only difference is on the second line, where we reference the
+<a class="reference internal" href="#module-blighty.gtk" title="blighty.gtk"><code class="xref py py-mod docutils literal notranslate"><span class="pre">blighty.gtk</span></code></a> submodule instead of <a class="reference internal" href="blighty.x11.html#module-blighty.x11" title="blighty.x11"><code class="xref py py-mod docutils literal notranslate"><span class="pre">blighty.x11</span></code></a>.</p>
+</div>
+<div class="section" id="extra-features">
+<h3>Extra features<a class="headerlink" href="#extra-features" title="Permalink to this headline">¶</a></h3>
+<p>There are some features that are unique to GTK canvases only. This implies
+that, if you have a GTK canvas and you use some of these features, you won’t
+be able to run the same code as an X11 canvas without changes.</p>
+<div class="section" id="access-the-underlying-gtk-window">
+<h4>Access the underlying GTK window<a class="headerlink" href="#access-the-underlying-gtk-window" title="Permalink to this headline">¶</a></h4>
+<p>GTK canvases are special GTK windows that have been configured to be used as
+desktop widgets. Every instance of the <a class="reference internal" href="#blighty.gtk.canvas.Canvas" title="blighty.gtk.canvas.Canvas"><code class="xref py py-class docutils literal notranslate"><span class="pre">blighty.gtk.canvas.Canvas</span></code></a> class
+will expose the underlying <code class="xref py py-class docutils literal notranslate"><span class="pre">GTKWindow</span></code> via <code class="docutils literal notranslate"><span class="pre">self</span></code>.</p>
+</div>
+</div>
+<div class="section" id="module-api">
+<h3>Module API<a class="headerlink" href="#module-api" title="Permalink to this headline">¶</a></h3>
+<dl class="class">
+<dt id="blighty.gtk.canvas.Canvas">
+<em class="property">class </em><code class="descclassname">blighty.gtk.canvas.</code><code class="descname">Canvas</code><span class="sig-paren">(</span><em>x</em>, <em>y</em>, <em>width</em>, <em>height</em>, <em>interval=1000</em>, <em>screen=0</em>, <em>window_type=1</em>, <em>gravity=1</em>, <em>sticky=True</em>, <em>keep_below=True</em>, <em>skip_taskbar=True</em>, <em>skip_pager=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/blighty/gtk/canvas.html#Canvas"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#blighty.gtk.canvas.Canvas" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">gi.overrides.Gtk.Window</span></code></p>
+<p>GTK Canvas object.</p>
+<p>This class is meant to be used as a superclass and should not be
+instantiated directly. Subclasses should implement the <code class="docutils literal notranslate"><span class="pre">on_draw</span></code>
+callback, which is invoked every time the canvas needs to be redrawn.
+Redraws happen at regular intervals in time, as specified by the
+<code class="docutils literal notranslate"><span class="pre">interval</span></code> attribute (also passed as an argument via the constructor).</p>
+<dl class="method">
+<dt id="blighty.gtk.canvas.Canvas.dispose">
+<code class="descname">dispose</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/blighty/gtk/canvas.html#Canvas.dispose"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#blighty.gtk.canvas.Canvas.dispose" title="Permalink to this definition">¶</a></dt>
+<dd><p>Dispose of the canvas.</p>
+<p>For GTK-based canvases, this is equivalent to calling the
+<code class="xref py py-func docutils literal notranslate"><span class="pre">destroy()</span></code> method.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="blighty.gtk.canvas.Canvas.draw_grid">
+<code class="descname">draw_grid</code><span class="sig-paren">(</span><em>x=50</em>, <em>y=50</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/blighty/gtk/canvas.html#Canvas.draw_grid"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#blighty.gtk.canvas.Canvas.draw_grid" title="Permalink to this definition">¶</a></dt>
+<dd><p>Draw a grid on the canvas [<strong>implicit brush</strong>].</p>
+<p>This implicit brush method is intended to help with determining the
+location of points on the canvas during development.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>x</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><em>int</em></a>) – The horizontal spacing between lines.</li>
+<li><strong>y</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><em>int</em></a>) – The vertical spacing between lines.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="blighty.gtk.canvas.Canvas.move">
+<code class="descname">move</code><span class="sig-paren">(</span><em>x</em>, <em>y</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/blighty/gtk/canvas.html#Canvas.move"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#blighty.gtk.canvas.Canvas.move" title="Permalink to this definition">¶</a></dt>
+<dd><p>Move the canvas to new coordinates.</p>
+<p>The <em>x</em> and <em>y</em> coordinates are relative to the canvas gravity.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="blighty.gtk.canvas.Canvas.on_draw">
+<code class="descname">on_draw</code><span class="sig-paren">(</span><em>cr</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/blighty/gtk/canvas.html#Canvas.on_draw"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#blighty.gtk.canvas.Canvas.on_draw" title="Permalink to this definition">¶</a></dt>
+<dd><p>Draw callback.</p>
+<p>Once the <a class="reference internal" href="#blighty.gtk.canvas.Canvas.show" title="blighty.gtk.canvas.Canvas.show"><code class="xref py py-func docutils literal notranslate"><span class="pre">show()</span></code></a> method is called on a <a class="reference internal" href="#blighty.gtk.canvas.Canvas" title="blighty.gtk.canvas.Canvas"><code class="xref py py-class docutils literal notranslate"><span class="pre">Canvas</span></code></a> object,
+this method gets called at regular intervals of time to perform the
+draw operation. Every subclass of <a class="reference internal" href="#blighty.gtk.canvas.Canvas" title="blighty.gtk.canvas.Canvas"><code class="xref py py-class docutils literal notranslate"><span class="pre">Canvas</span></code></a> must implement this
+method.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="blighty.gtk.canvas.Canvas.show">
+<code class="descname">show</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/blighty/gtk/canvas.html#Canvas.show"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#blighty.gtk.canvas.Canvas.show" title="Permalink to this definition">¶</a></dt>
+<dd><p>Map the canvas to screen and set it ready for drawing.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="blighty.gtk.canvas.Canvas.write_text">
+<code class="descname">write_text</code><span class="sig-paren">(</span><em>x</em>, <em>y</em>, <em>text</em>, <em>align=3</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/blighty/gtk/canvas.html#Canvas.write_text"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#blighty.gtk.canvas.Canvas.write_text" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write aligned text [<strong>explicit brush</strong>].</p>
+<p>This explicit brush method helps write aligned text on the canvas. The
+<em>x</em> and <em>y</em> coordinates are relative to the specified <em>alignment</em>. By
+default, this is <code class="docutils literal notranslate"><span class="pre">blighty.TextAlign.TOP_LEFT</span></code>, meaning that the text
+will be left-aligned and on top of the horizontal line that passes
+through <em>y</em> on the vertical axis. In terms of the point <em>(x,y)</em> on the
+Canvas, the text will develop in the NE direction.</p>
+<p>The return value is the text extents, in case that some further draw
+operations depend on the space required by the text to be drawn on the
+canvas.</p>
+<p>Note that font face and size need to be set on the Cairo context prior
+to a call to this method.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>x</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><em>int</em></a>) – The horizontal coordinate.</li>
+<li><strong>y</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><em>int</em></a>) – The vertical coordinate.</li>
+<li><strong>text</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – The text to write.</li>
+<li><strong>align</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><em>int</em></a>) – The text alignment. Detaulf is <code class="docutils literal notranslate"><span class="pre">TextAlign.TOP_LEFT</span></code>.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The same return value as <code class="docutils literal notranslate"><span class="pre">cairo.text_extents</span></code>.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.7)">tuple</a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="blighty.x11.html" class="btn btn-neutral float-right" title="blighty.x11 package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="blighty.html" class="btn btn-neutral" title="blighty package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, Gabriele N. Tornetta.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'2.0.0',
+            LANGUAGE:'None',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+
+  
+
+  <script type="text/javascript" src="_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

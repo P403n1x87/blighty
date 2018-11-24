@@ -1,0 +1,512 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>blighty.gtk.canvas &mdash; blighty 2.0.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/theme_overrides.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+
+  
+  <script src="../../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> blighty
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../blighty.html">blighty package</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">blighty</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+          <li><a href="../../blighty.html">blighty</a> &raquo;</li>
+        
+          <li><a href="../gtk.html">blighty.gtk</a> &raquo;</li>
+        
+      <li>blighty.gtk.canvas</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for blighty.gtk.canvas</h1><div class="highlight"><pre>
+<span></span><span class="c1"># This file is part of &quot;blighty&quot; which is released under GPL.</span>
+<span class="c1">#</span>
+<span class="c1"># See file LICENCE or go to http://www.gnu.org/licenses/ for full license</span>
+<span class="c1"># details.</span>
+<span class="c1">#</span>
+<span class="c1"># blighty is a desktop widget creation and management library for Python 3.</span>
+<span class="c1">#</span>
+<span class="c1"># Copyright (c) 2018 Gabriele N. Tornetta &lt;phoenix1987@gmail.com&gt;.</span>
+<span class="c1"># All rights reserved.</span>
+<span class="c1">#</span>
+<span class="c1"># This program is free software: you can redistribute it and/or modify</span>
+<span class="c1"># it under the terms of the GNU General Public License as published by</span>
+<span class="c1"># the Free Software Foundation, either version 3 of the License, or</span>
+<span class="c1"># (at your option) any later version.</span>
+<span class="c1">#</span>
+<span class="c1"># This program is distributed in the hope that it will be useful,</span>
+<span class="c1"># but WITHOUT ANY WARRANTY; without even the implied warranty of</span>
+<span class="c1"># MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the</span>
+<span class="c1"># GNU General Public License for more details.</span>
+<span class="c1"># You should have received a copy of the GNU General Public License</span>
+<span class="c1"># along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.</span>
+
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Description</span>
+<span class="sd">===========</span>
+
+<span class="sd">This module provides the ``Canvas`` class for the creation of X11 canvases.</span>
+
+<span class="sd">We advise that you consider using the ``Canvas`` class provided by the</span>
+<span class="sd">:mod:`blighty.x11` submodule instead, as it gives more portability</span>
+<span class="sd">acrossdifferent display managers. The interface of</span>
+<span class="sd">:class:`blighty.gtk.canvas.Canvas` is identical to that of</span>
+<span class="sd">:class:`blighty.x11.canvas.Canvas`, so we refer you to the latter for more</span>
+<span class="sd">details of how to deal with GTK canvases. The key difference is basically in</span>
+<span class="sd">the class that your canvases have to extend. For example, if you have an</span>
+<span class="sd">X11-based canvas and you have the following import in your source code::</span>
+
+<span class="sd">    from blighty.x11 import Canvas, start_event_loop</span>
+
+<span class="sd">all you have to do is replace ``blighty.x11`` with ``blighty.gtk``::</span>
+
+<span class="sd">    from blighty.gtk import Canvas, start_event_loop</span>
+
+<span class="sd">and the same code will work just fine and will produce the same result.</span>
+
+<span class="sd">Here is the same simple example from the :mod:`blighty.x11` module, adapted</span>
+<span class="sd">to the GTK case::</span>
+
+<span class="sd">    from blighty import CanvasGravity</span>
+<span class="sd">    from blighty.gtk import Canvas, start_event_loop</span>
+
+<span class="sd">    class MyCanvas(Canvas):</span>
+<span class="sd">        @staticmethod</span>
+<span class="sd">        def build(x, y):</span>
+<span class="sd">            return MyCanvas(x, y, 200, 200, gravity = CanvasGravity.NORTH)</span>
+
+<span class="sd">        def on_button_pressed(self, button, state, x, y):</span>
+<span class="sd">            if button == 1:  # Left mouse button pressed</span>
+<span class="sd">                self.dispose()</span>
+
+<span class="sd">        def on_draw(self, ctx):</span>
+<span class="sd">            ctx.set_source_rgb(1, 0, 0)</span>
+<span class="sd">            ctx.rectangle(0, 0, ctx.canvas.width &gt;&gt; 1, ctx.canvas.height &gt;&gt; 1)</span>
+<span class="sd">            ctx.fill()</span>
+
+<span class="sd">    if __name__ == &quot;__main__&quot;:</span>
+<span class="sd">        # Instantiate the canvas</span>
+<span class="sd">        canvas = MyCanvas.build()</span>
+
+<span class="sd">        # Map it on screen</span>
+<span class="sd">        canvas.show()</span>
+
+<span class="sd">        # Start the event loop</span>
+<span class="sd">        start_event_loop()</span>
+
+<span class="sd">The only difference is on the second line, where we reference the</span>
+<span class="sd">:mod:`blighty.gtk` submodule instead of :mod:`blighty.x11`.</span>
+
+
+<span class="sd">Extra features</span>
+<span class="sd">==============</span>
+
+<span class="sd">There are some features that are unique to GTK canvases only. This implies</span>
+<span class="sd">that, if you have a GTK canvas and you use some of these features, you won&#39;t</span>
+<span class="sd">be able to run the same code as an X11 canvas without changes.</span>
+
+
+<span class="sd">Access the underlying GTK window</span>
+<span class="sd">--------------------------------</span>
+
+<span class="sd">GTK canvases are special GTK windows that have been configured to be used as</span>
+<span class="sd">desktop widgets. Every instance of the :class:`blighty.gtk.canvas.Canvas` class</span>
+<span class="sd">will expose the underlying :class:`GTKWindow` via ``self``.</span>
+
+
+<span class="sd">Module API</span>
+<span class="sd">==========</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="k">try</span><span class="p">:</span>
+    <span class="kn">import</span> <span class="nn">gi</span>
+<span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+    <span class="k">raise</span> <span class="ne">ImportError</span><span class="p">(</span><span class="s2">&quot;Unable to import PyGObject. See https://pygobject.readthedocs.io/ for more info.&quot;</span><span class="p">)</span>
+
+<span class="n">gi</span><span class="o">.</span><span class="n">require_version</span><span class="p">(</span><span class="s1">&#39;Gtk&#39;</span><span class="p">,</span> <span class="s1">&#39;3.0&#39;</span><span class="p">)</span>
+<span class="n">gi</span><span class="o">.</span><span class="n">require_version</span><span class="p">(</span><span class="s1">&#39;Gdk&#39;</span><span class="p">,</span> <span class="s1">&#39;3.0&#39;</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">time</span> <span class="k">import</span> <span class="n">sleep</span>
+
+<span class="kn">from</span> <span class="nn">blighty</span> <span class="k">import</span> <span class="p">(</span><span class="n">CanvasGravity</span><span class="p">,</span> <span class="n">CanvasType</span><span class="p">,</span> <span class="n">ExtendedContext</span><span class="p">,</span> <span class="n">TextAlign</span><span class="p">,</span>
+                     <span class="n">brush</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">blighty._brush</span> <span class="k">import</span> <span class="n">BrushSets</span><span class="p">,</span> <span class="n">draw_grid</span><span class="p">,</span> <span class="n">write_text</span>
+<span class="kn">from</span> <span class="nn">gi.repository</span> <span class="k">import</span> <span class="n">Gdk</span><span class="p">,</span> <span class="n">Gtk</span>
+
+<span class="n">WINDOW_TYPE_MAP</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="n">Gdk</span><span class="o">.</span><span class="n">WindowTypeHint</span><span class="o">.</span><span class="n">NORMAL</span><span class="p">,</span>
+    <span class="n">Gdk</span><span class="o">.</span><span class="n">WindowTypeHint</span><span class="o">.</span><span class="n">DESKTOP</span><span class="p">,</span>
+    <span class="n">Gdk</span><span class="o">.</span><span class="n">WindowTypeHint</span><span class="o">.</span><span class="n">DOCK</span><span class="p">,</span>
+    <span class="n">Gdk</span><span class="o">.</span><span class="n">WindowTypeHint</span><span class="o">.</span><span class="n">TOOLBAR</span><span class="p">,</span>
+<span class="p">]</span>
+
+
+<div class="viewcode-block" id="Canvas"><a class="viewcode-back" href="../../../blighty.gtk.html#blighty.gtk.canvas.Canvas">[docs]</a><span class="k">class</span> <span class="nc">Canvas</span><span class="p">(</span><span class="n">Gtk</span><span class="o">.</span><span class="n">Window</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;GTK Canvas object.</span>
+
+<span class="sd">    This class is meant to be used as a superclass and should not be</span>
+<span class="sd">    instantiated directly. Subclasses should implement the ``on_draw``</span>
+<span class="sd">    callback, which is invoked every time the canvas needs to be redrawn.</span>
+<span class="sd">    Redraws happen at regular intervals in time, as specified by the</span>
+<span class="sd">    ``interval`` attribute (also passed as an argument via the constructor).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span>
+                 <span class="n">interval</span> <span class="o">=</span> <span class="mi">1000</span><span class="p">,</span>
+                 <span class="n">screen</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+                 <span class="n">window_type</span> <span class="o">=</span> <span class="n">CanvasType</span><span class="o">.</span><span class="n">DESKTOP</span><span class="p">,</span>
+                 <span class="n">gravity</span> <span class="o">=</span> <span class="n">CanvasGravity</span><span class="o">.</span><span class="n">NORTH_WEST</span><span class="p">,</span>
+                 <span class="n">sticky</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+                 <span class="n">keep_below</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+                 <span class="n">skip_taskbar</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+                 <span class="n">skip_pager</span> <span class="o">=</span> <span class="kc">True</span>
+                 <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Initialise the Canvas object.</span>
+
+<span class="sd">        If this method is overriden, keep in mind that the initialisation looks</span>
+<span class="sd">        up for brushes inherited from all the superclasses. It is therefore</span>
+<span class="sd">        important that the method from ``super()`` is called to ensure the</span>
+<span class="sd">        correct functioning of the brushes.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">interval</span> <span class="o">=</span> <span class="n">interval</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">xine_screen</span> <span class="o">=</span> <span class="n">screen</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">gravity</span> <span class="o">=</span> <span class="n">gravity</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_type_hint</span><span class="p">(</span><span class="n">WINDOW_TYPE_MAP</span><span class="p">[</span><span class="n">window_type</span><span class="p">])</span>
+
+        <span class="k">if</span> <span class="n">skip_taskbar</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">set_skip_taskbar_hint</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">skip_pager</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">set_skip_pager_hint</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">sticky</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">stick</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="n">keep_below</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">set_keep_below</span><span class="p">(</span><span class="n">keep_below</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">screen</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_screen</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">width</span> <span class="o">=</span> <span class="n">width</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">height</span> <span class="o">=</span> <span class="n">height</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_size_request</span><span class="p">(</span><span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">move</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+
+        <span class="c1"># Handle gravity with respect to parent window manually</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_gravity</span><span class="p">(</span><span class="n">gravity</span><span class="p">)</span>
+
+        <span class="c1"># Make the window transparent</span>
+        <span class="n">visual</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">screen</span><span class="o">.</span><span class="n">get_rgba_visual</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">visual</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">screen</span><span class="o">.</span><span class="n">is_composited</span><span class="p">():</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">set_visual</span><span class="p">(</span><span class="n">visual</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_app_paintable</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="c1"># Connect signals</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s2">&quot;draw&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_on_draw</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s2">&quot;delete-event&quot;</span><span class="p">,</span> <span class="n">Gtk</span><span class="o">.</span><span class="n">main_quit</span><span class="p">)</span>
+
+        <span class="n">BrushSets</span><span class="o">.</span><span class="n">inherit</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_extended_context</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="k">def</span> <span class="nf">_translate_coordinates</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">xine_screen</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">xine_screen</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">screen</span><span class="o">.</span><span class="n">get_n_monitors</span><span class="p">():</span>
+            <span class="n">width</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">screen</span><span class="o">.</span><span class="n">get_width</span><span class="p">()</span>
+            <span class="n">height</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">screen</span><span class="o">.</span><span class="n">get_height</span><span class="p">()</span>
+            <span class="n">x_org</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="n">y_org</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">monitor</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">screen</span><span class="o">.</span><span class="n">get_monitor_geometry</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">xine_screen</span><span class="p">)</span>
+            <span class="n">width</span> <span class="o">=</span> <span class="n">monitor</span><span class="o">.</span><span class="n">width</span>
+            <span class="n">height</span> <span class="o">=</span> <span class="n">monitor</span><span class="o">.</span><span class="n">height</span>
+            <span class="n">x_org</span> <span class="o">=</span> <span class="n">monitor</span><span class="o">.</span><span class="n">x</span>
+            <span class="n">y_org</span> <span class="o">=</span> <span class="n">monitor</span><span class="o">.</span><span class="n">y</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">gravity</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">%</span> <span class="mi">3</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">tx</span> <span class="o">=</span> <span class="n">x</span>
+        <span class="k">elif</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">gravity</span> <span class="o">-</span> <span class="mi">2</span><span class="p">)</span> <span class="o">%</span> <span class="mi">3</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">tx</span> <span class="o">=</span> <span class="p">((</span><span class="n">width</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">width</span><span class="p">)</span> <span class="o">&gt;&gt;</span> <span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="n">x</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">tx</span> <span class="o">=</span> <span class="n">width</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">width</span> <span class="o">-</span> <span class="n">x</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">gravity</span> <span class="o">&lt;=</span> <span class="mi">3</span><span class="p">:</span>
+            <span class="n">ty</span> <span class="o">=</span> <span class="n">y</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">gravity</span> <span class="o">&lt;=</span> <span class="mi">6</span><span class="p">:</span>
+            <span class="n">ty</span> <span class="o">=</span> <span class="p">((</span><span class="n">height</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">height</span><span class="p">)</span> <span class="o">&gt;&gt;</span> <span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="n">y</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">ty</span> <span class="o">=</span> <span class="n">height</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">height</span> <span class="o">-</span> <span class="n">y</span>
+
+        <span class="k">return</span> <span class="n">tx</span> <span class="o">+</span> <span class="n">x_org</span><span class="p">,</span> <span class="n">ty</span> <span class="o">+</span> <span class="n">y_org</span>
+
+    <span class="k">def</span> <span class="nf">_on_draw</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">widget</span><span class="p">,</span> <span class="n">cr</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_extended_context</span> <span class="o">=</span> <span class="n">ExtendedContext</span><span class="p">(</span><span class="n">cr</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">on_draw</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_extended_context</span><span class="p">)</span>
+
+        <span class="n">widget</span><span class="o">.</span><span class="n">queue_draw</span><span class="p">()</span>
+
+        <span class="n">sleep</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">interval</span> <span class="o">/</span> <span class="mf">1000.</span><span class="p">)</span>
+
+<div class="viewcode-block" id="Canvas.on_draw"><a class="viewcode-back" href="../../../blighty.gtk.html#blighty.gtk.canvas.Canvas.on_draw">[docs]</a>    <span class="k">def</span> <span class="nf">on_draw</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cr</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Draw callback.</span>
+
+<span class="sd">        Once the :func:`show` method is called on a :class:`Canvas` object,</span>
+<span class="sd">        this method gets called at regular intervals of time to perform the</span>
+<span class="sd">        draw operation. Every subclass of :class:`Canvas` must implement this</span>
+<span class="sd">        method.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;on_draw method not implemented in subclass.&quot;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Canvas.show"><a class="viewcode-back" href="../../../blighty.gtk.html#blighty.gtk.canvas.Canvas.show">[docs]</a>    <span class="k">def</span> <span class="nf">show</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Map the canvas to screen and set it ready for drawing.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">show_all</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="Canvas.move"><a class="viewcode-back" href="../../../blighty.gtk.html#blighty.gtk.canvas.Canvas.move">[docs]</a>    <span class="k">def</span> <span class="nf">move</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Move the canvas to new coordinates.</span>
+
+<span class="sd">        The *x* and *y* coordinates are relative to the canvas gravity.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="n">x</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="n">y</span>
+        <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">move</span><span class="p">(</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">_translate_coordinates</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="Canvas.dispose"><a class="viewcode-back" href="../../../blighty.gtk.html#blighty.gtk.canvas.Canvas.dispose">[docs]</a>    <span class="k">def</span> <span class="nf">dispose</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Dispose of the canvas.</span>
+
+<span class="sd">        For GTK-based canvases, this is equivalent to calling the</span>
+<span class="sd">        :func:`destroy` method.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">destroy</span><span class="p">()</span></div>
+
+    <span class="c1"># TODO: Remove duplicate docstrings</span>
+
+<div class="viewcode-block" id="Canvas.draw_grid"><a class="viewcode-back" href="../../../blighty.gtk.html#blighty.gtk.canvas.Canvas.draw_grid">[docs]</a>    <span class="k">def</span> <span class="nf">draw_grid</span><span class="p">(</span><span class="n">ctx</span><span class="p">,</span> <span class="n">x</span> <span class="o">=</span> <span class="mi">50</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="mi">50</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Draw a grid on the canvas [**implicit brush**].</span>
+
+<span class="sd">        This implicit brush method is intended to help with determining the</span>
+<span class="sd">        location of points on the canvas during development.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            x (int): The horizontal spacing between lines.</span>
+<span class="sd">            y (int): The vertical spacing between lines.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">draw_grid</span><span class="p">(</span><span class="n">ctx</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Canvas.write_text"><a class="viewcode-back" href="../../../blighty.gtk.html#blighty.gtk.canvas.Canvas.write_text">[docs]</a>    <span class="nd">@brush</span>
+    <span class="k">def</span> <span class="nf">write_text</span><span class="p">(</span><span class="n">cr</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">text</span><span class="p">,</span> <span class="n">align</span> <span class="o">=</span> <span class="n">TextAlign</span><span class="o">.</span><span class="n">TOP_LEFT</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Write aligned text [**explicit brush**].</span>
+
+<span class="sd">        This explicit brush method helps write aligned text on the canvas. The</span>
+<span class="sd">        *x* and *y* coordinates are relative to the specified *alignment*. By</span>
+<span class="sd">        default, this is ``blighty.TextAlign.TOP_LEFT``, meaning that the text</span>
+<span class="sd">        will be left-aligned and on top of the horizontal line that passes</span>
+<span class="sd">        through *y* on the vertical axis. In terms of the point *(x,y)* on the</span>
+<span class="sd">        Canvas, the text will develop in the NE direction.</span>
+
+<span class="sd">        The return value is the text extents, in case that some further draw</span>
+<span class="sd">        operations depend on the space required by the text to be drawn on the</span>
+<span class="sd">        canvas.</span>
+
+<span class="sd">        Note that font face and size need to be set on the Cairo context prior</span>
+<span class="sd">        to a call to this method.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            x (int): The horizontal coordinate.</span>
+<span class="sd">            y (int): The vertical coordinate.</span>
+<span class="sd">            text (str): The text to write.</span>
+<span class="sd">            align (int): The text alignment. Detaulf is ``TextAlign.TOP_LEFT``.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            tuple: The same return value as ``cairo.text_extents``.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">write_text</span><span class="p">(</span><span class="n">cr</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">text</span><span class="p">,</span> <span class="n">align</span><span class="p">)</span></div></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, Gabriele N. Tornetta.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../../',
+            VERSION:'2.0.0',
+            LANGUAGE:'None',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../../_static/doctools.js"></script>
+
+  
+
+  <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

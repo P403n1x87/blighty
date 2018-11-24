@@ -1,0 +1,612 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>blighty.x11.canvas &mdash; blighty 2.0.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/theme_overrides.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+
+  
+  <script src="../../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> blighty
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../blighty.html">blighty package</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">blighty</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+          <li><a href="../../blighty.html">blighty</a> &raquo;</li>
+        
+      <li>blighty.x11.canvas</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for blighty.x11.canvas</h1><div class="highlight"><pre>
+<span></span><span class="c1"># This file is part of &quot;blighty&quot; which is released under GPL.</span>
+<span class="c1">#</span>
+<span class="c1"># See file LICENCE or go to http://www.gnu.org/licenses/ for full license</span>
+<span class="c1"># details.</span>
+<span class="c1">#</span>
+<span class="c1"># blighty is a desktop widget creation and management library for Python 3.</span>
+<span class="c1">#</span>
+<span class="c1"># Copyright (c) 2018 Gabriele N. Tornetta &lt;phoenix1987@gmail.com&gt;.</span>
+<span class="c1"># All rights reserved.</span>
+<span class="c1">#</span>
+<span class="c1"># This program is free software: you can redistribute it and/or modify</span>
+<span class="c1"># it under the terms of the GNU General Public License as published by</span>
+<span class="c1"># the Free Software Foundation, either version 3 of the License, or</span>
+<span class="c1"># (at your option) any later version.</span>
+<span class="c1">#</span>
+<span class="c1"># This program is distributed in the hope that it will be useful,</span>
+<span class="c1"># but WITHOUT ANY WARRANTY; without even the implied warranty of</span>
+<span class="c1"># MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the</span>
+<span class="c1"># GNU General Public License for more details.</span>
+<span class="c1"># You should have received a copy of the GNU General Public License</span>
+<span class="c1"># along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Description</span>
+<span class="sd">===========</span>
+
+<span class="sd">This module provides the :class:`Canvas` class for the creation of X11</span>
+<span class="sd">canvases.</span>
+
+<span class="sd">The :class:`Canvas` class is, in Java terminoly, *abstract* and should not be</span>
+<span class="sd">instantiated directly. Instead, applications should define their own subclasses</span>
+<span class="sd">of the :class:`Canvas` and implement the :func:`on_draw` method, which gets</span>
+<span class="sd">called periodically to perform the required draw operations using pycairo.</span>
+
+<span class="sd">Once created, an instance of a subclass of :class:`Canvas` can be shown on</span>
+<span class="sd">screen by calling the :func:`show` method. This starts drawing the canvas on</span>
+<span class="sd">screen by calling the `on_draw` callback at regular intervals in time. Events</span>
+<span class="sd">can be handled by starting the event loop with</span>
+<span class="sd">:func:`blighty.x11.start_event_loop`, as described in more details in the</span>
+<span class="sd">`Event handling`_ section.</span>
+
+
+<span class="sd">Creating a canvas</span>
+<span class="sd">-----------------</span>
+
+<span class="sd">Canvases are created by simply subclassing the `Canvas` class and implementing</span>
+<span class="sd">the :func:`on_draw` callback.</span>
+
+<span class="sd">The :class:`Canvas` constructor (i.e. the :func:`__new__` magic method) takes</span>
+<span class="sd">the following arguments:</span>
+
+<span class="sd">+----------------+------------------------------------------------------------+</span>
+<span class="sd">| Argument       | Description                                                |</span>
+<span class="sd">+================+========================+===================================+</span>
+<span class="sd">| *x*            | These arguments describe the basic geometry of the canvas. |</span>
+<span class="sd">+----------------+ The *x* and *y* coordinates are relative to the ``gravity``|</span>
+<span class="sd">| *y*            | argument (see below). The *width* and *height* arguments   |</span>
+<span class="sd">+----------------+ give the canvas size in pixels.                            |</span>
+<span class="sd">| *width*        |                                                            |</span>
+<span class="sd">+----------------+                                                            |</span>
+<span class="sd">| *height*       |                                                            |</span>
+<span class="sd">+----------------+------------------------------------------------------------+</span>
+<span class="sd">| *interval*     | The time interval between calls to the :func:`on_draw`     |</span>
+<span class="sd">|                | callback, in `milliseconds`.                               |</span>
+<span class="sd">|                |                                                            |</span>
+<span class="sd">|                | **Default value**: 1000 (i.e. 1 second)                    |</span>
+<span class="sd">+----------------+------------------------------------------------------------+</span>
+<span class="sd">| *screen*       | In multi-screen setups, specifies on which screen the      |</span>
+<span class="sd">|                | canvas is to be drawn. The value 0 identifies the first    |</span>
+<span class="sd">|                | screen. To treat the phisical screens as a single virtual  |</span>
+<span class="sd">|                | screen, use the value -1.                                  |</span>
+<span class="sd">|                |                                                            |</span>
+<span class="sd">|                | **Default value**: 0 (i.e. the first screen)               |</span>
+<span class="sd">+----------------+------------------------------------------------------------+</span>
+<span class="sd">| *window_type*  | The type of window to create. The possible choices are     |</span>
+<span class="sd">|                | enumerated in the ``blighty.CanvasType`` type and are      |</span>
+<span class="sd">|                | named after the equivalent _NET_WM_WINDOW_TYPE hints for   |</span>
+<span class="sd">|                | the window manager. This is analogous to conky&#39;s           |</span>
+<span class="sd">|                | ``own_window_type`` configuration setting.                 |</span>
+<span class="sd">|                |                                                            |</span>
+<span class="sd">|                | **Default value**: ``CanvasType.DESKTOP``                  |</span>
+<span class="sd">+----------------+------------------------------------------------------------+</span>
+<span class="sd">| *gravity*      | Defines the coordinate system for the canvas relative to   |</span>
+<span class="sd">|                | the screen. The allowed values are enumerated in the       |</span>
+<span class="sd">|                | ``blighty.CanvasGravity`` type. This is the equivalent of  |</span>
+<span class="sd">|                | the conky ``alignment`` configuration setting. For example,|</span>
+<span class="sd">|                | the value ``CanvasGravity.SOUTH_EAST`` indicates that the  |</span>
+<span class="sd">|                | canvas should be positioned relative to the bottom-right   |</span>
+<span class="sd">|                | corner of the screen.                                      |</span>
+<span class="sd">|                |                                                            |</span>
+<span class="sd">|                | **Default value**: ``CanvasGravity.NORTH_WEST``            |</span>
+<span class="sd">+----------------+------------------------------------------------------------+</span>
+<span class="sd">| *sticky*       | Whether the window should *stick* to the desktop and hence |</span>
+<span class="sd">|                | be visible in all workspaces.                              |</span>
+<span class="sd">|                |                                                            |</span>
+<span class="sd">|                | **Default value**: ``True``                                |</span>
+<span class="sd">+----------------+------------------------------------------------------------+</span>
+<span class="sd">| *keep_below*   | Whether the window should stay below any other window on   |</span>
+<span class="sd">|                | the screen.                                                |</span>
+<span class="sd">|                |                                                            |</span>
+<span class="sd">|                | **Default value**: ``True``                                |</span>
+<span class="sd">+----------------+------------------------------------------------------------+</span>
+<span class="sd">| *skip_taskbar* | Whether the window should not have an entry in the taskbar.|</span>
+<span class="sd">|                |                                                            |</span>
+<span class="sd">|                | **Default value**: ``True``                                |</span>
+<span class="sd">+----------------+------------------------------------------------------------+</span>
+<span class="sd">| *skip_pager*   | Whether the window should not appear in the pager.         |</span>
+<span class="sd">|                |                                                            |</span>
+<span class="sd">|                | **Default value**: ``True``                                |</span>
+<span class="sd">+----------------+------------------------------------------------------------+</span>
+
+<span class="sd">Note that the interval can be changed dynamically by setting the ``interval``</span>
+<span class="sd">attribute on the canvas object directly after it has been created.</span>
+
+<span class="sd">If you want to distribute your subclasses of :class:`Canvas`, we recommend that</span>
+<span class="sd">you create a static method ``build`` that returns an instance of the subclass,</span>
+<span class="sd">with some of the argumets set to a predefined values. This is useful if you</span>
+<span class="sd">want to distribute widgets with, e.g., a predefined size, as a Python module.</span>
+
+<span class="sd">Showing the canvas</span>
+<span class="sd">------------------</span>
+
+<span class="sd">When a canvas is created, it is not immediately shown to screen. To map it to</span>
+<span class="sd">screen and start the draw cycle one has to call the :func:`show` method</span>
+<span class="sd">explicitly.</span>
+
+<span class="sd">If you need to pass data to the canvas, you might want to do that before</span>
+<span class="sd">calling this method, since presumably the :func:`on_draw` callback, which will</span>
+<span class="sd">start to be called, makes use of it.</span>
+
+<span class="sd">Finally, you must start the main event loop with</span>
+<span class="sd">:func:`blighty.x11.start_event_loop` to start drawing on the canvases, and in</span>
+<span class="sd">case that they should handle input events, like mouse button clicks or key</span>
+<span class="sd">presses. Note however that execution in the current thread will halt at this</span>
+<span class="sd">call, until it returns after a call to :func:`blighty.x11.stop_event_loop`.</span>
+
+<span class="sd">For more details on how to handle events with your X11 canvases, see the</span>
+<span class="sd">section `Event handling`_ below.</span>
+
+
+<span class="sd">Disposing of a canvas</span>
+<span class="sd">---------------------</span>
+
+<span class="sd">If you want to programmatically dispose of a canvas, you can call the</span>
+<span class="sd">:func:`dispose` method. This doesn&#39;t destroy the canvas immediately, but sends</span>
+<span class="sd">a delete request to the main event loop instead. This is the preffered way of</span>
+<span class="sd">getting rid of a canvas when you are running the event loop. You can also use</span>
+<span class="sd">the :func:`destroy` method directly, which destroys the canvas immediately.</span>
+<span class="sd">However this is not thread safe and should not be called in the :func:`on_draw`</span>
+<span class="sd">callback when running the event loop.</span>
+
+
+<span class="sd">Event handling</span>
+<span class="sd">--------------</span>
+
+<span class="sd">A feature that distinguishes blighty from conky is that it allows you to handle</span>
+<span class="sd">simple user input on the canvases. Currently, X11 canvases support two events:</span>
+<span class="sd">mouse button and key press events.</span>
+
+<span class="sd">Mouse button events can be handled by implementing the</span>
+<span class="sd">:func:`on_button_pressed` callback in the subclass of :class:`Canvas`. The</span>
+<span class="sd">signature is the following::</span>
+
+<span class="sd">    def on_button_pressed(self, button, state, x, y):</span>
+
+<span class="sd">and the semantics of the arguments is the same as the ``XButtonEvent`` [1]_.</span>
+
+<span class="sd">To handle key presses, implement the ``on_key_pressed`` callback with the</span>
+<span class="sd">following signature::</span>
+
+<span class="sd">    def on_key_pressed(self, keysym, state):</span>
+
+<span class="sd">The ``state`` argument has the same semantics as in the</span>
+<span class="sd">:func:`on_button_pressed` case, while the ``keysym`` is described, e,g, in the</span>
+<span class="sd">`Keyboard Econding</span>
+<span class="sd">&lt;https://tronche.com/gui/x/xlib/input/keyboard-encoding.html&gt;`_ section of the</span>
+<span class="sd">Xlib guide.</span>
+
+<span class="sd">A simple example</span>
+<span class="sd">----------------</span>
+
+<span class="sd">Here is a simple example that shows all the above concepts in action::</span>
+
+<span class="sd">    from blighty import CanvasGravity</span>
+<span class="sd">    from blighty.x11 import Canvas, start_event_loop</span>
+
+<span class="sd">    class MyCanvas(Canvas):</span>
+<span class="sd">        @staticmethod</span>
+<span class="sd">        def build(x, y):</span>
+<span class="sd">            return MyCanvas(x, y, 200, 200, gravity = CanvasGravity.NORTH)</span>
+
+<span class="sd">        def on_button_pressed(self, button, state, x, y):</span>
+<span class="sd">            if button == 1:  # Left mouse button pressed</span>
+<span class="sd">                self.dispose()</span>
+
+<span class="sd">        def on_draw(self, ctx):</span>
+<span class="sd">            ctx.set_source_rgb(1, 0, 0)</span>
+<span class="sd">            ctx.rectangle(0, 0, ctx.canvas.width &gt;&gt; 1, ctx.canvas.height &gt;&gt; 1)</span>
+<span class="sd">            ctx.fill()</span>
+
+<span class="sd">    if __name__ == &quot;__main__&quot;:</span>
+<span class="sd">        # Instantiate the canvas</span>
+<span class="sd">        canvas = MyCanvas.build()</span>
+
+<span class="sd">        # Map it on screen</span>
+<span class="sd">        canvas.show()</span>
+
+<span class="sd">        # Start the event loop</span>
+<span class="sd">        start_event_loop()</span>
+
+
+<span class="sd">Extra features</span>
+<span class="sd">==============</span>
+
+<span class="sd">The :class:`Canvas` class comes with some handy extra features that can help</span>
+<span class="sd">with common patterns, thus sparing you to have to type boilerplate code.</span>
+
+<span class="sd">Brushes</span>
+<span class="sd">-------</span>
+
+<span class="sd">Brushes are a way to rebind methods from your subclass of :class:`Canvas` to</span>
+<span class="sd">the Cairo context. Consider the following example::</span>
+
+<span class="sd">    from random import random as r</span>
+
+<span class="sd">    class RectCanvas(blighty.x11.Canvas):</span>
+<span class="sd">        def rect(self, ctx, width, height):</span>
+<span class="sd">            ctx.set_source_rgb(*[r() for _ in range(3)])</span>
+<span class="sd">            ctx.rectangle(0, 0, width, height)</span>
+<span class="sd">            ctx.fill()</span>
+
+<span class="sd">        def on_draw(self, ctx):</span>
+<span class="sd">            for i in range(4):</span>
+<span class="sd">                self.rect(ctx, self.width &gt;&gt; i, self.height &gt;&gt; i)</span>
+
+<span class="sd">The method ``rect`` is defined under the class ``RectCanvas`` for convenience.</span>
+<span class="sd">However, from a logical point of view, it would make more sense for this method</span>
+<span class="sd">to belong to ``ctx``, since the general pattern of these helper methods</span>
+<span class="sd">requires that we pass ``ctx`` as one of the arguments.</span>
+
+<span class="sd">If one prefixes the ``rect`` method with ``draw_`` then it turns into an</span>
+<span class="sd">*implicit brush*. The :func:`on_draw` callback is called with the ``ctx``</span>
+<span class="sd">argument being an instance of ``ExtendedContext``. The ``draw_rect`` brush is</span>
+<span class="sd">then available from ``ctx`` as a bound method. The sample code above can then</span>
+<span class="sd">be refactored as::</span>
+
+<span class="sd">    from random import random as r</span>
+
+<span class="sd">    class RectCanvas(blighty.x11.Canvas):</span>
+<span class="sd">        def draw_rect(ctx, width, height):</span>
+<span class="sd">            ctx.set_source_rgb(*[r() for _ in range(3)])</span>
+<span class="sd">            ctx.rectangle(0, 0, width, height)</span>
+<span class="sd">            ctx.fill()</span>
+
+<span class="sd">        def on_draw(self, ctx):</span>
+<span class="sd">            for i in range(4):</span>
+<span class="sd">                ctx.rect(self.width &gt;&gt; i, self.height &gt;&gt; i)</span>
+
+<span class="sd">Notice how ``draw_rect`` now takes less arguments, and how the first one is</span>
+<span class="sd">``ctx``, the (extended) Cairo context.</span>
+
+<span class="sd">If you do not wish to prefix your methods with ``draw_``, you can use the</span>
+<span class="sd">:func:`blighty.brush` decorator instead to create an *explicit brush*. The code</span>
+<span class="sd">would then look like this::</span>
+
+<span class="sd">    from blighty import brush</span>
+<span class="sd">    from random import random as r</span>
+
+<span class="sd">    class RectCanvas(blighty.x11.Canvas):</span>
+<span class="sd">        @brush</span>
+<span class="sd">        def rect(ctx, width, height):</span>
+<span class="sd">            ctx.set_source_rgb(*[r() for _ in range(3)])</span>
+<span class="sd">            ctx.rectangle(0, 0, width, height)</span>
+<span class="sd">            ctx.fill()</span>
+
+<span class="sd">        def on_draw(self, ctx):</span>
+<span class="sd">            for i in range(4):</span>
+<span class="sd">                ctx.rect(self.width &gt;&gt; i, self.height &gt;&gt; i)</span>
+
+
+<span class="sd">Text alignment</span>
+<span class="sd">--------------</span>
+
+<span class="sd">A common task is writing text on a canvas. With Cairo, text alignment usually</span>
+<span class="sd">requires the same pattern: get the text extents and compute the new position.</span>
+<span class="sd">To help with that, :class:`Canvas` objects come with a pre-defined</span>
+<span class="sd">:func:`write_text` brush. Please refer to the API documentation below for usage</span>
+<span class="sd">details.</span>
+
+
+<span class="sd">Grid</span>
+<span class="sd">----</span>
+
+<span class="sd">When designing a canvas from scrach, it is hard to guess at positions without</span>
+<span class="sd">any guiding lines. To help with precise placement, every :class:`Canvas` object</span>
+<span class="sd">comes with a ``draw_grid`` brush that creates a rectangular grid on the canvas.</span>
+<span class="sd">The spacing between the lines is set to 50 pixels by default (assuming that</span>
+<span class="sd">the scale hasn&#39;t been changed before). This can be adjusted by passing the new</span>
+<span class="sd">spacing along the two directions as arguments. Please refer to the API</span>
+<span class="sd">documentation below for more details.</span>
+
+
+<span class="sd">References</span>
+<span class="sd">==========</span>
+
+<span class="sd">.. [1] https://tronche.com/gui/x/xlib/events/keyboard-pointer/keyboard-pointer.html</span>
+
+
+<span class="sd">Module API</span>
+<span class="sd">==========</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">blighty</span> <span class="k">import</span> <span class="n">ExtendedContext</span><span class="p">,</span> <span class="n">TextAlign</span><span class="p">,</span> <span class="n">brush</span>
+<span class="kn">from</span> <span class="nn">blighty._brush</span> <span class="k">import</span> <span class="n">BrushSets</span><span class="p">,</span> <span class="n">draw_grid</span><span class="p">,</span> <span class="n">write_text</span>
+<span class="kn">from</span> <span class="nn">blighty._x11</span> <span class="k">import</span> <span class="n">BaseCanvas</span>
+
+
+<div class="viewcode-block" id="Canvas"><a class="viewcode-back" href="../../../blighty.x11.html#blighty.x11.canvas.Canvas">[docs]</a><span class="k">class</span> <span class="nc">Canvas</span><span class="p">(</span><span class="n">BaseCanvas</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;X11 Canvas object.</span>
+
+<span class="sd">    This class is meant to be used as a superclass and should not be</span>
+<span class="sd">    instantiated directly. Subclasses should implement the :func:`on_draw`</span>
+<span class="sd">    callback, which is invoked every time the canvas needs to be redrawn.</span>
+<span class="sd">    Redraws happen at regular intervals in time, as specified by the</span>
+<span class="sd">    ``interval`` attribute (also passed as an argument via the constructor).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Initialise the Canvas object.</span>
+
+<span class="sd">        If this method is overriden, keep in mind that the initialisation looks</span>
+<span class="sd">        up for brushes inherited from all the superclasses. It is therefore</span>
+<span class="sd">        important that the method from ``super()`` is called to ensure the</span>
+<span class="sd">        correct functioning of the brushes.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">BrushSets</span><span class="o">.</span><span class="n">inherit</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_extended_context</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="k">def</span> <span class="nf">_on_draw</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ctx</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Draw callback (internal).</span>
+
+<span class="sd">        This is the callback that actually gets called from the BaseCanvas</span>
+<span class="sd">        class. It ensures that an instance of ``ExtendedContext`` is created</span>
+<span class="sd">        before going on to delegate the draw procedures to the user-defined</span>
+<span class="sd">        :func:`on_draw` callback.</span>
+
+<span class="sd">        If you want to skip some of the iterations and retain the current</span>
+<span class="sd">        content of the canvas, you can return ``True``. This is useful to avoid</span>
+<span class="sd">        performing the same drawing operations when not required because no</span>
+<span class="sd">        data to display has changed.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_extended_context</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_extended_context</span> <span class="o">=</span> <span class="n">ExtendedContext</span><span class="p">(</span><span class="n">ctx</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">on_draw</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_extended_context</span><span class="p">)</span>
+
+<div class="viewcode-block" id="Canvas.on_draw"><a class="viewcode-back" href="../../../blighty.x11.html#blighty.x11.canvas.Canvas.on_draw">[docs]</a>    <span class="k">def</span> <span class="nf">on_draw</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ctx</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Draw callback.</span>
+
+<span class="sd">        Once the :func:`show` method is called on a :class:`Canvas` object,</span>
+<span class="sd">        this method gets called at regular intervals of time to perform the</span>
+<span class="sd">        draw operation. Every subclass of :class:`Canvas` must implement this</span>
+<span class="sd">        method.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;on_draw method not implemented in subclass.&quot;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Canvas.draw_grid"><a class="viewcode-back" href="../../../blighty.x11.html#blighty.x11.canvas.Canvas.draw_grid">[docs]</a>    <span class="k">def</span> <span class="nf">draw_grid</span><span class="p">(</span><span class="n">ctx</span><span class="p">,</span> <span class="n">x</span> <span class="o">=</span> <span class="mi">50</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="mi">50</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Draw a grid on the canvas [**implicit brush**].</span>
+
+<span class="sd">        This implicit brush method is intended to help with determining the</span>
+<span class="sd">        location of points on the canvas during development.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            x (int): The horizontal spacing between lines.</span>
+<span class="sd">            y (int): The vertical spacing between lines.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">draw_grid</span><span class="p">(</span><span class="n">ctx</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Canvas.write_text"><a class="viewcode-back" href="../../../blighty.x11.html#blighty.x11.canvas.Canvas.write_text">[docs]</a>    <span class="nd">@brush</span>
+    <span class="k">def</span> <span class="nf">write_text</span><span class="p">(</span><span class="n">cr</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">text</span><span class="p">,</span> <span class="n">align</span> <span class="o">=</span> <span class="n">TextAlign</span><span class="o">.</span><span class="n">TOP_LEFT</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Write aligned text [**explicit brush**].</span>
+
+<span class="sd">        This explicit brush method helps write aligned text on the canvas. The</span>
+<span class="sd">        *x* and *y* coordinates are relative to the specified *alignment*. By</span>
+<span class="sd">        default, this is ``blighty.TextAlign.TOP_LEFT``, meaning that the text</span>
+<span class="sd">        will be left-aligned and on top of the horizontal line that passes</span>
+<span class="sd">        through *y* on the vertical axis. In terms of the point *(x,y)* on the</span>
+<span class="sd">        Canvas, the text will develop in the NE direction.</span>
+
+<span class="sd">        The return value is the text extents, in case that some further draw</span>
+<span class="sd">        operations depend on the space required by the text to be drawn on the</span>
+<span class="sd">        canvas.</span>
+
+<span class="sd">        Note that font face and size need to be set on the Cairo context prior</span>
+<span class="sd">        to a call to this method.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            x (int): The horizontal coordinate.</span>
+<span class="sd">            y (int): The vertical coordinate.</span>
+<span class="sd">            text (str): The text to write.</span>
+<span class="sd">            align (int): The text alignment. Detaulf is ``TextAlign.TOP_LEFT``.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            tuple: The same return value as ``cairo.text_extents``.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">write_text</span><span class="p">(</span><span class="n">cr</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">text</span><span class="p">,</span> <span class="n">align</span><span class="p">)</span></div></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, Gabriele N. Tornetta.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../../',
+            VERSION:'2.0.0',
+            LANGUAGE:'None',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../../_static/doctools.js"></script>
+
+  
+
+  <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

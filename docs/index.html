@@ -1,0 +1,357 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Welcome to blighty’s documentation! &mdash; blighty 2.0.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/theme_overrides.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="blighty package" href="blighty.html" /> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="#" class="icon icon-home"> blighty
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="blighty.html">blighty package</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="#">blighty</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="#">Docs</a> &raquo;</li>
+        
+      <li>Welcome to blighty’s documentation!</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/index.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="welcome-to-blighty-s-documentation">
+<h1>Welcome to blighty’s documentation!<a class="headerlink" href="#welcome-to-blighty-s-documentation" title="Permalink to this headline">¶</a></h1>
+<ul class="simple">
+<li><a class="reference internal" href="genindex.html"><span class="std std-ref">Index</span></a></li>
+<li><a class="reference internal" href="py-modindex.html"><span class="std std-ref">Module Index</span></a></li>
+<li><a class="reference internal" href="search.html"><span class="std std-ref">Search Page</span></a></li>
+</ul>
+<div class="section" id="the-blighty-project">
+<h2>The <code class="docutils literal notranslate"><span class="pre">blighty</span></code> project<a class="headerlink" href="#the-blighty-project" title="Permalink to this headline">¶</a></h2>
+<p>This is the documentation for <code class="docutils literal notranslate"><span class="pre">blighty</span></code>, a Python package for the creation
+of widgets for the Linux desktop. The idea is to replicate the wonders of
+<a class="reference external" href="https://github.com/brndnmtthws/conky">conky</a>, but with Python support
+instead of Lua.</p>
+</div>
+</div>
+<div class="section" id="usage">
+<h1>Usage<a class="headerlink" href="#usage" title="Permalink to this headline">¶</a></h1>
+<p>Using <code class="docutils literal notranslate"><span class="pre">blighty</span></code> is very simple and should come quite natural to you,
+especially if you already have experience with Cairo from conky.</p>
+<p>All the you need to do is extend one of the <code class="docutils literal notranslate"><span class="pre">Canvas</span></code> classes provided by the
+package (e.g. <a class="reference internal" href="blighty.x11.html#blighty.x11.canvas.Canvas" title="blighty.x11.canvas.Canvas"><code class="xref py py-class docutils literal notranslate"><span class="pre">blighty.x11.canvas.Canvas</span></code></a>) and implement the <code class="docutils literal notranslate"><span class="pre">on_draw</span></code>
+method.</p>
+<p>Start by reading through the documentation of the <a class="reference internal" href="blighty.x11.html#module-blighty.x11" title="blighty.x11"><code class="xref py py-mod docutils literal notranslate"><span class="pre">blighty.x11</span></code></a> module and
+then make your way to the
+<a class="reference external" href="https://github.com/P403n1x87/blighty/tree/master/examples">examples</a>
+folder from the GitHub repository.</p>
+</div>
+<div class="section" id="a-clock-widget">
+<h1>A clock widget<a class="headerlink" href="#a-clock-widget" title="Permalink to this headline">¶</a></h1>
+<p>Here is the example of a simple clock widget:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">blighty</span> <span class="k">import</span> <span class="n">CanvasGravity</span><span class="p">,</span> <span class="n">brush</span>
+<span class="kn">from</span> <span class="nn">blighty.x11</span> <span class="k">import</span> <span class="n">Canvas</span><span class="p">,</span> <span class="n">start_event_loop</span>
+
+<span class="kn">import</span> <span class="nn">datetime</span>
+
+<span class="kn">from</span> <span class="nn">math</span> <span class="k">import</span> <span class="n">pi</span> <span class="k">as</span> <span class="n">PI</span>
+
+
+<span class="k">class</span> <span class="nc">Clock</span><span class="p">(</span><span class="n">Canvas</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">on_button_pressed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">button</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dispose</span><span class="p">()</span>
+
+    <span class="nd">@brush</span>
+    <span class="k">def</span> <span class="nf">hand</span><span class="p">(</span><span class="n">ctx</span><span class="p">,</span> <span class="n">angle</span><span class="p">,</span> <span class="n">length</span><span class="p">,</span> <span class="n">thickness</span><span class="p">):</span>
+        <span class="n">ctx</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+        <span class="n">ctx</span><span class="o">.</span><span class="n">set_source_rgba</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">ctx</span><span class="o">.</span><span class="n">set_line_width</span><span class="p">(</span><span class="n">thickness</span><span class="p">)</span>
+        <span class="n">ctx</span><span class="o">.</span><span class="n">rotate</span><span class="p">(</span><span class="n">angle</span><span class="p">)</span>
+        <span class="n">ctx</span><span class="o">.</span><span class="n">move_to</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">length</span> <span class="o">*</span> <span class="o">.</span><span class="mi">2</span><span class="p">)</span>
+        <span class="n">ctx</span><span class="o">.</span><span class="n">line_to</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="n">length</span><span class="p">)</span>
+        <span class="n">ctx</span><span class="o">.</span><span class="n">stroke</span><span class="p">()</span>
+        <span class="n">ctx</span><span class="o">.</span><span class="n">restore</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">on_draw</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ctx</span><span class="p">):</span>
+        <span class="n">now</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
+
+        <span class="n">ctx</span><span class="o">.</span><span class="n">translate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">width</span> <span class="o">&gt;&gt;</span> <span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">height</span> <span class="o">&gt;&gt;</span> <span class="mi">1</span><span class="p">)</span>
+
+        <span class="n">ctx</span><span class="o">.</span><span class="n">hand</span><span class="p">(</span>
+            <span class="n">angle</span> <span class="o">=</span> <span class="n">now</span><span class="o">.</span><span class="n">second</span> <span class="o">/</span> <span class="mi">30</span> <span class="o">*</span> <span class="n">PI</span><span class="p">,</span>
+            <span class="n">length</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">height</span> <span class="o">&gt;&gt;</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="o">.</span><span class="mi">9</span><span class="p">,</span>
+            <span class="n">thickness</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="p">)</span>
+
+        <span class="n">mins</span> <span class="o">=</span> <span class="n">now</span><span class="o">.</span><span class="n">minute</span> <span class="o">+</span> <span class="n">now</span><span class="o">.</span><span class="n">second</span> <span class="o">/</span> <span class="mi">60</span>
+        <span class="n">ctx</span><span class="o">.</span><span class="n">hand</span><span class="p">(</span>
+            <span class="n">angle</span> <span class="o">=</span> <span class="n">mins</span> <span class="o">/</span> <span class="mi">30</span> <span class="o">*</span> <span class="n">PI</span><span class="p">,</span>
+            <span class="n">length</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">height</span> <span class="o">&gt;&gt;</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="o">.</span><span class="mi">8</span><span class="p">,</span>
+            <span class="n">thickness</span> <span class="o">=</span> <span class="mi">3</span>
+        <span class="p">)</span>
+
+        <span class="n">hours</span> <span class="o">=</span> <span class="p">(</span><span class="n">now</span><span class="o">.</span><span class="n">hour</span> <span class="o">%</span> <span class="mi">12</span><span class="p">)</span> <span class="o">+</span> <span class="n">mins</span> <span class="o">/</span> <span class="mi">60</span>
+        <span class="n">ctx</span><span class="o">.</span><span class="n">hand</span><span class="p">(</span>
+            <span class="n">angle</span> <span class="o">=</span> <span class="n">hours</span> <span class="o">/</span> <span class="mi">6</span> <span class="o">*</span> <span class="n">PI</span><span class="p">,</span>
+            <span class="n">length</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">height</span> <span class="o">&gt;&gt;</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="o">.</span><span class="mi">5</span><span class="p">,</span>
+            <span class="n">thickness</span> <span class="o">=</span> <span class="mi">6</span>
+        <span class="p">)</span>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="n">clock</span> <span class="o">=</span> <span class="n">Clock</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">400</span><span class="p">,</span> <span class="mi">400</span><span class="p">,</span> <span class="n">gravity</span> <span class="o">=</span> <span class="n">CanvasGravity</span><span class="o">.</span><span class="n">CENTER</span><span class="p">)</span>
+    <span class="n">clock</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+    <span class="n">start_event_loop</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="issues">
+<h1>Issues<a class="headerlink" href="#issues" title="Permalink to this headline">¶</a></h1>
+<p>If you find any issues with <code class="docutils literal notranslate"><span class="pre">blighty</span></code>, or for a list of all the currently
+known and open issues, please visit
+<a class="reference external" href="https://github.com/P403n1x87/blighty/issues">https://github.com/P403n1x87/blighty/issues</a>.</p>
+</div>
+<div class="section" id="the-brag-corner">
+<h1>The brag corner<a class="headerlink" href="#the-brag-corner" title="Permalink to this headline">¶</a></h1>
+<p>The <code class="docutils literal notranslate"><span class="pre">blighty</span></code> project was founded by Gabriele Tornetta in 2018.</p>
+<div class="toctree-wrapper compound">
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="blighty.html">blighty package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="blighty.html#module-blighty">Module content</a></li>
+<li class="toctree-l2"><a class="reference internal" href="blighty.html#subpackages">Subpackages</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="blighty.gtk.html">blighty.gtk package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="blighty.gtk.html#module-blighty.gtk">Module contents</a></li>
+<li class="toctree-l4"><a class="reference internal" href="blighty.gtk.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="blighty.gtk.html#module-blighty.gtk.canvas">blighty.gtk.canvas module</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="blighty.gtk.html#description">Description</a></li>
+<li class="toctree-l5"><a class="reference internal" href="blighty.gtk.html#extra-features">Extra features</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="blighty.gtk.html#access-the-underlying-gtk-window">Access the underlying GTK window</a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="blighty.gtk.html#module-api">Module API</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="blighty.x11.html">blighty.x11 package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="blighty.x11.html#module-blighty.x11">Module contents</a></li>
+<li class="toctree-l4"><a class="reference internal" href="blighty.x11.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="blighty.x11.html#module-blighty.x11.canvas">blighty.x11.canvas module</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="blighty.x11.html#description">Description</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="blighty.x11.html#creating-a-canvas">Creating a canvas</a></li>
+<li class="toctree-l6"><a class="reference internal" href="blighty.x11.html#showing-the-canvas">Showing the canvas</a></li>
+<li class="toctree-l6"><a class="reference internal" href="blighty.x11.html#disposing-of-a-canvas">Disposing of a canvas</a></li>
+<li class="toctree-l6"><a class="reference internal" href="blighty.x11.html#event-handling">Event handling</a></li>
+<li class="toctree-l6"><a class="reference internal" href="blighty.x11.html#a-simple-example">A simple example</a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="blighty.x11.html#extra-features">Extra features</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="blighty.x11.html#brushes">Brushes</a></li>
+<li class="toctree-l6"><a class="reference internal" href="blighty.x11.html#text-alignment">Text alignment</a></li>
+<li class="toctree-l6"><a class="reference internal" href="blighty.x11.html#grid">Grid</a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="blighty.x11.html#module-api">Module API</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="blighty.html" class="btn btn-neutral float-right" title="blighty package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, Gabriele N. Tornetta.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'2.0.0',
+            LANGUAGE:'None',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+
+  
+
+  <script type="text/javascript" src="_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

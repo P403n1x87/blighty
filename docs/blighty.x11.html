@@ -1,0 +1,676 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>blighty.x11 package &mdash; blighty 2.0.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/theme_overrides.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="blighty.gtk package" href="blighty.gtk.html" /> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> blighty
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="blighty.html">blighty package</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="blighty.html#module-blighty">Module content</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="blighty.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="blighty.gtk.html">blighty.gtk package</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">blighty.x11 package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#module-blighty.x11">Module contents</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-blighty.x11.canvas">blighty.x11.canvas module</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">blighty</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="blighty.html">blighty package</a> &raquo;</li>
+        
+      <li>blighty.x11 package</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/blighty.x11.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="blighty-x11-package">
+<h1>blighty.x11 package<a class="headerlink" href="#blighty-x11-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="module-blighty.x11">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-blighty.x11" title="Permalink to this headline">¶</a></h2>
+<p>This module provides support for creating X11 canvases. If you are trying to
+replicate conky’s behaviour, the API offered by this module is the closest to
+it.</p>
+</div>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-blighty.x11.canvas">
+<span id="blighty-x11-canvas-module"></span><h2>blighty.x11.canvas module<a class="headerlink" href="#module-blighty.x11.canvas" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="description">
+<h3>Description<a class="headerlink" href="#description" title="Permalink to this headline">¶</a></h3>
+<p>This module provides the <a class="reference internal" href="#blighty.x11.canvas.Canvas" title="blighty.x11.canvas.Canvas"><code class="xref py py-class docutils literal notranslate"><span class="pre">Canvas</span></code></a> class for the creation of X11
+canvases.</p>
+<p>The <a class="reference internal" href="#blighty.x11.canvas.Canvas" title="blighty.x11.canvas.Canvas"><code class="xref py py-class docutils literal notranslate"><span class="pre">Canvas</span></code></a> class is, in Java terminoly, <em>abstract</em> and should not be
+instantiated directly. Instead, applications should define their own subclasses
+of the <a class="reference internal" href="#blighty.x11.canvas.Canvas" title="blighty.x11.canvas.Canvas"><code class="xref py py-class docutils literal notranslate"><span class="pre">Canvas</span></code></a> and implement the <code class="xref py py-func docutils literal notranslate"><span class="pre">on_draw()</span></code> method, which gets
+called periodically to perform the required draw operations using pycairo.</p>
+<p>Once created, an instance of a subclass of <a class="reference internal" href="#blighty.x11.canvas.Canvas" title="blighty.x11.canvas.Canvas"><code class="xref py py-class docutils literal notranslate"><span class="pre">Canvas</span></code></a> can be shown on
+screen by calling the <code class="xref py py-func docutils literal notranslate"><span class="pre">show()</span></code> method. This starts drawing the canvas on
+screen by calling the <cite>on_draw</cite> callback at regular intervals in time. Events
+can be handled by starting the event loop with
+<code class="xref py py-func docutils literal notranslate"><span class="pre">blighty.x11.start_event_loop()</span></code>, as described in more details in the
+<a class="reference internal" href="#event-handling">Event handling</a> section.</p>
+<div class="section" id="creating-a-canvas">
+<h4>Creating a canvas<a class="headerlink" href="#creating-a-canvas" title="Permalink to this headline">¶</a></h4>
+<p>Canvases are created by simply subclassing the <cite>Canvas</cite> class and implementing
+the <code class="xref py py-func docutils literal notranslate"><span class="pre">on_draw()</span></code> callback.</p>
+<p>The <a class="reference internal" href="#blighty.x11.canvas.Canvas" title="blighty.x11.canvas.Canvas"><code class="xref py py-class docutils literal notranslate"><span class="pre">Canvas</span></code></a> constructor (i.e. the <code class="xref py py-func docutils literal notranslate"><span class="pre">__new__()</span></code> magic method) takes
+the following arguments:</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="21%" />
+<col width="32%" />
+<col width="47%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Argument</th>
+<th class="head" colspan="2">Description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td><em>x</em></td>
+<td colspan="2" rowspan="4">These arguments describe the basic geometry of the canvas.
+The <em>x</em> and <em>y</em> coordinates are relative to the <code class="docutils literal notranslate"><span class="pre">gravity</span></code>
+argument (see below). The <em>width</em> and <em>height</em> arguments
+give the canvas size in pixels.</td>
+</tr>
+<tr class="row-odd"><td><em>y</em></td>
+</tr>
+<tr class="row-even"><td><em>width</em></td>
+</tr>
+<tr class="row-odd"><td><em>height</em></td>
+</tr>
+<tr class="row-even"><td><em>interval</em></td>
+<td colspan="2"><p class="first">The time interval between calls to the <code class="xref py py-func docutils literal notranslate"><span class="pre">on_draw()</span></code>
+callback, in <cite>milliseconds</cite>.</p>
+<p class="last"><strong>Default value</strong>: 1000 (i.e. 1 second)</p>
+</td>
+</tr>
+<tr class="row-odd"><td><em>screen</em></td>
+<td colspan="2"><p class="first">In multi-screen setups, specifies on which screen the
+canvas is to be drawn. The value 0 identifies the first
+screen. To treat the phisical screens as a single virtual
+screen, use the value -1.</p>
+<p class="last"><strong>Default value</strong>: 0 (i.e. the first screen)</p>
+</td>
+</tr>
+<tr class="row-even"><td><em>window_type</em></td>
+<td colspan="2"><p class="first">The type of window to create. The possible choices are
+enumerated in the <code class="docutils literal notranslate"><span class="pre">blighty.CanvasType</span></code> type and are
+named after the equivalent _NET_WM_WINDOW_TYPE hints for
+the window manager. This is analogous to conky’s
+<code class="docutils literal notranslate"><span class="pre">own_window_type</span></code> configuration setting.</p>
+<p class="last"><strong>Default value</strong>: <code class="docutils literal notranslate"><span class="pre">CanvasType.DESKTOP</span></code></p>
+</td>
+</tr>
+<tr class="row-odd"><td><em>gravity</em></td>
+<td colspan="2"><p class="first">Defines the coordinate system for the canvas relative to
+the screen. The allowed values are enumerated in the
+<code class="docutils literal notranslate"><span class="pre">blighty.CanvasGravity</span></code> type. This is the equivalent of
+the conky <code class="docutils literal notranslate"><span class="pre">alignment</span></code> configuration setting. For example,
+the value <code class="docutils literal notranslate"><span class="pre">CanvasGravity.SOUTH_EAST</span></code> indicates that the
+canvas should be positioned relative to the bottom-right
+corner of the screen.</p>
+<p class="last"><strong>Default value</strong>: <code class="docutils literal notranslate"><span class="pre">CanvasGravity.NORTH_WEST</span></code></p>
+</td>
+</tr>
+<tr class="row-even"><td><em>sticky</em></td>
+<td colspan="2"><p class="first">Whether the window should <em>stick</em> to the desktop and hence
+be visible in all workspaces.</p>
+<p class="last"><strong>Default value</strong>: <code class="docutils literal notranslate"><span class="pre">True</span></code></p>
+</td>
+</tr>
+<tr class="row-odd"><td><em>keep_below</em></td>
+<td colspan="2"><p class="first">Whether the window should stay below any other window on
+the screen.</p>
+<p class="last"><strong>Default value</strong>: <code class="docutils literal notranslate"><span class="pre">True</span></code></p>
+</td>
+</tr>
+<tr class="row-even"><td><em>skip_taskbar</em></td>
+<td colspan="2"><p class="first">Whether the window should not have an entry in the taskbar.</p>
+<p class="last"><strong>Default value</strong>: <code class="docutils literal notranslate"><span class="pre">True</span></code></p>
+</td>
+</tr>
+<tr class="row-odd"><td><em>skip_pager</em></td>
+<td colspan="2"><p class="first">Whether the window should not appear in the pager.</p>
+<p class="last"><strong>Default value</strong>: <code class="docutils literal notranslate"><span class="pre">True</span></code></p>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Note that the interval can be changed dynamically by setting the <code class="docutils literal notranslate"><span class="pre">interval</span></code>
+attribute on the canvas object directly after it has been created.</p>
+<p>If you want to distribute your subclasses of <a class="reference internal" href="#blighty.x11.canvas.Canvas" title="blighty.x11.canvas.Canvas"><code class="xref py py-class docutils literal notranslate"><span class="pre">Canvas</span></code></a>, we recommend that
+you create a static method <code class="docutils literal notranslate"><span class="pre">build</span></code> that returns an instance of the subclass,
+with some of the argumets set to a predefined values. This is useful if you
+want to distribute widgets with, e.g., a predefined size, as a Python module.</p>
+</div>
+<div class="section" id="showing-the-canvas">
+<h4>Showing the canvas<a class="headerlink" href="#showing-the-canvas" title="Permalink to this headline">¶</a></h4>
+<p>When a canvas is created, it is not immediately shown to screen. To map it to
+screen and start the draw cycle one has to call the <code class="xref py py-func docutils literal notranslate"><span class="pre">show()</span></code> method
+explicitly.</p>
+<p>If you need to pass data to the canvas, you might want to do that before
+calling this method, since presumably the <code class="xref py py-func docutils literal notranslate"><span class="pre">on_draw()</span></code> callback, which will
+start to be called, makes use of it.</p>
+<p>Finally, you must start the main event loop with
+<code class="xref py py-func docutils literal notranslate"><span class="pre">blighty.x11.start_event_loop()</span></code> to start drawing on the canvases, and in
+case that they should handle input events, like mouse button clicks or key
+presses. Note however that execution in the current thread will halt at this
+call, until it returns after a call to <code class="xref py py-func docutils literal notranslate"><span class="pre">blighty.x11.stop_event_loop()</span></code>.</p>
+<p>For more details on how to handle events with your X11 canvases, see the
+section <a class="reference internal" href="#event-handling">Event handling</a> below.</p>
+</div>
+<div class="section" id="disposing-of-a-canvas">
+<h4>Disposing of a canvas<a class="headerlink" href="#disposing-of-a-canvas" title="Permalink to this headline">¶</a></h4>
+<p>If you want to programmatically dispose of a canvas, you can call the
+<code class="xref py py-func docutils literal notranslate"><span class="pre">dispose()</span></code> method. This doesn’t destroy the canvas immediately, but sends
+a delete request to the main event loop instead. This is the preffered way of
+getting rid of a canvas when you are running the event loop. You can also use
+the <code class="xref py py-func docutils literal notranslate"><span class="pre">destroy()</span></code> method directly, which destroys the canvas immediately.
+However this is not thread safe and should not be called in the <code class="xref py py-func docutils literal notranslate"><span class="pre">on_draw()</span></code>
+callback when running the event loop.</p>
+</div>
+<div class="section" id="event-handling">
+<h4>Event handling<a class="headerlink" href="#event-handling" title="Permalink to this headline">¶</a></h4>
+<p>A feature that distinguishes blighty from conky is that it allows you to handle
+simple user input on the canvases. Currently, X11 canvases support two events:
+mouse button and key press events.</p>
+<p>Mouse button events can be handled by implementing the
+<code class="xref py py-func docutils literal notranslate"><span class="pre">on_button_pressed()</span></code> callback in the subclass of <a class="reference internal" href="#blighty.x11.canvas.Canvas" title="blighty.x11.canvas.Canvas"><code class="xref py py-class docutils literal notranslate"><span class="pre">Canvas</span></code></a>. The
+signature is the following:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">on_button_pressed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">button</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+</pre></div>
+</div>
+<p>and the semantics of the arguments is the same as the <code class="docutils literal notranslate"><span class="pre">XButtonEvent</span></code> <a class="footnote-reference" href="#id2" id="id1">[1]</a>.</p>
+<p>To handle key presses, implement the <code class="docutils literal notranslate"><span class="pre">on_key_pressed</span></code> callback with the
+following signature:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">on_key_pressed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">keysym</span><span class="p">,</span> <span class="n">state</span><span class="p">):</span>
+</pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">state</span></code> argument has the same semantics as in the
+<code class="xref py py-func docutils literal notranslate"><span class="pre">on_button_pressed()</span></code> case, while the <code class="docutils literal notranslate"><span class="pre">keysym</span></code> is described, e,g, in the
+<a class="reference external" href="https://tronche.com/gui/x/xlib/input/keyboard-encoding.html">Keyboard Econding</a> section of the
+Xlib guide.</p>
+</div>
+<div class="section" id="a-simple-example">
+<h4>A simple example<a class="headerlink" href="#a-simple-example" title="Permalink to this headline">¶</a></h4>
+<p>Here is a simple example that shows all the above concepts in action:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">blighty</span> <span class="k">import</span> <span class="n">CanvasGravity</span>
+<span class="kn">from</span> <span class="nn">blighty.x11</span> <span class="k">import</span> <span class="n">Canvas</span><span class="p">,</span> <span class="n">start_event_loop</span>
+
+<span class="k">class</span> <span class="nc">MyCanvas</span><span class="p">(</span><span class="n">Canvas</span><span class="p">):</span>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">build</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">MyCanvas</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="mi">200</span><span class="p">,</span> <span class="mi">200</span><span class="p">,</span> <span class="n">gravity</span> <span class="o">=</span> <span class="n">CanvasGravity</span><span class="o">.</span><span class="n">NORTH</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">on_button_pressed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">button</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">button</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>  <span class="c1"># Left mouse button pressed</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">dispose</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">on_draw</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ctx</span><span class="p">):</span>
+        <span class="n">ctx</span><span class="o">.</span><span class="n">set_source_rgb</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="n">ctx</span><span class="o">.</span><span class="n">rectangle</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">ctx</span><span class="o">.</span><span class="n">canvas</span><span class="o">.</span><span class="n">width</span> <span class="o">&gt;&gt;</span> <span class="mi">1</span><span class="p">,</span> <span class="n">ctx</span><span class="o">.</span><span class="n">canvas</span><span class="o">.</span><span class="n">height</span> <span class="o">&gt;&gt;</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">ctx</span><span class="o">.</span><span class="n">fill</span><span class="p">()</span>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="c1"># Instantiate the canvas</span>
+    <span class="n">canvas</span> <span class="o">=</span> <span class="n">MyCanvas</span><span class="o">.</span><span class="n">build</span><span class="p">()</span>
+
+    <span class="c1"># Map it on screen</span>
+    <span class="n">canvas</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+
+    <span class="c1"># Start the event loop</span>
+    <span class="n">start_event_loop</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="extra-features">
+<h3>Extra features<a class="headerlink" href="#extra-features" title="Permalink to this headline">¶</a></h3>
+<p>The <a class="reference internal" href="#blighty.x11.canvas.Canvas" title="blighty.x11.canvas.Canvas"><code class="xref py py-class docutils literal notranslate"><span class="pre">Canvas</span></code></a> class comes with some handy extra features that can help
+with common patterns, thus sparing you to have to type boilerplate code.</p>
+<div class="section" id="brushes">
+<h4>Brushes<a class="headerlink" href="#brushes" title="Permalink to this headline">¶</a></h4>
+<p>Brushes are a way to rebind methods from your subclass of <a class="reference internal" href="#blighty.x11.canvas.Canvas" title="blighty.x11.canvas.Canvas"><code class="xref py py-class docutils literal notranslate"><span class="pre">Canvas</span></code></a> to
+the Cairo context. Consider the following example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">random</span> <span class="k">import</span> <span class="n">random</span> <span class="k">as</span> <span class="n">r</span>
+
+<span class="k">class</span> <span class="nc">RectCanvas</span><span class="p">(</span><span class="n">blighty</span><span class="o">.</span><span class="n">x11</span><span class="o">.</span><span class="n">Canvas</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">rect</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ctx</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">):</span>
+        <span class="n">ctx</span><span class="o">.</span><span class="n">set_source_rgb</span><span class="p">(</span><span class="o">*</span><span class="p">[</span><span class="n">r</span><span class="p">()</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">)])</span>
+        <span class="n">ctx</span><span class="o">.</span><span class="n">rectangle</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">)</span>
+        <span class="n">ctx</span><span class="o">.</span><span class="n">fill</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">on_draw</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ctx</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">4</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">rect</span><span class="p">(</span><span class="n">ctx</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">width</span> <span class="o">&gt;&gt;</span> <span class="n">i</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">height</span> <span class="o">&gt;&gt;</span> <span class="n">i</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The method <code class="docutils literal notranslate"><span class="pre">rect</span></code> is defined under the class <code class="docutils literal notranslate"><span class="pre">RectCanvas</span></code> for convenience.
+However, from a logical point of view, it would make more sense for this method
+to belong to <code class="docutils literal notranslate"><span class="pre">ctx</span></code>, since the general pattern of these helper methods
+requires that we pass <code class="docutils literal notranslate"><span class="pre">ctx</span></code> as one of the arguments.</p>
+<p>If one prefixes the <code class="docutils literal notranslate"><span class="pre">rect</span></code> method with <code class="docutils literal notranslate"><span class="pre">draw_</span></code> then it turns into an
+<em>implicit brush</em>. The <code class="xref py py-func docutils literal notranslate"><span class="pre">on_draw()</span></code> callback is called with the <code class="docutils literal notranslate"><span class="pre">ctx</span></code>
+argument being an instance of <code class="docutils literal notranslate"><span class="pre">ExtendedContext</span></code>. The <code class="docutils literal notranslate"><span class="pre">draw_rect</span></code> brush is
+then available from <code class="docutils literal notranslate"><span class="pre">ctx</span></code> as a bound method. The sample code above can then
+be refactored as:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">random</span> <span class="k">import</span> <span class="n">random</span> <span class="k">as</span> <span class="n">r</span>
+
+<span class="k">class</span> <span class="nc">RectCanvas</span><span class="p">(</span><span class="n">blighty</span><span class="o">.</span><span class="n">x11</span><span class="o">.</span><span class="n">Canvas</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">draw_rect</span><span class="p">(</span><span class="n">ctx</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">):</span>
+        <span class="n">ctx</span><span class="o">.</span><span class="n">set_source_rgb</span><span class="p">(</span><span class="o">*</span><span class="p">[</span><span class="n">r</span><span class="p">()</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">)])</span>
+        <span class="n">ctx</span><span class="o">.</span><span class="n">rectangle</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">)</span>
+        <span class="n">ctx</span><span class="o">.</span><span class="n">fill</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">on_draw</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ctx</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">4</span><span class="p">):</span>
+            <span class="n">ctx</span><span class="o">.</span><span class="n">rect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">width</span> <span class="o">&gt;&gt;</span> <span class="n">i</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">height</span> <span class="o">&gt;&gt;</span> <span class="n">i</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Notice how <code class="docutils literal notranslate"><span class="pre">draw_rect</span></code> now takes less arguments, and how the first one is
+<code class="docutils literal notranslate"><span class="pre">ctx</span></code>, the (extended) Cairo context.</p>
+<p>If you do not wish to prefix your methods with <code class="docutils literal notranslate"><span class="pre">draw_</span></code>, you can use the
+<code class="xref py py-func docutils literal notranslate"><span class="pre">blighty.brush()</span></code> decorator instead to create an <em>explicit brush</em>. The code
+would then look like this:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">blighty</span> <span class="k">import</span> <span class="n">brush</span>
+<span class="kn">from</span> <span class="nn">random</span> <span class="k">import</span> <span class="n">random</span> <span class="k">as</span> <span class="n">r</span>
+
+<span class="k">class</span> <span class="nc">RectCanvas</span><span class="p">(</span><span class="n">blighty</span><span class="o">.</span><span class="n">x11</span><span class="o">.</span><span class="n">Canvas</span><span class="p">):</span>
+    <span class="nd">@brush</span>
+    <span class="k">def</span> <span class="nf">rect</span><span class="p">(</span><span class="n">ctx</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">):</span>
+        <span class="n">ctx</span><span class="o">.</span><span class="n">set_source_rgb</span><span class="p">(</span><span class="o">*</span><span class="p">[</span><span class="n">r</span><span class="p">()</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">)])</span>
+        <span class="n">ctx</span><span class="o">.</span><span class="n">rectangle</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">)</span>
+        <span class="n">ctx</span><span class="o">.</span><span class="n">fill</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">on_draw</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ctx</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">4</span><span class="p">):</span>
+            <span class="n">ctx</span><span class="o">.</span><span class="n">rect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">width</span> <span class="o">&gt;&gt;</span> <span class="n">i</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">height</span> <span class="o">&gt;&gt;</span> <span class="n">i</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="text-alignment">
+<h4>Text alignment<a class="headerlink" href="#text-alignment" title="Permalink to this headline">¶</a></h4>
+<p>A common task is writing text on a canvas. With Cairo, text alignment usually
+requires the same pattern: get the text extents and compute the new position.
+To help with that, <a class="reference internal" href="#blighty.x11.canvas.Canvas" title="blighty.x11.canvas.Canvas"><code class="xref py py-class docutils literal notranslate"><span class="pre">Canvas</span></code></a> objects come with a pre-defined
+<code class="xref py py-func docutils literal notranslate"><span class="pre">write_text()</span></code> brush. Please refer to the API documentation below for usage
+details.</p>
+</div>
+<div class="section" id="grid">
+<h4>Grid<a class="headerlink" href="#grid" title="Permalink to this headline">¶</a></h4>
+<p>When designing a canvas from scrach, it is hard to guess at positions without
+any guiding lines. To help with precise placement, every <a class="reference internal" href="#blighty.x11.canvas.Canvas" title="blighty.x11.canvas.Canvas"><code class="xref py py-class docutils literal notranslate"><span class="pre">Canvas</span></code></a> object
+comes with a <code class="docutils literal notranslate"><span class="pre">draw_grid</span></code> brush that creates a rectangular grid on the canvas.
+The spacing between the lines is set to 50 pixels by default (assuming that
+the scale hasn’t been changed before). This can be adjusted by passing the new
+spacing along the two directions as arguments. Please refer to the API
+documentation below for more details.</p>
+<p class="rubric">References</p>
+<table class="docutils footnote" frame="void" id="id2" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id1">[1]</a></td><td><a class="reference external" href="https://tronche.com/gui/x/xlib/events/keyboard-pointer/keyboard-pointer.html">https://tronche.com/gui/x/xlib/events/keyboard-pointer/keyboard-pointer.html</a></td></tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="section" id="module-api">
+<h3>Module API<a class="headerlink" href="#module-api" title="Permalink to this headline">¶</a></h3>
+<dl class="class">
+<dt id="blighty.x11.canvas.Canvas">
+<em class="property">class </em><code class="descclassname">blighty.x11.canvas.</code><code class="descname">Canvas</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/blighty/x11/canvas.html#Canvas"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#blighty.x11.canvas.Canvas" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">x11.BaseCanvas</span></code></p>
+<p>X11 Canvas object.</p>
+<p>This class is meant to be used as a superclass and should not be
+instantiated directly. Subclasses should implement the <a class="reference internal" href="#blighty.x11.canvas.Canvas.on_draw" title="blighty.x11.canvas.Canvas.on_draw"><code class="xref py py-func docutils literal notranslate"><span class="pre">on_draw()</span></code></a>
+callback, which is invoked every time the canvas needs to be redrawn.
+Redraws happen at regular intervals in time, as specified by the
+<code class="docutils literal notranslate"><span class="pre">interval</span></code> attribute (also passed as an argument via the constructor).</p>
+<dl class="method">
+<dt id="blighty.x11.canvas.Canvas.destroy">
+<code class="descname">destroy</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#blighty.x11.canvas.Canvas.destroy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Destroy the canvas.</p>
+<p>This method is not thread-safe. Use the <a class="reference internal" href="#blighty.x11.canvas.Canvas.dispose" title="blighty.x11.canvas.Canvas.dispose"><code class="xref py py-func docutils literal notranslate"><span class="pre">dispose()</span></code></a> method instead.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="blighty.x11.canvas.Canvas.dispose">
+<code class="descname">dispose</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#blighty.x11.canvas.Canvas.dispose" title="Permalink to this definition">¶</a></dt>
+<dd><p>Mark the canvas as ready to be destroyed to free up resources.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="blighty.x11.canvas.Canvas.draw_grid">
+<code class="descname">draw_grid</code><span class="sig-paren">(</span><em>x=50</em>, <em>y=50</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/blighty/x11/canvas.html#Canvas.draw_grid"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#blighty.x11.canvas.Canvas.draw_grid" title="Permalink to this definition">¶</a></dt>
+<dd><p>Draw a grid on the canvas [<strong>implicit brush</strong>].</p>
+<p>This implicit brush method is intended to help with determining the
+location of points on the canvas during development.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>x</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><em>int</em></a>) – The horizontal spacing between lines.</li>
+<li><strong>y</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><em>int</em></a>) – The vertical spacing between lines.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="blighty.x11.canvas.Canvas.get_size">
+<code class="descname">get_size</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#blighty.x11.canvas.Canvas.get_size" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the canvas size.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">the 2-tuple of width and height in pixels.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.7)">tuple</a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="blighty.x11.canvas.Canvas.height">
+<code class="descname">height</code><a class="headerlink" href="#blighty.x11.canvas.Canvas.height" title="Permalink to this definition">¶</a></dt>
+<dd><p>The canvas height. <em>Read-only</em>.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="blighty.x11.canvas.Canvas.interval">
+<code class="descname">interval</code><a class="headerlink" href="#blighty.x11.canvas.Canvas.interval" title="Permalink to this definition">¶</a></dt>
+<dd><p>The refresh interval, in milliseconds.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="blighty.x11.canvas.Canvas.move">
+<code class="descname">move</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#blighty.x11.canvas.Canvas.move" title="Permalink to this definition">¶</a></dt>
+<dd><p>Move the canvas to new coordinates.</p>
+<p>The <em>x</em> and <em>y</em> coordinates are relative to the canvas gravity.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="blighty.x11.canvas.Canvas.on_draw">
+<code class="descname">on_draw</code><span class="sig-paren">(</span><em>ctx</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/blighty/x11/canvas.html#Canvas.on_draw"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#blighty.x11.canvas.Canvas.on_draw" title="Permalink to this definition">¶</a></dt>
+<dd><p>Draw callback.</p>
+<p>Once the <a class="reference internal" href="#blighty.x11.canvas.Canvas.show" title="blighty.x11.canvas.Canvas.show"><code class="xref py py-func docutils literal notranslate"><span class="pre">show()</span></code></a> method is called on a <a class="reference internal" href="#blighty.x11.canvas.Canvas" title="blighty.x11.canvas.Canvas"><code class="xref py py-class docutils literal notranslate"><span class="pre">Canvas</span></code></a> object,
+this method gets called at regular intervals of time to perform the
+draw operation. Every subclass of <a class="reference internal" href="#blighty.x11.canvas.Canvas" title="blighty.x11.canvas.Canvas"><code class="xref py py-class docutils literal notranslate"><span class="pre">Canvas</span></code></a> must implement this
+method.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="blighty.x11.canvas.Canvas.show">
+<code class="descname">show</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#blighty.x11.canvas.Canvas.show" title="Permalink to this definition">¶</a></dt>
+<dd><p>Map the canvas to screen and set it ready for drawing.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="blighty.x11.canvas.Canvas.width">
+<code class="descname">width</code><a class="headerlink" href="#blighty.x11.canvas.Canvas.width" title="Permalink to this definition">¶</a></dt>
+<dd><p>The canvas width. <em>Read-only</em>.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="blighty.x11.canvas.Canvas.write_text">
+<code class="descname">write_text</code><span class="sig-paren">(</span><em>x</em>, <em>y</em>, <em>text</em>, <em>align=3</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/blighty/x11/canvas.html#Canvas.write_text"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#blighty.x11.canvas.Canvas.write_text" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write aligned text [<strong>explicit brush</strong>].</p>
+<p>This explicit brush method helps write aligned text on the canvas. The
+<em>x</em> and <em>y</em> coordinates are relative to the specified <em>alignment</em>. By
+default, this is <code class="docutils literal notranslate"><span class="pre">blighty.TextAlign.TOP_LEFT</span></code>, meaning that the text
+will be left-aligned and on top of the horizontal line that passes
+through <em>y</em> on the vertical axis. In terms of the point <em>(x,y)</em> on the
+Canvas, the text will develop in the NE direction.</p>
+<p>The return value is the text extents, in case that some further draw
+operations depend on the space required by the text to be drawn on the
+canvas.</p>
+<p>Note that font face and size need to be set on the Cairo context prior
+to a call to this method.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>x</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><em>int</em></a>) – The horizontal coordinate.</li>
+<li><strong>y</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><em>int</em></a>) – The vertical coordinate.</li>
+<li><strong>text</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – The text to write.</li>
+<li><strong>align</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><em>int</em></a>) – The text alignment. Detaulf is <code class="docutils literal notranslate"><span class="pre">TextAlign.TOP_LEFT</span></code>.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The same return value as <code class="docutils literal notranslate"><span class="pre">cairo.text_extents</span></code>.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.7)">tuple</a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="blighty.x11.canvas.Canvas.x">
+<code class="descname">x</code><a class="headerlink" href="#blighty.x11.canvas.Canvas.x" title="Permalink to this definition">¶</a></dt>
+<dd><p>The canvas <em>x</em> coordinate. <em>Read-only</em>.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="blighty.x11.canvas.Canvas.y">
+<code class="descname">y</code><a class="headerlink" href="#blighty.x11.canvas.Canvas.y" title="Permalink to this definition">¶</a></dt>
+<dd><p>The canvas <em>y</em> coordinate. <em>Read-only</em>.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+      
+        <a href="blighty.gtk.html" class="btn btn-neutral" title="blighty.gtk package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, Gabriele N. Tornetta.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'2.0.0',
+            LANGUAGE:'None',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+
+  
+
+  <script type="text/javascript" src="_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

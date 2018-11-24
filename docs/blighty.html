@@ -1,0 +1,373 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>blighty package &mdash; blighty 2.0.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/theme_overrides.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="blighty.gtk package" href="blighty.gtk.html" />
+    <link rel="prev" title="Welcome to blighty’s documentation!" href="index.html" /> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> blighty
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">blighty package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#module-blighty">Module content</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#subpackages">Subpackages</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="blighty.gtk.html">blighty.gtk package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="blighty.x11.html">blighty.x11 package</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">blighty</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>blighty package</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/blighty.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="blighty-package">
+<h1>blighty package<a class="headerlink" href="#blighty-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="module-blighty">
+<span id="module-content"></span><h2>Module content<a class="headerlink" href="#module-blighty" title="Permalink to this headline">¶</a></h2>
+<p>This module contains the common objects and types for the different kind of
+canvases provided by <code class="docutils literal notranslate"><span class="pre">blighty</span></code>.</p>
+<dl class="class">
+<dt id="blighty.CanvasGravity">
+<em class="property">class </em><code class="descclassname">blighty.</code><code class="descname">CanvasGravity</code><a class="reference internal" href="_modules/blighty.html#CanvasGravity"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#blighty.CanvasGravity" title="Permalink to this definition">¶</a></dt>
+<dd><p>Window gravity control type.</p>
+<p>The positioning of a canvas on the screen is controlled by its gravity.
+By default, a window is positioned in a coordinate system where the origin
+is located in the top-left corner of the screen, with the <em>x</em> axis running
+horizontally from left to right, and the <em>y</em> from top to bottom. To change
+the location of the origin, use one of the following values.</p>
+<dl class="attribute">
+<dt id="blighty.CanvasGravity.CENTER">
+<code class="descname">CENTER</code><em class="property"> = 5</em><a class="headerlink" href="#blighty.CanvasGravity.CENTER" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="blighty.CanvasGravity.EAST">
+<code class="descname">EAST</code><em class="property"> = 6</em><a class="headerlink" href="#blighty.CanvasGravity.EAST" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="blighty.CanvasGravity.NORTH">
+<code class="descname">NORTH</code><em class="property"> = 2</em><a class="headerlink" href="#blighty.CanvasGravity.NORTH" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="blighty.CanvasGravity.NORTH_EAST">
+<code class="descname">NORTH_EAST</code><em class="property"> = 3</em><a class="headerlink" href="#blighty.CanvasGravity.NORTH_EAST" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="blighty.CanvasGravity.NORTH_WEST">
+<code class="descname">NORTH_WEST</code><em class="property"> = 1</em><a class="headerlink" href="#blighty.CanvasGravity.NORTH_WEST" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="blighty.CanvasGravity.SOUTH">
+<code class="descname">SOUTH</code><em class="property"> = 8</em><a class="headerlink" href="#blighty.CanvasGravity.SOUTH" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="blighty.CanvasGravity.SOUTH_EAST">
+<code class="descname">SOUTH_EAST</code><em class="property"> = 9</em><a class="headerlink" href="#blighty.CanvasGravity.SOUTH_EAST" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="blighty.CanvasGravity.SOUTH_WEST">
+<code class="descname">SOUTH_WEST</code><em class="property"> = 7</em><a class="headerlink" href="#blighty.CanvasGravity.SOUTH_WEST" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="blighty.CanvasGravity.STATIC">
+<code class="descname">STATIC</code><em class="property"> = 10</em><a class="headerlink" href="#blighty.CanvasGravity.STATIC" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="blighty.CanvasGravity.WEST">
+<code class="descname">WEST</code><em class="property"> = 4</em><a class="headerlink" href="#blighty.CanvasGravity.WEST" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="blighty.CanvasType">
+<em class="property">class </em><code class="descclassname">blighty.</code><code class="descname">CanvasType</code><a class="reference internal" href="_modules/blighty.html#CanvasType"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#blighty.CanvasType" title="Permalink to this definition">¶</a></dt>
+<dd><p>The Canvas type.</p>
+<p>The canvas types enumerated in this Python type reflect the same window
+types that one can request to the window manager via the <a class="reference external" href="https://standards.freedesktop.org/wm-spec/wm-spec-1.3.html">Extended
+Window Manager Hints</a>.</p>
+<ul class="simple">
+<li><code class="docutils literal notranslate"><span class="pre">NORMAL</span></code> is a normal top-level window.</li>
+<li><code class="docutils literal notranslate"><span class="pre">DESKTOP</span></code> is a window drawn directly on the desktop.</li>
+<li><code class="docutils literal notranslate"><span class="pre">DOCK</span></code> indicates a dock or panel window that will usually stay on top
+of other windows.</li>
+<li><code class="docutils literal notranslate"><span class="pre">UNDECORATED</span></code> is a type of window that behaves as a toolbar. As such,
+it is undecorated.</li>
+</ul>
+<dl class="attribute">
+<dt id="blighty.CanvasType.DESKTOP">
+<code class="descname">DESKTOP</code><em class="property"> = 1</em><a class="headerlink" href="#blighty.CanvasType.DESKTOP" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="blighty.CanvasType.DOCK">
+<code class="descname">DOCK</code><em class="property"> = 2</em><a class="headerlink" href="#blighty.CanvasType.DOCK" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="blighty.CanvasType.NORMAL">
+<code class="descname">NORMAL</code><em class="property"> = 0</em><a class="headerlink" href="#blighty.CanvasType.NORMAL" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="blighty.CanvasType.UNDECORATED">
+<code class="descname">UNDECORATED</code><em class="property"> = 3</em><a class="headerlink" href="#blighty.CanvasType.UNDECORATED" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="subpackages">
+<h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="blighty.gtk.html">blighty.gtk package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="blighty.gtk.html#module-blighty.gtk">Module contents</a></li>
+<li class="toctree-l2"><a class="reference internal" href="blighty.gtk.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="blighty.gtk.html#module-blighty.gtk.canvas">blighty.gtk.canvas module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="blighty.gtk.html#description">Description</a></li>
+<li class="toctree-l3"><a class="reference internal" href="blighty.gtk.html#extra-features">Extra features</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="blighty.gtk.html#access-the-underlying-gtk-window">Access the underlying GTK window</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="blighty.gtk.html#module-api">Module API</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="blighty.x11.html">blighty.x11 package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="blighty.x11.html#module-blighty.x11">Module contents</a></li>
+<li class="toctree-l2"><a class="reference internal" href="blighty.x11.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="blighty.x11.html#module-blighty.x11.canvas">blighty.x11.canvas module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="blighty.x11.html#description">Description</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="blighty.x11.html#creating-a-canvas">Creating a canvas</a></li>
+<li class="toctree-l4"><a class="reference internal" href="blighty.x11.html#showing-the-canvas">Showing the canvas</a></li>
+<li class="toctree-l4"><a class="reference internal" href="blighty.x11.html#disposing-of-a-canvas">Disposing of a canvas</a></li>
+<li class="toctree-l4"><a class="reference internal" href="blighty.x11.html#event-handling">Event handling</a></li>
+<li class="toctree-l4"><a class="reference internal" href="blighty.x11.html#a-simple-example">A simple example</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="blighty.x11.html#extra-features">Extra features</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="blighty.x11.html#brushes">Brushes</a></li>
+<li class="toctree-l4"><a class="reference internal" href="blighty.x11.html#text-alignment">Text alignment</a></li>
+<li class="toctree-l4"><a class="reference internal" href="blighty.x11.html#grid">Grid</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="blighty.x11.html#module-api">Module API</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="blighty.gtk.html" class="btn btn-neutral float-right" title="blighty.gtk package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="index.html" class="btn btn-neutral" title="Welcome to blighty’s documentation!" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, Gabriele N. Tornetta.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'2.0.0',
+            LANGUAGE:'None',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+
+  
+
+  <script type="text/javascript" src="_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
