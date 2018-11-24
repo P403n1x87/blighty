@@ -12,7 +12,7 @@
     <img src="https://travis-ci.org/P403n1x87/blighty.svg?branch=master"
          alt="Travis CI Build Status">
   </a>
-  <a href="https://blighty.readthedocs.io/en/latest/?badge=latest">
+  <a href="https://p403n1x87.github.io/blighty">
     <img src="https://readthedocs.org/projects/blighty/badge/?version=latest"
          alt="Documentation Status">
   </a>
