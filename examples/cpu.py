@@ -43,7 +43,7 @@ class Cpu(Canvas):
 
         c.translate(x, y)
         c.move_to(size, 0)
-        for i in range(n):
+        for _ in range(n):
             c.rotate(a)
             c.line_to(size, 0)
         c.stroke()
