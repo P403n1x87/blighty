@@ -236,10 +236,8 @@ Atelier_start_event_loop(PyObject * args, PyObject * kwargs) {
       }
     }
 
-    // TODO: Raise RuntimeError!
     if (!found) {
-      fprintf(stderr, "Canvas not found!\n");
-      return NULL;
+      continue;
     }
 
     dispatch_event(canvas, &e);

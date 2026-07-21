@@ -136,9 +136,19 @@ BaseCanvas__ui_thread(BaseCanvas * self) {
   PyGILState_STATE gstate;
   gstate = PyGILState_Ensure();
 
-  self->context_arg = Py_BuildValue("(O)", PycairoContext_FromContext(
+  PyObject * pycairo_ctx = PycairoContext_FromContext(
     self->context, &PycairoContext_Type, (PyObject*) NULL
-  ));
+  );
+
+  if (pycairo_ctx != NULL) {
+    cairo_reference(self->context);
+
+    self->context_arg = Py_BuildValue("(O)", pycairo_ctx);
+    Py_DECREF(pycairo_ctx);
+  }
+  else {
+    self->context_arg = NULL;
+  }
 
   self->_expiry = gettime();
 
@@ -167,7 +177,8 @@ BaseCanvas__ui_thread(BaseCanvas * self) {
     }
   }
 
-  Py_DECREF(self->context_arg);
+  if (self->context_arg != NULL)
+    Py_DECREF(self->context_arg);
 
   PyGILState_Release(gstate);
 }
