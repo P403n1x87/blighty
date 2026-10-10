@@ -1,41 +1,33 @@
+"""Blighty clock widget example.
+
+Run with: blighty clock.py
 """
-This file is part of "blighty" which is released under GPL.
-
-See file LICENCE or go to http://www.gnu.org/licenses/ for full license
-details.
-
-blighty is a desktop widget creation and management library for Python 3.
-
-Copyright (c) 2018 Gabriele N. Tornetta <phoenix1987@gmail.com>.
-All rights reserved.
-
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
-"""
-
-from blighty import CanvasGravity, brush
-from blighty.x11 import Canvas, start_event_loop
 
 import datetime
-
 from math import pi as PI
+from dataclasses import dataclass
+
+from blighty import Widget, CanvasGravity
 
 
-class Clock(Canvas):
-    def on_button_pressed(self, button, state, x, y):
-        self.dispose()
+@dataclass(frozen=True)
+class ClockData:
+    hour: int
+    minute: int
+    second: int
 
-    @brush
-    def hand(ctx, angle, length, thickness):
+
+class Clock(Widget):
+    __interval__ = 1000
+    __width__ = 400
+    __height__ = 400
+    __gravity__ = CanvasGravity.CENTER
+
+    def update(self):
+        now = datetime.datetime.now()
+        return ClockData(now.hour, now.minute, now.second)
+
+    def _hand(self, ctx, angle, length, thickness):
         ctx.save()
         ctx.set_source_rgba(1, 1, 1, 1)
         ctx.set_line_width(thickness)
@@ -45,33 +37,28 @@ class Clock(Canvas):
         ctx.stroke()
         ctx.restore()
 
-    def on_draw(self, ctx):
-        now = datetime.datetime.now()
-
+    async def draw(self, ctx):
         ctx.translate(self.width >> 1, self.height >> 1)
 
-        ctx.hand(
-            angle = now.second / 30 * PI,
-            length = (self.height >> 1) * .9,
-            thickness = 1
+        self._hand(ctx,
+            angle=self.data.second / 30 * PI,
+            length=(self.height >> 1) * .9,
+            thickness=1
         )
 
-        mins = now.minute + now.second / 60
-        ctx.hand(
-            angle = mins / 30 * PI,
-            length = (self.height >> 1) * .8,
-            thickness = 3
+        mins = self.data.minute + self.data.second / 60
+        self._hand(ctx,
+            angle=mins / 30 * PI,
+            length=(self.height >> 1) * .8,
+            thickness=3
         )
 
-        hours = (now.hour % 12) + mins / 60
-        ctx.hand(
-            angle = hours / 6 * PI,
-            length = (self.height >> 1) * .5,
-            thickness = 6
+        hours = (self.data.hour % 12) + mins / 60
+        self._hand(ctx,
+            angle=hours / 6 * PI,
+            length=(self.height >> 1) * .5,
+            thickness=6
         )
 
-
-if __name__ == "__main__":
-    clock = Clock(0, 0, 400, 400, gravity = CanvasGravity.CENTER)
-    clock.show()
-    start_event_loop()
+    async def on_button_pressed(self, button, state, x, y):
+        self.dispose()

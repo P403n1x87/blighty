@@ -17,32 +17,10 @@
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
+#
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-"""
-This module provides support for creating GTK canvases. If you are trying to
-replicate conky's behaviour then consider using the :mod:`blighty.x11`
-submodule instead.
-"""
+"""GTK backend for blighty widgets."""
 
-try:
-    import gi
-except ImportError:
-    raise ImportError("Unable to import PyGObject. See https://pygobject.readthedocs.io/ for more info.")
-
-gi.require_version('Gtk', '3.0')
-from gi.repository import Gtk
-
-
-from .canvas import Canvas
-
-
-def start_event_loop():
-    """Start the main GTK event loop."""
-    Gtk.main()
-
-
-def stop_event_loop():
-    """Stop the main GTK event loop."""
-    Gtk.main_quit()
+from . canvas import Canvas, create_canvas, start_event_loop, stop_event_loop

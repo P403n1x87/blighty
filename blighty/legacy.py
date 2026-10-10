@@ -17,26 +17,30 @@
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
+#
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-"""Legacy visual tools.
-
-Most of the classes in this module are inspired from Conky.
-"""
+"""Legacy visual tools, inspired by Conky."""
 
 from collections import deque
 
 
 class Graph:
-    """A Blighty take on Conky graphsself.
+    """A Conky-style scrolling graph.
 
-    The constructor allows you to specify where the graph should be located
-    as well as its size. You push values to it by calling the ``push_value``
-    method. By default, the values are assumed to be in the range from 0 to
-    100. If this is not the case, you can change the Y scale by specifying a
-    value for the ``scale`` keyword argument.
+    Instantiate inside a Widget and use ``push_value()`` in your
+    ``update()`` method, then call ``draw(ctx)`` in your ``draw()``
+    method.
+
+    Args:
+        x: X position of the graph.
+        y: Y position of the graph.
+        width: Graph width in pixels.
+        height: Graph height in pixels.
+        scale: Y-axis scale. ``None`` for auto-scaling.
     """
+
     def __init__(self, x, y, width, height, scale=100):
         self.x = x
         self.y = y
@@ -47,11 +51,13 @@ class Graph:
         self._values = deque(maxlen=width)
 
     def push_value(self, v):
+        """Push a new value onto the graph."""
         self._values.append(v)
         if self.auto:
             self.scale = max(self._values)
 
     def draw(self, cr):
+        """Draw the graph on the given cairo context."""
         if not self.scale:
             return
 
@@ -62,7 +68,7 @@ class Graph:
                 cr.move_to(offset + i + .5, self.y + self.height)
                 cr.line_to(
                     offset + i + .5,
-                    self.y + int(self.height * (1-self._values[i]/self.scale))
+                    self.y + int(self.height * (1 - self._values[i] / self.scale))
                 )
             else:
                 cr.move_to(offset + i + .5, self.y)

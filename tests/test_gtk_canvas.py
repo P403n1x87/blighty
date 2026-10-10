@@ -18,6 +18,7 @@ This program is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
+
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
@@ -42,7 +43,7 @@ class MyCanvas(b.Canvas):
     def foo_brush(cr):
         cr.fill()
 
-    def on_draw(self, cr):
+    async def on_draw(self, cr):
         cr.set_line_width(8)
         cr.set_source_rgba(0.7, 0.2, 0.0, .5)
 
@@ -59,8 +60,7 @@ class MyCanvas(b.Canvas):
         cr.foo_brush()
 
         if self.r == 10:
-            self.destroy()
-            b.stop_event_loop()
+            self.dispose()
 
 
 def test_gtk_canvas_monitor():
@@ -76,7 +76,7 @@ def test_gtk_canvas_monitor():
         assert canvas.interval == 1000
 
         canvas.interval = 10
-        assert canvas.show() is None
+        canvas.show()
 
     b.start_event_loop()
 
@@ -93,6 +93,6 @@ def test_gtk_canvas():
         assert canvas.interval == 1000
 
         canvas.interval = 10
-        assert canvas.show() is None
+        canvas.show()
 
     b.start_event_loop()

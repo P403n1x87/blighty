@@ -18,6 +18,7 @@ This program is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
+
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
@@ -36,7 +37,7 @@ def test_brush():
 
             self.c = False
 
-        def on_button_pressed(self, button, state, x, y):
+        async def on_button_pressed(self, button, state, x, y):
             if button == 1:
                 self.dispose()
 
@@ -46,7 +47,7 @@ def test_brush():
             ctx.rectangle(0, 0, width, height)
             ctx.fill()
 
-        def on_draw(self, ctx):
+        async def on_draw(self, ctx):
             if self.c:
                 self.dispose()
                 return
@@ -69,11 +70,11 @@ def test_grid():
 
             self.c = False
 
-        def on_button_pressed(self, button, state, x, y):
+        async def on_button_pressed(self, button, state, x, y):
             if button == 1:
                 self.dispose()
 
-        def on_draw(self, ctx):
+        async def on_draw(self, ctx):
             if self.c:
                 self.dispose()
                 return
@@ -97,11 +98,11 @@ def test_text():
 
             self.c = False
 
-        def on_button_pressed(self, button, state, x, y):
+        async def on_button_pressed(self, button, state, x, y):
             if button == 1:
                 self.dispose()
 
-        def on_draw(self, ctx):
+        async def on_draw(self, ctx):
             if self.c:
                 self.dispose()
                 return
@@ -114,38 +115,6 @@ def test_text():
     canvas = DrawMethodsCanvas(40, 40, 128, 128, interval = 3000)
     canvas.show()
     x11.start_event_loop()
-
-# def test_invalid_brush():
-#
-#     class DrawMethodsCanvas(x11.Canvas):
-#         def __init__(self, *args, **kwargs):
-#             super().__init__(*args, **kwargs)
-#
-#             self.c = False
-#
-#         def on_button_pressed(self, button, state, x, y):
-#             if button == 1:
-#                 self.destroy()
-#
-#         @brush
-#         def rectangle(ctx, width, height):
-#             ctx.set_source_rgb(*[r() for _ in range(3)])
-#             ctx.rectangle(0, 0, width, height)
-#             ctx.fill()
-#
-#         def on_draw(self, ctx):
-#             if self.c:
-#                 self.dispose()
-#                 return
-#
-#             for i in range(4):
-#                 ctx.rectangle(self.width >> i, self.height >> i)
-#
-#             self.c = True
-#
-#     canvas = DrawMethodsCanvas(40, 40, 128, 128, interval = 3000)
-#     canvas.show()
-#     x11.start_event_loop()
 
 
 if __name__ == "__main__":

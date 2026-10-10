@@ -17,6 +17,7 @@
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
+//
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
@@ -40,24 +41,10 @@ Atelier_get_screen_info(int);
 void
 Atelier_init(void);
 
-void
-Atelier_add_canvas(BaseCanvas * canvas);
-
-int
-Atelier_remove_canvas(BaseCanvas * canvas);
-
-
-/******************************************************************************
- ** EVENT LOOP
- ******************************************************************************/
+PyObject *
+Atelier_get_display_fd(PyObject *, PyObject *);
 
 PyObject *
-Atelier_start_event_loop(PyObject *, PyObject *);
-
-void
-Atelier_stop_event_loop(void);
-
-int
-Atelier_is_running(void);
+Atelier_poll_events(PyObject *, PyObject *);
 
 #endif

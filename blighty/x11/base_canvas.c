@@ -17,6 +17,7 @@
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
+//
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
@@ -30,13 +31,11 @@
 
 #define PYCAIRO_NO_IMPORT
 #include "pycairo.h"
-#include "pythread.h"
 
 
 //
 // CONSTANTS
 //
-#define UI_INTERVAL 1000  // 1 ms
 
 static const char * WINDOW_TYPE_MAP[] = {
   "_NET_WM_WINDOW_TYPE_NORMAL",
@@ -56,15 +55,6 @@ static XSetWindowAttributes   attr;
 //
 // LOCAL HELPERS
 //
-
-// ----------------------------------------------------------------------------
-static time_t
-gettime(void) {
-  struct timespec ts;
-  clock_gettime(CLOCK_BOOTTIME, &ts);
-  return ts.tv_sec * 1000 + ts.tv_nsec / 1e6;
-}
-
 
 // ----------------------------------------------------------------------------
 static void
@@ -93,94 +83,6 @@ BaseCanvas__redraw(BaseCanvas * self) {
   cairo_paint(self->context);
   cairo_restore(self->context);
   XFlush(Atelier_get_display());
-}
-
-
-// ----------------------------------------------------------------------------
-void
-BaseCanvas__on_draw(BaseCanvas * self, PyObject * args) {
-  PyObject * cb = PyObject_GetAttr((PyObject *) self, PyUnicode_FromString("_on_draw"));
-
-  if (cb == NULL) {
-    PyErr_SetString(
-      PyExc_TypeError,
-      "Subclasses of BaseCanvas must implement the 'on_draw(self, context)' method."
-    );
-    return;
-  }
-  else {
-    if (!PyCallable_Check(cb)) {
-      PyErr_SetString(PyExc_TypeError, "on_draw callback must be callable.");
-      return;
-    }
-
-    // Required for animations in order to avoid flickers.
-    // The X server queues up draw requests. This way we group
-    // them together and we send a single draw request
-    cairo_push_group(self->context);
-
-    // Call user declaration of the 'on_draw' method
-    PyObject * cb_result = PyObject_CallObject(cb, args);
-
-    cairo_pattern_t * group = cairo_pop_group(self->context);
-    if (cb_result == Py_None)
-      cairo_set_source(self->context, group);
-    cairo_pattern_destroy(group);
-  }
-}
-
-
-// ----------------------------------------------------------------------------
-static void
-BaseCanvas__ui_thread(BaseCanvas * self) {
-  PyGILState_STATE gstate;
-  gstate = PyGILState_Ensure();
-
-  PyObject * pycairo_ctx = PycairoContext_FromContext(
-    self->context, &PycairoContext_Type, (PyObject*) NULL
-  );
-
-  if (pycairo_ctx != NULL) {
-    cairo_reference(self->context);
-
-    self->context_arg = Py_BuildValue("(O)", pycairo_ctx);
-    Py_DECREF(pycairo_ctx);
-  }
-  else {
-    self->context_arg = NULL;
-  }
-
-  self->_expiry = gettime();
-
-  while (self->_running) {
-    Py_BEGIN_ALLOW_THREADS
-    usleep(self->interval > 100 ? 100 * UI_INTERVAL : UI_INTERVAL);
-    Py_END_ALLOW_THREADS
-
-    if (Atelier_is_running() > 0 && self->_expiry <= gettime()) {
-      self->_needs_redraw = 1;
-
-      // Request redraw
-      XEvent event;
-      event.type = Expose;
-      event.xany.window = self->win_id;
-      event.xexpose.count = 0;
-
-      Display * display = Atelier_get_display();
-      XLockDisplay(display);
-      XSendEvent(display, self->win_id, False, ExposureMask, &event);
-      // Send the event immediately
-      XFlush(display);
-      XUnlockDisplay(display);
-
-      self->_expiry += self->interval ? self->interval : UI_INTERVAL;
-    }
-  }
-
-  if (self->context_arg != NULL)
-    Py_DECREF(self->context_arg);
-
-  PyGILState_Release(gstate);
 }
 
 
@@ -236,7 +138,7 @@ BaseCanvas_new(PyTypeObject *type, PyObject *args, PyObject *kwargs) {
      "window_type",     // CanvasType.DESKTOP
      "gravity",         // CanvasGravity.NORTH_WEST
      "sticky",          // True
-     "keep_below"       // True
+     "keep_below",      // True
      "skip_taskbar",    // True
      "skip_pager",      // True
      NULL
@@ -323,9 +225,6 @@ BaseCanvas_new(PyTypeObject *type, PyObject *args, PyObject *kwargs) {
     self->_running      = 0;
     self->_drawing      = 0;
     self->_needs_redraw = 0;
-
-    // Register the BaseCanvas with the Atelier
-    Atelier_add_canvas(self);
   }
 
   return (PyObject *)self;
@@ -344,8 +243,6 @@ BaseCanvas_init(BaseCanvas *self, PyObject *args, PyObject *kwds)
 
 //
 //    def move(self, x, y):
-//      """Move the canvas to new coordinates relative to the current gravity.
-//      """
 //
 static PyObject *
 BaseCanvas_move(BaseCanvas * self, PyObject * args, PyObject * kwargs) {
@@ -368,8 +265,6 @@ BaseCanvas_move(BaseCanvas * self, PyObject * args, PyObject * kwargs) {
 
 //
 //    def show(self):
-//      """Show the canvas.
-//      """
 //
 static PyObject *
 BaseCanvas_show(BaseCanvas* self) {
@@ -385,20 +280,12 @@ BaseCanvas_show(BaseCanvas* self) {
 
   self->_running = 1;
 
-  // Use the allocated BaseCanvas object to pass arguments to the UI thread.
-  PyThread_start_new_thread((void (*)(void *)) BaseCanvas__ui_thread, self);
-
   Py_INCREF(Py_None); return Py_None;
 }
 
 
 //
 //    def get_size(self):
-//      """Get the size of the BaseCanvas.
-//
-//        Return:
-//          (tuple) The `(width, height)` tuple.
-//      """
 //
 static PyObject *
 BaseCanvas_get_size(BaseCanvas * self) {
@@ -408,30 +295,12 @@ BaseCanvas_get_size(BaseCanvas * self) {
 
 //
 //    def dispose(self):
-//      """Dispose of the canvas when no longer needed.
-//      This method marks the canvas it is called on as ready to be destroyed.
-//      The actual destruction is performed by the event loop, which calls the
-//      `destroy` method. This is the thread-safe way of destrying an X11
-//      BaseCanvas object.
-//      """
 //
 static PyObject *
 BaseCanvas_dispose(BaseCanvas * self) {
+  self->_running = 0;
   Display * display = Atelier_get_display();
-
   XUnmapWindow(display, self->win_id);
-
-  XEvent event;
-  event.type = ClientMessage;
-  event.xany.window = self->win_id;
-	event.xclient.format = 32;
-  event.xclient.data.l[0] = self->wm_delete_window;
-
-  XLockDisplay(display);
-  XSendEvent(display, self->win_id, True, 0, &event);
-  // Send the event immediately
-  XFlush(display);
-  XUnlockDisplay(display);
 
   Py_INCREF(Py_None); return Py_None;
 }
@@ -439,9 +308,6 @@ BaseCanvas_dispose(BaseCanvas * self) {
 
 //
 //    def destroy(self):
-//      """Destroy the canvas.
-//      WARNING: Not thread-safe. Use `dispose` instead.
-//      """
 //
 static PyObject *
 BaseCanvas_destroy(BaseCanvas * self) {
@@ -449,8 +315,26 @@ BaseCanvas_destroy(BaseCanvas * self) {
   cairo_destroy(self->context);
   cairo_surface_destroy(self->surface);
 
-  // De-register BaseCanvas from Atelier;
-  Atelier_remove_canvas(self);
-
   Py_INCREF(Py_None); return Py_None;
+}
+
+
+//
+//    def _get_context_ptr(self):
+//
+static PyObject *
+BaseCanvas_get_context_ptr(BaseCanvas * self) {
+  return PyLong_FromVoidPtr(self->context);
+}
+
+
+//
+//    def _get_pycairo_context(self):
+//
+static PyObject *
+BaseCanvas_get_pycairo_context(BaseCanvas * self) {
+  cairo_reference(self->context);
+  return PycairoContext_FromContext(
+    self->context, &PycairoContext_Type, (PyObject *) NULL
+  );
 }

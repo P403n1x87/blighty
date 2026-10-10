@@ -72,7 +72,7 @@ class Spotify(Canvas):
 
         self.last_art_url = ""
 
-    def on_button_pressed(self, button, state, x, y):
+    async def on_button_pressed(self, button, state, x, y):
         if button == 1:    # Left button
             self.spotify.toggle_play()
         elif button == 3:  # Right button
@@ -148,7 +148,7 @@ class Spotify(Canvas):
             album = metadata["album"]
         ))
 
-    def on_draw(self, ctx):
+    async def on_draw(self, ctx):
         if self.spotify is None:
             self.init_dbus()
             return

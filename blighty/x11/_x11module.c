@@ -17,6 +17,7 @@
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
+//
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
@@ -30,10 +31,16 @@ extern PyTypeObject BaseCanvasType;
 
 static PyMethodDef x11methods[] = {
   {
-    "start_event_loop",
-    Atelier_start_event_loop,
+    "get_display_fd",
+    Atelier_get_display_fd,
     METH_NOARGS,
-    "Starts the main event loop for all the BaseCanvas objects."
+    "Returns the file descriptor of the X11 display connection for asyncio integration."
+  },
+  {
+    "poll_events",
+    Atelier_poll_events,
+    METH_NOARGS,
+    "Non-blocking poll of all pending X11 events. Returns a list of event dictionaries."
   },
   {NULL, NULL, 0, NULL}
 };
@@ -65,7 +72,7 @@ PyInit__x11(void)
   Py_INCREF(&BaseCanvasType);
   PyModule_AddObject(m, "BaseCanvas", (PyObject *)&BaseCanvasType);
 
-  // Initialise Atelier
+  // Initialise Atelier (XInitThreads, etc.)
   Atelier_init();
   return m;
 }

@@ -17,100 +17,33 @@
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
+#
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+"""GTK backend for blighty widgets.
 
-"""
-Description
-===========
-
-This module provides the ``Canvas`` class for the creation of X11 canvases.
-
-We advise that you consider using the ``Canvas`` class provided by the
-:mod:`blighty.x11` submodule instead, as it gives more portability
-acrossdifferent display managers. The interface of
-:class:`blighty.gtk.canvas.Canvas` is identical to that of
-:class:`blighty.x11.canvas.Canvas`, so we refer you to the latter for more
-details of how to deal with GTK canvases. The key difference is basically in
-the class that your canvases have to extend. For example, if you have an
-X11-based canvas and you have the following import in your source code::
-
-    from blighty.x11 import Canvas, start_event_loop
-
-all you have to do is replace ``blighty.x11`` with ``blighty.gtk``::
-
-    from blighty.gtk import Canvas, start_event_loop
-
-and the same code will work just fine and will produce the same result.
-
-Here is the same simple example from the :mod:`blighty.x11` module, adapted
-to the GTK case::
-
-    from blighty import CanvasGravity
-    from blighty.gtk import Canvas, start_event_loop
-
-    class MyCanvas(Canvas):
-        @staticmethod
-        def build(x, y):
-            return MyCanvas(x, y, 200, 200, gravity = CanvasGravity.NORTH)
-
-        def on_button_pressed(self, button, state, x, y):
-            if button == 1:  # Left mouse button pressed
-                self.dispose()
-
-        def on_draw(self, ctx):
-            ctx.set_source_rgb(1, 0, 0)
-            ctx.rectangle(0, 0, ctx.canvas.width >> 1, ctx.canvas.height >> 1)
-            ctx.fill()
-
-    if __name__ == "__main__":
-        # Instantiate the canvas
-        canvas = MyCanvas.build()
-
-        # Map it on screen
-        canvas.show()
-
-        # Start the event loop
-        start_event_loop()
-
-The only difference is on the second line, where we reference the
-:mod:`blighty.gtk` submodule instead of :mod:`blighty.x11`.
-
-
-Extra features
-==============
-
-There are some features that are unique to GTK canvases only. This implies
-that, if you have a GTK canvas and you use some of these features, you won't
-be able to run the same code as an X11 canvas without changes.
-
-
-Access the underlying GTK window
---------------------------------
-
-GTK canvases are special GTK windows that have been configured to be used as
-desktop widgets. Every instance of the :class:`blighty.gtk.canvas.Canvas` class
-will expose the underlying :class:`GTKWindow` via ``self``.
-
-
-Module API
-==========
+GTK runs on the main thread.  An asyncio event loop runs in a background
+thread for handling async widget callbacks.  Canvas operations are
+marshalled to GTK via ``GLib.idle_add()``.
 """
 
 try:
     import gi
 except ImportError:
-    raise ImportError("Unable to import PyGObject. See https://pygobject.readthedocs.io/ for more info.")
+    raise ImportError(
+        "Unable to import PyGObject. See https://pygobject.readthedocs.io/"
+    )
 
 gi.require_version('Gtk', '3.0')
 gi.require_version('Gdk', '3.0')
-from time import sleep
 
-from blighty import (CanvasGravity, CanvasType, ExtendedContext, TextAlign,
-                     brush)
-from blighty._brush import BrushSets, draw_grid, write_text
-from gi.repository import Gdk, Gtk
+from blighty import CanvasGravity, CanvasType
+from blighty._extended_context import ExtendedContext
+from gi.repository import Gdk, Gtk, GLib
+
+import asyncio
+import threading
 
 WINDOW_TYPE_MAP = [
     Gdk.WindowTypeHint.NORMAL,
@@ -119,187 +52,158 @@ WINDOW_TYPE_MAP = [
     Gdk.WindowTypeHint.TOOLBAR,
 ]
 
+# The asyncio event loop running in a background thread
+_async_loop = None
+_async_thread = None
+
 
 class Canvas(Gtk.Window):
-    """GTK Canvas object.
+    """GTK canvas adapter.
 
-    This class is meant to be used as a superclass and should not be
-    instantiated directly. Subclasses should implement the ``on_draw``
-    callback, which is invoked every time the canvas needs to be redrawn.
-    Redraws happen at regular intervals in time, as specified by the
-    ``interval`` attribute (also passed as an argument via the constructor).
+    Wraps a :class:`~blighty.Widget` subclass as a ``Gtk.Window``.
+    Users should not instantiate this directly.
     """
 
-    def __init__(self, x, y, width, height,
-                 interval = 1000,
-                 screen = 0,
-                 window_type = CanvasType.DESKTOP,
-                 gravity = CanvasGravity.NORTH_WEST,
-                 sticky = True,
-                 keep_below = True,
-                 skip_taskbar = True,
-                 skip_pager = True
-                 ):
-        """Initialise the Canvas object.
-
-        If this method is overriden, keep in mind that the initialisation looks
-        up for brushes inherited from all the superclasses. It is therefore
-        important that the method from ``super()`` is called to ensure the
-        correct functioning of the brushes.
-        """
+    def __init__(self, widget):
         super().__init__()
 
-        self.interval = interval
-        self.xine_screen = screen
-        self.gravity = gravity
-
-        self.set_type_hint(WINDOW_TYPE_MAP[window_type])
-
-        if skip_taskbar:
-            self.set_skip_taskbar_hint(True)
-
-        if skip_pager:
-            self.set_skip_pager_hint(True)
-
-        if sticky:
-            self.stick()
-
-        if keep_below:
-            self.set_keep_below(keep_below)
-
-        self.screen = self.get_screen()
-
-        self.width = width
-        self.height = height
-        self.set_size_request(width, height)
-        self.move(x, y)
-
-        # Handle gravity with respect to parent window manually
-        self.set_gravity(gravity)
-
-        # Make the window transparent
-        visual = self.screen.get_rgba_visual()
-        if visual is not None and self.screen.is_composited():
-            self.set_visual(visual)
-
-        self.set_app_paintable(True)
-
-        # Connect signals
-        self.connect("draw", self._on_draw)
-        self.connect("delete-event", Gtk.main_quit)
-
-        BrushSets.inherit(type(self))
+        self._widget = widget
+        widget._canvas = self
         self._extended_context = None
 
-    def _translate_coordinates(self, x, y):
-        if self.xine_screen < 0 or self.xine_screen >= self.screen.get_n_monitors():
-            width = self.screen.get_width()
-            height = self.screen.get_height()
+        self.set_type_hint(WINDOW_TYPE_MAP[widget.__window_type__])
+
+        if widget.__skip_taskbar__:
+            self.set_skip_taskbar_hint(True)
+        if widget.__skip_pager__:
+            self.set_skip_pager_hint(True)
+        if widget.__sticky__:
+            self.stick()
+        if widget.__keep_below__:
+            self.set_keep_below(True)
+
+        screen = self.get_screen()
+        self.width = widget.__width__
+        self.height = widget.__height__
+        self.set_size_request(self.width, self.height)
+        self.xine_screen = widget.__screen__
+        self.gravity = widget.__gravity__
+
+        visual = screen.get_rgba_visual()
+        if visual is not None and screen.is_composited():
+            self.set_visual(visual)
+        self.set_app_paintable(True)
+
+        self._translate_and_move(widget.__x__, widget.__y__)
+
+        self.connect("draw", self._on_draw)
+        self.connect("delete-event", self._on_delete)
+        self.connect("button-press-event", self._on_button_press)
+        self.connect("key-press-event", self._on_key_press)
+
+    def _translate_and_move(self, x, y):
+        screen = self.get_screen()
+        if self.xine_screen < 0 or self.xine_screen >= screen.get_n_monitors():
+            w = screen.get_width()
+            h = screen.get_height()
             x_org = 0
             y_org = 0
         else:
-            monitor = self.screen.get_monitor_geometry(self.xine_screen)
-            width = monitor.width
-            height = monitor.height
-            x_org = monitor.x
-            y_org = monitor.y
+            mon = screen.get_monitor_geometry(self.xine_screen)
+            w = mon.width
+            h = mon.height
+            x_org = mon.x
+            y_org = mon.y
 
-        if (self.gravity - 1) % 3 == 0:
+        g = self.gravity
+        if (g - 1) % 3 == 0:
             tx = x
-        elif (self.gravity - 2) % 3 == 0:
-            tx = ((width - self.width) >> 1) + x
+        elif (g - 2) % 3 == 0:
+            tx = ((w - self.width) >> 1) + x
         else:
-            tx = width - self.width - x
+            tx = w - self.width - x
 
-        if self.gravity <= 3:
+        if g <= 3:
             ty = y
-        elif self.gravity <= 6:
-            ty = ((height - self.height) >> 1) + y
+        elif g <= 6:
+            ty = ((h - self.height) >> 1) + y
         else:
-            ty = height - self.height - y
+            ty = h - self.height - y
 
-        return tx + x_org, ty + y_org
+        self.move(tx + x_org, ty + y_org)
+
+    def _schedule_coro(self, coro):
+        if _async_loop is not None and _async_loop.is_running():
+            asyncio.run_coroutine_threadsafe(coro, _async_loop)
 
     def _on_draw(self, widget, cr):
-        self._extended_context = ExtendedContext(cr, self)
+        self._extended_context = ExtendedContext(cr, self._widget)
+        self._schedule_coro(self._widget.draw(self._extended_context))
 
-        self.on_draw(self._extended_context)
+    def _on_button_press(self, widget, event):
+        self._schedule_coro(self._widget.on_button_pressed(
+            event.button, event.state, event.x, event.y
+        ))
 
-        widget.queue_draw()
+    def _on_key_press(self, widget, event):
+        self._schedule_coro(self._widget.on_key_pressed(
+            event.keyval, event.state
+        ))
 
-        sleep(self.interval / 1000.)
-
-    def on_draw(self, cr):
-        """Draw callback.
-
-        Once the :func:`show` method is called on a :class:`Canvas` object,
-        this method gets called at regular intervals of time to perform the
-        draw operation. Every subclass of :class:`Canvas` must implement this
-        method.
-        """
-        raise NotImplementedError("on_draw method not implemented in subclass.")
+    def _on_delete(self, widget, event):
+        self._widget._running = False
+        Gtk.main_quit()
 
     def show(self):
-        """Map the canvas to screen and set it ready for drawing."""
+        """Map the canvas to screen and start the periodic refresh timer."""
         self.show_all()
+        self._widget._running = True
+        GLib.timeout_add(self._widget.__interval__, self._refresh_tick)
+        return self
 
-    def move(self, x, y):
-        """Move the canvas to new coordinates.
+    def _refresh_tick(self):
+        if not self._widget._running:
+            return False
+        self._schedule_coro(self._widget._tick())
+        return True
 
-        The *x* and *y* coordinates are relative to the canvas gravity.
-        """
-        self.x = x
-        self.y = y
-        return super().move(*self._translate_coordinates(x, y))
+    def get_size(self):
+        return (self.width, self.height)
 
     def dispose(self):
-        """Dispose of the canvas.
+        self._widget._running = False
+        GLib.idle_add(Gtk.main_quit)
 
-        For GTK-based canvases, this is equivalent to calling the
-        :func:`destroy` method.
-        """
-        self.destroy()
+    def destroy(self):
+        self._widget._running = False
+        Gtk.Window.destroy(self)
 
-    # TODO: Remove duplicate docstrings
 
-    def draw_grid(ctx, x = 50, y = 50):
-        """Draw a grid on the canvas [**implicit brush**].
+def create_canvas(widget):
+    """Create and return a GTK Canvas wrapping the given Widget."""
+    return Canvas(widget)
 
-        This implicit brush method is intended to help with determining the
-        location of points on the canvas during development.
 
-        Args:
-            x (int): The horizontal spacing between lines.
-            y (int): The vertical spacing between lines.
-        """
-        draw_grid(ctx, x, y)
+def start_event_loop():
+    """Start GTK main loop with asyncio in a background thread."""
+    global _async_loop, _async_thread
 
-    @brush
-    def write_text(cr, x, y, text, align = TextAlign.TOP_LEFT):
-        """Write aligned text [**explicit brush**].
+    ready = threading.Event()
 
-        This explicit brush method helps write aligned text on the canvas. The
-        *x* and *y* coordinates are relative to the specified *alignment*. By
-        default, this is ``blighty.TextAlign.TOP_LEFT``, meaning that the text
-        will be left-aligned and on top of the horizontal line that passes
-        through *y* on the vertical axis. In terms of the point *(x,y)* on the
-        Canvas, the text will develop in the NE direction.
+    def _run_async():
+        global _async_loop
+        _async_loop = asyncio.new_event_loop()
+        asyncio.set_event_loop(_async_loop)
+        ready.set()
+        _async_loop.run_forever()
 
-        The return value is the text extents, in case that some further draw
-        operations depend on the space required by the text to be drawn on the
-        canvas.
+    _async_thread = threading.Thread(target=_run_async, daemon=True)
+    _async_thread.start()
+    ready.wait()
 
-        Note that font face and size need to be set on the Cairo context prior
-        to a call to this method.
+    Gtk.main()
 
-        Args:
-            x (int): The horizontal coordinate.
-            y (int): The vertical coordinate.
-            text (str): The text to write.
-            align (int): The text alignment. Detaulf is ``TextAlign.TOP_LEFT``.
 
-        Returns:
-            tuple: The same return value as ``cairo.text_extents``.
-
-        """
-        return write_text(cr, x, y, text, align)
+def stop_event_loop():
+    """Stop the GTK main loop."""
+    Gtk.main_quit()
