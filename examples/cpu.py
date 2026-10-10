@@ -33,7 +33,7 @@ class Cpu(Canvas):
     def build(x = 0, y = 0, gravity = CanvasGravity.CENTER):
         return Cpu(x, y, *Cpu.SIZE, gravity = gravity, interval = 2000)
 
-    def on_button_pressed(self, button, *args):
+    async def on_button_pressed(self, button, *args):
         self.dispose()
 
     def draw_polygon(c, n, x, y, size):
@@ -119,7 +119,7 @@ class Cpu(Canvas):
         )
         c.restore()
 
-    def on_draw(self, c):
+    async def on_draw(self, c):
         # c.draw_grid()
 
         c.select_font_face(*Fonts.LAKSAMAN_NORMAL)

@@ -18,6 +18,7 @@ This program is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
+
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
@@ -35,15 +36,15 @@ class MyCanvas(x11.Canvas):
         self.r = 50.0
         self.d = 4.0
 
-    def on_button_pressed(self, button, state, x, y):
+    async def on_button_pressed(self, button, state, x, y):
         if button == 1 and state == 16:
             self.dispose()
 
-    def on_key_pressed(self, keysym, state):
+    async def on_key_pressed(self, keysym, state):
         if keysym == 65307:
             self.dispose()
 
-    def on_draw(self, cr):
+    async def on_draw(self, cr):
         cr.set_line_width(8)
         cr.set_source_rgba(*[r() for _ in range(4)])
 
@@ -74,7 +75,7 @@ def test_canvas():
         assert canvas.interval == 42
 
         canvas.interval = 100
-        assert canvas.show() is None
+        canvas.show()
 
     assert x11.start_event_loop() is None
 
@@ -94,7 +95,7 @@ def test_canvas_xinerama():
         assert canvas.interval == 42
 
         canvas.interval = 100
-        assert canvas.show() is None
+        canvas.show()
 
     assert x11.start_event_loop() is None
 
@@ -107,7 +108,7 @@ def test_draw_methods():
 
             self.c = 0
 
-        def on_button_pressed(self, button, state, x, y):
+        async def on_button_pressed(self, button, state, x, y):
             if button == 1:
                 self.dispose()
 
@@ -116,7 +117,7 @@ def test_draw_methods():
             ctx.rectangle(0, 0, width, height)
             ctx.fill()
 
-        def on_draw(self, ctx):
+        async def on_draw(self, ctx):
             if self.c > 2:
                 self.dispose()
                 return
@@ -139,7 +140,7 @@ def test_draw_once():
 
             self.c = 0
 
-        def on_button_pressed(self, button, state, x, y):
+        async def on_button_pressed(self, button, state, x, y):
             if button == 1:
                 self.dispose()
 
@@ -148,7 +149,7 @@ def test_draw_once():
             ctx.rectangle(0, 0, width, height)
             ctx.fill()
 
-        def on_draw(self, ctx):
+        async def on_draw(self, ctx):
             if self.c > 2:
                 self.dispose()
                 return
@@ -156,7 +157,7 @@ def test_draw_once():
             self.c += 1
 
             if self.c > 1:
-                return False
+                return
 
             for i in range(4):
                 ctx.draw_rect(self.width >> i, self.height >> i)

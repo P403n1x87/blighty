@@ -18,6 +18,7 @@ This program is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
+
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
@@ -38,7 +39,7 @@ def test_canvas():
             self.refl = Graph(0, height >> 1, width, -(height >> 1), scale=None)
             self.count = 0
 
-        def on_draw(self, cr):
+        async def on_draw(self, cr):
             cr.set_source_rgb(0.1, 0.1, 0.1)
             cr.rectangle(0, 0, *self.get_size())
             cr.fill()
@@ -57,11 +58,11 @@ def test_canvas():
             if self.count > 300:
                 self.dispose()
 
-        def on_button_pressed(self, button, state, x, y):
+        async def on_button_pressed(self, button, state, x, y):
             if button == 1:
                 self.dispose()
 
-        def on_key_pressed(self, keysym, state):
+        async def on_key_pressed(self, keysym, state):
             if keysym == 65307:
                 self.dispose()
 

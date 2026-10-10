@@ -1,0 +1,37 @@
+[build-system]
+requires = ["setuptools>=64"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "blighty"
+version = "3.0.0"
+description = "Desktop Widget Manager. Think of conky, but with Python instead of Lua."
+readme = "README.md"
+license = {file = "LICENSE.md"}
+requires-python = ">=3.8"
+authors = [
+    { name = "Gabriele N. Tornetta", email = "phoenix1987@gmail.com" },
+]
+keywords = ["desklet", "widget", "infotainment"]
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Intended Audience :: Developers",
+    "Topic :: Software Development :: Build Tools",
+    "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
+    "Programming Language :: Python :: 3",
+]
+dependencies = ["pycairo"]
+
+[project.optional-dependencies]
+test = ["pytest-xvfb", "numpy", "matplotlib", "psutil"]
+
+[project.urls]
+Homepage = "https://github.com/P403n1x87/blighty"
+"Bug Reports" = "https://github.com/P403n1x87/blighty/issues"
+Source = "https://github.com/P403n1x87/blighty"
+
+[project.scripts]
+blighty = "blighty.cli:main"
+
+[tool.setuptools.packages.find]
+exclude = ["contrib", "docs", "tests"]

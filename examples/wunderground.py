@@ -135,7 +135,7 @@ class Wunderground(Canvas):
 
         self.datasource.start()
 
-    def on_button_pressed(self, button, state, x, y):
+    async def on_button_pressed(self, button, state, x, y):
         if button == 1:
             self.datasource.stop()
             self.dispose()
@@ -359,7 +359,7 @@ class Wunderground(Canvas):
         ctx.write_text(ctx.canvas.width >> 1, ctx.canvas.height >> 1, msg, align = TextAlign.CENTER_MIDDLE)
         ctx.restore()
 
-    def on_draw(self, ctx):
+    async def on_draw(self, ctx):
         ctx.select_font_face(*Fonts.LAKSAMAN_NORMAL)
 
         if self.datasource is None:

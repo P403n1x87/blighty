@@ -17,15 +17,11 @@
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
+#
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-"""
-This module provides support for creating X11 canvases. If you are trying to
-replicate conky's behaviour, the API offered by this module is the closest to
-it.
-"""
+"""X11 backend for blighty widgets."""
 
-from blighty._x11 import *
-
-from . canvas import Canvas
+from blighty._x11 import get_display_fd, poll_events
+from . canvas import Canvas, create_canvas

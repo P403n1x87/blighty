@@ -17,6 +17,7 @@
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
+//
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
@@ -77,6 +78,8 @@ static PyObject * BaseCanvas_show     (BaseCanvas *);
 static PyObject * BaseCanvas_get_size (BaseCanvas *);
 static PyObject * BaseCanvas_dispose  (BaseCanvas *);
 static PyObject * BaseCanvas_destroy  (BaseCanvas *);
+static PyObject * BaseCanvas_get_context_ptr (BaseCanvas *);
+static PyObject * BaseCanvas_get_pycairo_context (BaseCanvas *);
 
 
 static PyMethodDef BaseCanvas_methods[] = {
@@ -102,6 +105,12 @@ static PyMethodDef BaseCanvas_methods[] = {
 
       "This method is not thread-safe. Use the :func:`dispose` method instead."
   },
+  {"_get_context_ptr", (PyCFunction) BaseCanvas_get_context_ptr, METH_NOARGS,
+      "Return the raw cairo_t pointer as an integer."
+  },
+  {"_get_pycairo_context", (PyCFunction) BaseCanvas_get_pycairo_context, METH_NOARGS,
+      "Return a pycairo Context wrapping the canvas's cairo_t."
+  },
   {NULL}  /* Sentinel */
 };
 
@@ -113,6 +122,9 @@ static PyMemberDef BaseCanvas_members[] = {
   {"y"        , T_INT , offsetof(BaseCanvas, y)        , READONLY , "The canvas *y* coordinate. *Read-only*."},
   {"width"    , T_INT , offsetof(BaseCanvas, width)    , READONLY , "The canvas width. *Read-only*."},
   {"height"   , T_INT , offsetof(BaseCanvas, height)   , READONLY , "The canvas height. *Read-only*."},
+  {"win_id"   , T_LONG, offsetof(BaseCanvas, win_id)   , READONLY , "The X11 window ID. *Read-only*."},
+  {"_running" , T_INT , offsetof(BaseCanvas, _running)  , 0        , "Whether the canvas is running."},
+  {"_needs_redraw", T_INT, offsetof(BaseCanvas, _needs_redraw), 0, "Whether a redraw is pending."},
   {NULL}  /* Sentinel */
 };
 

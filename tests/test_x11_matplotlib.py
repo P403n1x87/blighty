@@ -18,6 +18,7 @@ This program is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
+
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
@@ -37,7 +38,7 @@ def test_canvas():
             self.plot = SimplePlot(*self.get_size())
             self.count = 5
 
-        def on_draw(self, cr):
+        async def on_draw(self, cr):
             self.plot.push_value(psutil.cpu_percent(.1))
             self.plot.draw(cr)
             self.count += 1
@@ -45,11 +46,11 @@ def test_canvas():
             if self.count > 10:
                 self.dispose()
 
-        def on_button_pressed(self, button, state, x, y):
+        async def on_button_pressed(self, button, state, x, y):
             if button == 1:
                 self.dispose()
 
-        def on_key_pressed(self, keysym, state):
+        async def on_key_pressed(self, keysym, state):
             if keysym == 65307:
                 self.dispose()
 
